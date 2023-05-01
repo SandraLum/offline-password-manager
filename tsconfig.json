@@ -1,0 +1,15 @@
+{
+	"extends": "@tsconfig/react-native/tsconfig.json",
+	"compilerOptions": {
+		"paths": {
+			"@assets/*": ["./assets/*"],
+			"@src/*": ["./src/*"],
+			"@store/*": ["./src/store/*"],
+			"@slices/*": ["./src/store/slices/*"],
+			"@common/*": ["./src/common/*"],
+			"@utils": ["./src/common/utils"],
+			"@components/*": ["./src/components/*"]
+		},
+		"types": ["node"]
+	}
+}

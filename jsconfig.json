@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"checkJs": false,
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"target": "es2020",
+		"module": "es2015",
+		"baseUrl": ".",
+		"paths": {
+			"@assets/*": ["./assets/*"],
+			"@src/*": ["./src/*"],
+			"@store/*": ["./src/store/*"],
+			"@slices/*": ["./src/store/slices/*"],
+			"@common/*": ["./src/common/*"],
+			"@utils": ["./src/common/utils"],
+			"@components/*": ["./src/components/*"]
+		}
+	},
+	"exclude": ["dist", "node_modules", "build", ".vscode", "coverage", ".yarn"],
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["react", "jest"]
+	}
+}

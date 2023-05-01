@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Offline Password Store",
+    "slug": "offlinepasswordstore",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.jpg",
+    "primaryColor": "#00A0DF",
+    "description": "",
+    "splash": {
+      "image": "./assets/images/splash.jpg",
+      "backgroundColor": "#FEF9B0"
+    },
+    "plugins": [
+      "expo-localization"
+    ]
+  }
+}
