@@ -8,8 +8,10 @@ import { FieldType } from '@src/common/templates'
 import { i18n } from '@src/app/locale'
 import IconSelector from '@components/IconSelector'
 import AddFieldForm from './AddFieldForm'
+import { getMK } from '@store/slices/secureSlice'
 
 import { decrypt, encrypt, isEmpty } from '@src/common/utils'
+import { useSelector } from 'react-redux'
 
 type Props = {
 	entry: {
@@ -23,7 +25,7 @@ type Props = {
 	setFieldsValues: React.Dispatch<React.SetStateAction<OPM.FieldsValues>>
 	setFields: React.Dispatch<React.SetStateAction<OPM.Field[]>>
 	editable: boolean
-	onChangeIcon: (icon: OPM.Icon) => void
+	onChangeIcon: (icon?: OPM.ComplexIcon) => void
 }
 
 export default function EntryForm({
@@ -36,7 +38,8 @@ export default function EntryForm({
 	onChangeIcon
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Props) {
-	const secret = 'secret key 123'
+	// const secret = 'secret key 123'
+	const s = useSelector(getMK)
 
 	function getFieldComponent(f: OPM.Field) {
 		let component
@@ -44,7 +47,7 @@ Props) {
 		console.log('value', value)
 
 		// Decrypt value
-		const decrypted = !isEmpty(value) ? decrypt(value, secret) : ''
+		const decrypted = !isEmpty(value) ? decrypt(value, s) : ''
 
 		switch (f.fieldType) {
 			case FieldType.TextInput:
@@ -115,7 +118,7 @@ Props) {
 	}
 
 	function onChangeValue(field: OPM.Field, value: string) {
-		const encrypted = encrypt(value || '', secret)
+		const encrypted = encrypt(value || '', s)
 		setFieldsValues(o => ({ ...o, [field.id]: encrypted }))
 	}
 
@@ -177,7 +180,7 @@ Props) {
 						error={title.name.trim() === ''}
 						underlineColor="transparent"
 						activeUnderlineColor="transparent"
-						placeholder="title"
+						placeholder={i18n.t('entry:form:field:input:placeholder:title')}
 						focusable={true}
 						right={
 							editable && title.name.length > 0 ? (

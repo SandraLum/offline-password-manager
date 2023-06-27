@@ -1,9 +1,9 @@
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, ViewStyle } from 'react-native'
 import { Text, Divider, TextInput as PaperTextInput } from 'react-native-paper'
 
 import tw from 'twrnc'
-import IconSelector from '@components/IconSelector'
 import { OPMTypes } from '@src/common/types'
+import AvatarCustomizer from '@src/components/AvatarCustomizer'
 
 type Props = {
 	editable: boolean
@@ -13,6 +13,9 @@ type Props = {
 
 export default function ProfileForm(props: Props) {
 	const { profile, editable, setProfile } = props
+	const color = profile?.avatar?.color
+	const backgroundColor = (profile?.avatar?.style as ViewStyle)?.backgroundColor || 'bg-teal-200'
+
 	if (!profile) return null
 
 	const { avatar, name, description } = profile
@@ -25,8 +28,8 @@ export default function ProfileForm(props: Props) {
 		setProfile(o => ({ ...o, description: val }))
 	}
 
-	function onChangeIcon() {
-		// SL TODO: update avatar
+	function onChangeIcon(icon: OPM.Avatar) {
+		setProfile(o => ({ ...o, avatar: icon }))
 	}
 
 	return (
@@ -37,35 +40,22 @@ export default function ProfileForm(props: Props) {
 			contentContainerStyle={tw.style(`flex h-full`)}
 		>
 			<View style={tw.style(`w-full py-0 h-full`, { overflow: 'hidden' })}>
-				<View style={tw.style(`h-1/4 flex-col items-center justify-center bg-teal-200`, { overflow: 'hidden' })}>
+				<View
+					style={tw.style(`h-1/4 flex-col items-center justify-center`, { backgroundColor: color, overflow: 'hidden' })}
+				>
 					{/* Design */}
-					<>
-						<View
-							style={tw.style(`bg-teal-600 absolute rounded-full opacity-70`, {
-								top: '50%',
-								left: '-20%',
-								width: bgDesign.size / 2,
-								height: bgDesign.size / 2
-							})}
-						/>
-						<View
-							style={tw.style(`bg-white absolute rounded-full opacity-50`, {
-								top: '20%',
-								left: '70%',
-								width: bgDesign.size,
-								height: bgDesign.size,
-								transform: [{ scaleX: 3 }]
-							})}
-						/>
-					</>
-
-					<IconSelector
-						editable={editable}
-						size={58}
-						icon={avatar.icon}
-						onChangeIcon={onChangeIcon}
-						style={avatar.iconStyle}
+					<View
+						style={tw.style(`bg-white absolute rounded-full opacity-40`, {
+							backgroundColor: backgroundColor,
+							top: '30%',
+							left: '-70%',
+							width: bgDesign.size,
+							height: bgDesign.size,
+							transform: [{ scaleX: 3 }]
+						})}
 					/>
+
+					<AvatarCustomizer editable={editable} size={58} icon={avatar} onChangeIcon={onChangeIcon} />
 				</View>
 
 				<Divider style={tw.style({ borderBottomWidth: 1, borderColor: tw.color('teal-300') })} />
@@ -118,7 +108,6 @@ export default function ProfileForm(props: Props) {
 									/>
 								)
 							}
-							// multiline={true}
 						/>
 					</View>
 				</View>

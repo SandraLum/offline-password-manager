@@ -7,7 +7,7 @@ await main()
 
 async function main() {
 	const fileContent = generateContent()
-	await writeTofile(fileContent, 'genericIcons.v3.ts')
+	await writeTofile(fileContent, 'genericIcons.ts')
 }
 
 function generateContent() {

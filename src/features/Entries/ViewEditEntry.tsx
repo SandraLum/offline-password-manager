@@ -9,17 +9,23 @@ import { RootStackParamList } from '@src/app/routes'
 
 import { i18n } from '@src/app/locale'
 import { selectCategoryById } from '@src/features/Categories/categoriesSlice'
-import { defaultEntry, entryRemove, entryUpdate, selectEntryById } from '@src/features/Entries/entriesSlice'
-import { RootState } from '@src/store'
+import {
+	defaultEntry,
+	entryRemoveFromCurrentProfile,
+	entryUpdate,
+	selectEntryById
+} from '@src/features/Entries/entriesSlice'
+import { AppDispatch, RootState } from '@src/store'
 import { OPMTypes } from '@src/common/types'
 import EntryForm from './component/EntryForm'
 import { EntryMode } from '@src/common/enums'
-import IconInitialsBadge from '@src/components/IconInitialsBadge'
+import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewEditEntry'>
 
 export default function ViewEditEntry({ navigation, route }: Props) {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 	const { data, mode: _mode = EntryMode.READ } = route.params
 
 	const entry = useSelector((state: RootState) => selectEntryById(state, data.entry?.id))
@@ -87,7 +93,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 				{
 					text: i18n.t('button:label:ok'),
 					onPress: () => {
-						dispatch(entryRemove(entry.id))
+						dispatch(entryRemoveFromCurrentProfile(entry.id))
 					}
 				}
 			])
@@ -124,12 +130,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	useEffect(() => {
 		if (category) {
 			navigation.setOptions({
-				headerTitle: () => (
-					<View style={tw`flex-row items-center `}>
-						<IconInitialsBadge icon={category.icon} size={24} />
-						<Text style={tw.style(`pl-2 text-6 font-bold`)}>{category.name}</Text>
-					</View>
-				),
+				headerTitle: () => <Text style={tw.style(`text-6 font-bold`)}>{category.name}</Text>,
 				headerRight: () => {
 					let headerButtons
 					switch (mode) {
@@ -162,21 +163,23 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 		setEditable(mode === EntryMode.EDIT)
 	}, [mode])
 
-	function onChangeIcon(icon: OPM.Icon) {
+	function onChangeIcon(icon?: OPM.ComplexIcon) {
 		setTitle(t => ({ ...t, icon }))
 	}
 
 	return (
-		<>
-			<EntryForm
-				editable={editable}
-				entry={{ title, fieldsOptions, fieldsValues, fields }}
-				setTitle={setTitle}
-				setFieldsOptions={setFieldsOptions}
-				setFieldsValues={setFieldsValues}
-				setFields={setFields}
-				onChangeIcon={onChangeIcon}
-			/>
-		</>
+		<Screen>
+			<Container personalizeHeader={true}>
+				<EntryForm
+					editable={editable}
+					entry={{ title, fieldsOptions, fieldsValues, fields }}
+					setTitle={setTitle}
+					setFieldsOptions={setFieldsOptions}
+					setFieldsValues={setFieldsValues}
+					setFields={setFields}
+					onChangeIcon={onChangeIcon}
+				/>
+			</Container>
+		</Screen>
 	)
 }

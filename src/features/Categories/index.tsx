@@ -11,13 +11,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 // Components
 import CategoryItemModal from './CategoryItemModal'
-import VertMenu from '@src/components/VertMenu'
-import IconInitialsBadge from '@src/components/IconInitialsBadge'
+
 import { selectAllCategories } from '@src/features/Categories/categoriesSlice'
-import { selectAllEntries } from '@src/features/Entries/entriesSlice'
+import { selectAllEntriesByProfile } from '@src/features/Entries/entriesSlice'
 import { CategoryType, DashboardContentView } from '@common/enums'
 import { OPMTypes } from '@common/types'
-import Animated, { FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, ZoomOut } from 'react-native-reanimated'
+import { getCurrentProfileId } from '@src/store/slices/appSlice'
+import CategoryIcon from '@src/components/CategoryIcon'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = { onToggleDisplayView: (view: DashboardContentView, params: any) => void }
@@ -27,7 +27,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	const dialogRef = useRef(null)
 
 	const allCategories = useSelector(selectAllCategories)
-	const entries = useSelector(selectAllEntries)
+	const entries = useSelector(state => selectAllEntriesByProfile(state, getCurrentProfileId(state)))
 
 	const [categories, setCategories] = useState<OPMTypes.Category[]>([])
 	const [allItemsCategory, setAllItemsCategory] = useState<OPMTypes.Category | null>()
@@ -67,12 +67,11 @@ export default function Categories({ onToggleDisplayView }: Props) {
 					titleNumberOfLines={2}
 					title={category?.name}
 					subtitle={`Entries: ${totalEntries}`}
-					left={() => <IconInitialsBadge icon={icon} name={category.name} iconType="category" size={32} />}
+					left={() => <CategoryIcon size={32} name={icon.name} backgroundColor={icon.bgColor} color={icon.color} />}
 					style={tw`m-0 p-1 min-h-0`}
 					titleStyle={tw`m-0 p-0 min-h-0 font-bold`}
 					leftStyle={tw`p-0 m-1`}
 					rightStyle={tw`p-0 m-0`}
-					// right={props => <VertMenu data={category} {...props} />}
 				/>
 
 				<Card.Actions>
@@ -95,12 +94,14 @@ export default function Categories({ onToggleDisplayView }: Props) {
 							title={allItemsCategory.name}
 							subtitle={`Entries: ${entries.length}`}
 							left={() => (
-								<IconInitialsBadge
-									icon={allItemsCategory.icon}
-									name={allItemsCategory.name}
-									iconType="category"
-									size={32}
-								/>
+								<View style={tw`flex flex-row`}>
+									<CategoryIcon
+										size={32}
+										name={allItemsCategory.icon.name}
+										backgroundColor={allItemsCategory.icon.bgColor}
+										color={allItemsCategory.icon.color}
+									/>
+								</View>
 							)}
 							style={tw`m-0 p-1 min-h-0`}
 							titleStyle={tw`m-0 p-0 min-h-0 font-bold`}

@@ -127,6 +127,15 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Created', fieldType: FieldType.Label },
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
+	},
+	[CategoryType.School]: {
+		fields: [
+			{ label: 'Account', fieldType: FieldType.TextInput },
+			{ label: 'Password', fieldType: FieldType.Password, fieldOptions: { secure: true } },
+			{ label: 'Note', fieldType: FieldType.TextInput, fieldOptions: { multiline: true } },
+			{ label: 'Created', fieldType: FieldType.Label },
+			{ label: 'Last Modified On', fieldType: FieldType.Label }
+		]
 	}
 }
 

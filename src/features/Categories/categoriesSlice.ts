@@ -1,11 +1,11 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
-import * as utils from '@utils'
 
 import * as Templates from '@src/common/templates/index'
 
 import { CategoryType } from '@src/common/enums'
 import { OPMTypes } from '@src/common/types'
 import { RootState } from '@src/store'
+import { generateUID } from '@utils'
 
 const defaultCategories: OPMTypes.Category[] = [
 	{
@@ -15,32 +15,32 @@ const defaultCategories: OPMTypes.Category[] = [
 		sort: 0
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.Login],
 		sort: 1
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.Banking],
 		sort: 2
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.CreditCard],
 		sort: 3
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.Email],
 		sort: 4
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.Office],
 		sort: 5
 	},
 	{
-		id: utils.generateUID(),
+		id: generateUID(),
 		...Templates.Categories[CategoryType.School],
 		sort: 5
 	}
@@ -71,7 +71,7 @@ const categoriesSlice = createSlice({
 })
 
 export const { selectAll: selectAllCategories, selectById: selectCategoryById } = categoriesAdapter.getSelectors(
-	(state: RootState) => state.main.categories
+	(state: RootState) => state.categories
 )
 export const { categoriesAddOne, categoriesAddMany, categoryUpdate, categoryRemove, resetCategories } =
 	categoriesSlice.actions

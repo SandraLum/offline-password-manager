@@ -3,7 +3,7 @@ declare namespace OPM {
 
 	type Icon = {
 		id?: string
-		name?: string //Name for preloaded react-native-vector-icons
+		name?: string | IconName<typeof MaterialCommunityIcons.glyphMap> //Name for preloaded react-native-vector-icons
 		path?: string //Actual image of brand icons
 		bgColor?: string
 		color: string | undefined
@@ -62,7 +62,7 @@ declare namespace OPM {
 
 	type EntryTitle = {
 		name: string
-		icon?: Icon
+		icon?: ComplexIcon
 	}
 
 	type TemplateEntry = {
@@ -77,6 +77,53 @@ declare namespace OPM {
 		CreditCard = 'CreditCard',
 		Office = 'Office',
 		Password = 'Password'
+	}
+
+	type BadgeIcon = {
+		color: string
+	}
+
+	type BasicIcon = {
+		id: string
+		name: IconName<typeof MaterialCommunityIcons.glyphMap>
+	}
+
+	type GenericIcon = {
+		id: string
+		name: string
+		color: string | undefined
+		displayName: string
+		sort: number
+	}
+
+	type BrandIcon = {
+		id: string
+		displayName: string
+		path: ImageSourcePropType
+		sort: number
+	}
+
+	type ComplexIcon = GenericIcon | BrandIcon
+
+	// type AvatarIcon = {
+	// 	name: IconName<typeof MaterialCommunityIcons.glyphMap>
+	// 	size: number
+	// 	themeId?: string
+	// 	color?: string
+	// 	style?: unknown
+	// }
+
+	type Avatar = {
+		name: IconName<typeof MaterialCommunityIcons.glyphMap>
+		color?: string
+		style?: unknown
+	}
+
+	type CategoryIcon = {
+		name: IconName<typeof MaterialCommunityIcons.glyphMap>
+		color: string | undefined
+		size: number | undefined
+		backgroundColor: string | undefined
 	}
 
 	// type Entry = {

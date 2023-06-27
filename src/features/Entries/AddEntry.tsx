@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Alert, View } from 'react-native'
-import { Text, IconButton } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 
 import tw from 'twrnc'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -13,17 +13,25 @@ import * as utils from '@utils'
 import { Entries as TemplateEntries } from '@src/common/templates'
 
 import { selectCategoryById } from '@src/features/Categories/categoriesSlice'
-import { defaultEntry, entriesAddOne } from '@src/features/Entries/entriesSlice'
-import { RootState } from '@src/store'
+import { defaultEntry, entriesAddOneToCurrentProfile } from '@src/features/Entries/entriesSlice'
+import { AppDispatch, RootState } from '@src/store'
 import EntryForm from './component/EntryForm'
+import { selectCurrentProfile } from '@src/store/slices/appSlice'
+import { useNavigation } from '@react-navigation/native'
+
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
-export default function AddEntry({ navigation, route }: Props) {
-	const dispatch = useDispatch()
+export default function AddEntry({ route }: Props) {
+	const dispatch = useDispatch<AppDispatch>()
+	const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 	const { data } = route.params
 
 	const category = useSelector((state: RootState) => selectCategoryById(state, data.category.id))
+	const currentProfile = useSelector(selectCurrentProfile)
 
 	const originalFields = useMemo<OPM.Field[]>(
 		() =>
@@ -40,16 +48,8 @@ export default function AddEntry({ navigation, route }: Props) {
 	const onSave = useCallback(() => {
 		if (!category) return
 
-		// SL: Not sure if we need this, state of eye "secure" should be just within the state
-		// const updatedFields = fields.map(f => {
-		// 	if (fieldsOptions[f.id]) {
-		// 		f.fieldOptions = fieldsOptions[f.id]
-		// 	}
-		// 	return f
-		// })
-
 		dispatch(
-			entriesAddOne({
+			entriesAddOneToCurrentProfile({
 				id: utils.generateUID(),
 				category,
 				title,
@@ -75,11 +75,11 @@ export default function AddEntry({ navigation, route }: Props) {
 		])
 	}, [navigation])
 
+	// Initialize
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { name, ...iconProps } = category?.icon || {}
-		const _title = category ? { name: category?.name, icon: { ...iconProps } } : {}
-		setTitle(o => ({ ...o, ..._title }))
+		if (category) {
+			setTitle(o => ({ ...o, ...{ name: category.name, icon: { color: category.icon.bgColor } } }))
+		}
 	}, [category])
 
 	useEffect(() => {
@@ -87,11 +87,7 @@ export default function AddEntry({ navigation, route }: Props) {
 			navigation.pop()
 		} else {
 			navigation.setOptions({
-				headerTitle: () => (
-					<View style={tw`flex flex-row`}>
-						<Text style={tw.style(`flex-1 text-6 bg-transparent`, 'font-bold')}>{category.name}</Text>
-					</View>
-				),
+				title: category.name,
 				headerRight: () => (
 					<View style={tw`flex flex-row`}>
 						<IconButton icon="star-outline" onPress={() => console.log('Fav pressed')} />
@@ -101,21 +97,35 @@ export default function AddEntry({ navigation, route }: Props) {
 				)
 			})
 		}
-	}, [category, dispatch, fields, fieldsOptions, fieldsValues, navigation, onCancel, onSave])
+	}, [
+		category,
+		currentProfile?.avatar?.color,
+		dispatch,
+		fields,
+		fieldsOptions,
+		fieldsValues,
+		navigation,
+		onCancel,
+		onSave
+	])
 
-	function onChangeIcon(icon: OPM.Icon) {
+	function onChangeIcon(icon?: OPM.ComplexIcon) {
 		setTitle(t => ({ ...t, icon }))
 	}
 
 	return (
-		<EntryForm
-			editable={editable}
-			entry={{ title, fieldsOptions, fieldsValues, fields }}
-			setTitle={setTitle}
-			setFieldsOptions={setFieldsOptions}
-			setFieldsValues={setFieldsValues}
-			setFields={setFields}
-			onChangeIcon={onChangeIcon}
-		/>
+		<Screen>
+			<Container personalizeHeader={true}>
+				<EntryForm
+					editable={editable}
+					entry={{ title, fieldsOptions, fieldsValues, fields }}
+					setTitle={setTitle}
+					setFieldsOptions={setFieldsOptions}
+					setFieldsValues={setFieldsValues}
+					setFields={setFields}
+					onChangeIcon={onChangeIcon}
+				/>
+			</Container>
+		</Screen>
 	)
 }

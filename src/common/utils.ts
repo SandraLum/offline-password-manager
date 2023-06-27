@@ -99,6 +99,25 @@ export function encrypt(value: string | unknown, secret: string): string {
 	return encrypted
 }
 
+export function cryptoHS(value: string): string {
+	return CryptoJS.SHA256(value).toString(CryptoJS.enc.Hex)
+}
+
 export function isEmpty(str: string | undefined | null) {
 	return str?.length === 0
+}
+
+export function union<T>(arr: T[], item: T): T[] {
+	if (!arr.includes(item)) {
+		return arr.concat(item)
+	}
+	return arr
+}
+
+export function convertChar(value: number) {
+	return String.fromCharCode(value)
+}
+
+export function getRandom(min: number, max: number) {
+	return Math.random() * (max - min) + min
 }

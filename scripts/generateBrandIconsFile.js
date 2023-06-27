@@ -9,7 +9,7 @@ async function main() {
 	//Assets from images icon folder
 	const filenames = (await getFilenamesFromDir('./assets/images/icons/')).sort((a, b) => a < b)
 	const fileContent = generateContent(filenames, brandIcons)
-	await writeTofile(fileContent, 'brandIcons.v4.ts')
+	await writeTofile(fileContent, 'brandIcons.ts')
 }
 
 function generateContent(filenames, existingList) {

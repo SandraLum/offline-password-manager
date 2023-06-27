@@ -13,7 +13,7 @@ export const Categories: Categories = {
 		icon: {
 			name: 'format-list-bulleted-type',
 			bgColor: tw.color('zinc-200'),
-			color: tw.color('zinc-700')
+			color: tw.color('neutral-800')
 		},
 		type: CategoryType.AllItems
 	},
@@ -22,7 +22,7 @@ export const Categories: Categories = {
 		icon: {
 			name: 'key-variant',
 			bgColor: tw.color('cyan-700'),
-			color: tw.color('stone-200')
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.Login
 	},
@@ -30,8 +30,8 @@ export const Categories: Categories = {
 		name: 'Banking',
 		icon: {
 			name: 'currency-usd',
-			bgColor: tw.color('yellow-400'),
-			color: tw.color('yellow-700')
+			bgColor: tw.color('yellow-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.Banking
 	},
@@ -39,8 +39,8 @@ export const Categories: Categories = {
 		name: 'Email',
 		icon: {
 			name: 'email',
-			bgColor: tw.color('rose-800'),
-			color: tw.color('rose-200')
+			bgColor: tw.color('rose-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.Email
 	},
@@ -48,8 +48,8 @@ export const Categories: Categories = {
 		name: 'Credit Cards',
 		icon: {
 			name: 'credit-card',
-			bgColor: tw.color('sky-200'),
-			color: tw.color('sky-900')
+			bgColor: tw.color('sky-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.CreditCard
 	},
@@ -57,8 +57,8 @@ export const Categories: Categories = {
 		name: 'Office',
 		icon: {
 			name: 'desktop-tower-monitor',
-			bgColor: tw.color('green-600'),
-			color: tw.color('green-100')
+			bgColor: tw.color('green-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.Office
 	},
@@ -66,8 +66,8 @@ export const Categories: Categories = {
 		name: 'Password',
 		icon: {
 			name: 'password',
-			bgColor: tw.color('orange-600'),
-			color: tw.color('orange-900')
+			bgColor: tw.color('orange-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.Password
 	},
@@ -75,8 +75,8 @@ export const Categories: Categories = {
 		name: 'School',
 		icon: {
 			name: 'school',
-			bgColor: tw.color('violet-600'),
-			color: tw.color('violet-900')
+			bgColor: tw.color('violet-700'),
+			color: tw.color('neutral-100')
 		},
 		type: CategoryType.School
 	}

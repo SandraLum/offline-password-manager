@@ -7,9 +7,11 @@ import { RootState } from '@src/store'
 export const emptyProfile: OPMTypes.EmptyProfile = {
 	name: '',
 	description: '',
-	avatar: { icon: { name: '' } },
-	categories: [],
-	entries: []
+	avatar: {
+		name: 'account',
+		color: tw.color('zinc-700'),
+		style: { backgroundColor: tw.color('zinc-200') }
+	}
 }
 
 export const defaultProfiles: OPMTypes.Profile[] = [
@@ -18,8 +20,9 @@ export const defaultProfiles: OPMTypes.Profile[] = [
 		name: 'Me',
 		description: 'Personal',
 		avatar: {
-			icon: { name: 'account' },
-			iconStyle: { backgroundColor: tw.color('bg-red-500') }
+			name: 'account',
+			color: tw.color('orange-100'),
+			style: { backgroundColor: tw.color('orange-500') }
 		}
 	},
 	{
@@ -27,15 +30,15 @@ export const defaultProfiles: OPMTypes.Profile[] = [
 		name: 'Family member 1',
 		description: 'Family member',
 		avatar: {
-			icon: { name: 'account' },
-			iconStyle: { backgroundColor: tw.color('bg-purple-500') }
+			name: 'account',
+			color: tw.color('violet-200'),
+			style: { backgroundColor: tw.color('purple-600') }
 		}
 	}
 ]
 
 const profilesAdapter = createEntityAdapter<OPMTypes.Profile>({
-	// Assume IDs are stored in a field other than `profile.id`
-	selectId: (profile: OPMTypes.Profile) => profile.id
+	selectId: profile => profile.id
 })
 
 const initialState = profilesAdapter.upsertMany(profilesAdapter.getInitialState(), defaultProfiles)
@@ -51,8 +54,15 @@ const profilesSlice = createSlice({
 	}
 })
 
+export const resetProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
+	const state = getState()
+
+	profilesAdapter.removeAll(state)
+	profilesAdapter.upsertMany(profilesAdapter.getInitialState(), defaultProfiles)
+}
+
 export const { selectAll: selectAllProfiles, selectById: selectProfileById } = profilesAdapter.getSelectors(
-	(state: RootState) => state.main.profiles
+	(state: RootState) => state.profiles
 )
 export const { profilesAddOne, profilesAddMany, profileUpdate, profileRemove } = profilesSlice.actions
 export default profilesSlice

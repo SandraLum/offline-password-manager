@@ -14,6 +14,7 @@ type Props = {
 	iconStyle?: { backgroundColor: string | undefined }
 	children: ReactNode
 	onDismiss: (() => void) | undefined
+	dismissable?: boolean
 }
 
 export default function AlertModal(props: Props) {
@@ -22,13 +23,19 @@ export default function AlertModal(props: Props) {
 		icon = { name: 'information', size: 36, color: 'white' },
 		iconStyle = { backgroundColor: 'darkblue' },
 		onDismiss,
+		dismissable = true,
 		children
 	} = props
 
 	return (
 		<>
 			<Portal>
-				<Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={tw.style(`bg-white p-4 m-4 rounded-lg`)}>
+				<Modal
+					dismissable={dismissable}
+					visible={visible}
+					onDismiss={onDismiss}
+					contentContainerStyle={tw.style(`bg-white p-4 m-4 rounded-lg`)}
+				>
 					<View
 						style={tw.style(`rounded-full p-2 border-4 border-white`, {
 							position: 'absolute',

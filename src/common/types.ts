@@ -1,6 +1,7 @@
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit'
 import { CategoryType } from '@src/common/enums'
 import { RootState } from '@src/store'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace OPMTypes {
@@ -32,14 +33,14 @@ export declare namespace OPMTypes {
 
 	type EntryWithoutCategory = Omit<Entry, 'category'>
 
+	type IconName<T> = keyof T
+
 	type Profile = {
 		id: string
 		name: string
 		description?: string
-		avatar: { icon: { name: string }; iconStyle?: { backgroundColor: string | undefined } }
-		categories?: string[]
+		avatar: OPM.Avatar
 		entries?: string[]
-		// type: CategoryType
 	}
 
 	type EmptyProfile = Omit<Profile, 'id'> & { id?: string }
