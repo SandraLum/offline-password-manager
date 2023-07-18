@@ -8,7 +8,7 @@
 		"primaryColor": "#00A0DF",
 		"description": "",
 		"splash": {
-			"image": "./assets/images/splash.jpg",
+			"image": "./assets/images/splash.png",
 			"backgroundColor": "#FEF9B0"
 		},
 		"plugins": ["expo-localization", "@config-plugins/react-native-blob-util", "@config-plugins/react-native-pdf"],
