@@ -1,28 +1,24 @@
 {
-  "expo": {
-    "name": "Offline Password Store",
-    "slug": "offlinepasswordstore",
-    "version": "0.0.1",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.jpg",
-    "primaryColor": "#00A0DF",
-    "description": "",
-    "splash": {
-      "image": "./assets/images/splash.jpg",
-      "backgroundColor": "#FEF9B0"
-    },
-    "plugins": [
-      "expo-localization",
-      "@config-plugins/react-native-blob-util",
-      "@config-plugins/react-native-pdf"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "6ce6e53e-664b-4a54-a4d1-944b78f70e9b"
-      }
-    },
-    "android": {
-      "package": "io.slamcode.offlinepasswordstore"
-    }
-  }
+	"expo": {
+		"name": "Offline Password Store",
+		"slug": "offlinepasswordstore",
+		"version": "0.0.1",
+		"orientation": "portrait",
+		"icon": "./assets/images/lock-icon.png",
+		"primaryColor": "#00A0DF",
+		"description": "",
+		"splash": {
+			"image": "./assets/images/splash.jpg",
+			"backgroundColor": "#FEF9B0"
+		},
+		"plugins": ["expo-localization", "@config-plugins/react-native-blob-util", "@config-plugins/react-native-pdf"],
+		"extra": {
+			"eas": {
+				"projectId": "6ce6e53e-664b-4a54-a4d1-944b78f70e9b"
+			}
+		},
+		"android": {
+			"package": "io.slamcode.offlinepasswordstore"
+		}
+	}
 }
