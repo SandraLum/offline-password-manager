@@ -1,4 +1,4 @@
-import { Image, Pressable, TouchableHighlight, TouchableOpacity, ViewStyle } from 'react-native'
+import { Image, TouchableOpacity, ViewStyle } from 'react-native'
 import { Badge, Avatar } from 'react-native-paper'
 import tw from 'twrnc'
 

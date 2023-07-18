@@ -62,7 +62,7 @@ export const resetProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
 }
 
 export const { selectAll: selectAllProfiles, selectById: selectProfileById } = profilesAdapter.getSelectors(
-	(state: RootState) => state.profiles
+	(state: RootState) => state.main.profiles
 )
 export const { profilesAddOne, profilesAddMany, profileUpdate, profileRemove } = profilesSlice.actions
 export default profilesSlice

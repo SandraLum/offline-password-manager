@@ -1,17 +1,22 @@
 import tw from 'twrnc'
 import { useDispatch } from 'react-redux'
+import { WebView } from 'react-native'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import Content from '@components/Content'
-import { login } from '@src/store/slices/secureSlice'
+import { unlock } from '@src/store/slices/authSlice'
 
 import { AppDispatch } from '@src/store'
 import EnterPasswordForm from './component/EnterPasswordForm'
 import { View } from 'react-native'
-import { Button } from 'react-native-paper'
+import { Button, Portal } from 'react-native-paper'
 import { useState } from 'react'
 import { i18n } from '@src/app/locale'
+import { factoryReset } from '@src/store/slices/appSlice'
+import PasswordEmergencySheet from './PasswordEmergencySheet'
+
+// import { syncEntriesWithMKey } from '../Entries/entriesSlice'
 
 export default function Login() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -20,10 +25,8 @@ export default function Login() {
 	async function onLogin(password: string): Promise<string | null> {
 		let error = null
 		try {
-			const success = await dispatch(login(password))
-			if (success) {
-				navigation.navigate('App', { name: 'Dashboard', params: {} })
-			} else {
+			const success = await dispatch(unlock(password))
+			if (!success) {
 				error = i18n.t('login:error:password:invalid')
 			}
 		} catch {
@@ -34,6 +37,15 @@ export default function Login() {
 
 	function onLoginViaBiometrics() {
 		console.log('Login')
+	}
+
+	function Testing() {
+		console.log('Testing pressed.............')
+		// dispatch(syncEntriesWithMKey('qqq111'))
+	}
+
+	function resetApp() {
+		dispatch(factoryReset())
 	}
 
 	return (
@@ -53,14 +65,18 @@ export default function Login() {
 				</Button>
 
 				{/* SL:TODO remove */}
-				<Button
-					buttonColor={tw.color('red-500')}
-					onPress={() => dispatch({ type: 'RESET_APP' })}
-					mode="contained"
-					style={tw`my-5`}
-				>
+				<Button buttonColor={tw.color('blue-500')} onPress={() => Testing()} mode="contained" style={tw`my-5`}>
+					{'Testing button'}
+				</Button>
+
+				{/* SL:TODO remove */}
+				<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
 					{'Reset Data'}
 				</Button>
+
+				<Portal>
+					<PasswordEmergencySheet />
+				</Portal>
 			</Content>
 		</View>
 	)

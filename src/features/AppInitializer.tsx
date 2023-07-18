@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { View, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as SplashScreen from 'expo-splash-screen'
 
-import { initialize, redirectScreen } from '@src/store/slices/appSlice'
+import { initialize } from '@src/store/slices/appSlice'
+import { redirectScreen } from '@src/store/slices/secureSlice'
 
 import { AppDispatch } from '@src/store'
 

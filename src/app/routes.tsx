@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { NavigationContainer, NavigatorScreenParams, DefaultTheme } from '@react-navigation/native'
+import {
+	NavigationContainer,
+	NavigatorScreenParams,
+	DefaultTheme,
+	useNavigationContainerRef
+} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer'
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer'
-import { StackActions } from '@react-navigation/native'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 
 import SetMasterPassword from '@src/features/SetMasterPassword'
 import Login from '@src/features/Login'
@@ -16,12 +19,14 @@ import ViewEditEntry from '@src/features/Entries/ViewEditEntry'
 import Settings from '@src/features/Settings'
 import ViewAndEditProfile from '@src/features/Profile/ViewAndEditProfile'
 import AddProfile from '@src/features/Profile/AddProfile'
+import ChangePassword from '@src/features/Settings/ChangePassword'
 
-import tw from 'twrnc'
 import { theme } from './theme'
 import CustomDrawer from './CustomDrawer'
 import AppInitializer from '@src/features/AppInitializer'
-// import { SafeAreaView } from 'react-native-safe-area-context'
+import { checkIsAuthenticated } from '@src/store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import AppWrapper from './AppWrapper'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -50,6 +55,9 @@ export type RootStackParamList = {
 		mode: ProfileMode.EDIT
 	}
 	AddProfile: {}
+	// Settings: {}
+	// SettingsStack: {}
+	'Settings:ChangePassword': {}
 }
 
 export type DrawerParamList = {
@@ -59,6 +67,15 @@ export type DrawerParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Drawer = createDrawerNavigator<DrawerParamList>()
+
+// function SettingsStack() {
+// 	return (
+// 		<Stack.Navigator initialRouteName="Settings">
+// 			<Stack.Screen name="Settings" component={Settings} />
+// 			<Stack.Screen name="Settings:ChangePassword" component={ChangePassword} />
+// 		</Stack.Navigator>
+// 	)
+// }
 
 function DrawerStack() {
 	return (
@@ -71,10 +88,20 @@ function DrawerStack() {
 					drawerIcon: props => <CustomDrawer.Icon {...props} name="home" />
 				}}
 			/>
+			{/* <Drawer.Screen
+				name="SettingsStack"
+				component={SettingsStack}
+				options={{
+					// headerShown: false,
+					title: i18n.t('routes:settings'),
+					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />
+				}}
+			/> */}
 			<Drawer.Screen
 				name="Settings"
 				component={Settings}
 				options={{
+					// headerShown: false,
 					title: i18n.t('routes:settings'),
 					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />
 				}}
@@ -84,24 +111,51 @@ function DrawerStack() {
 }
 
 export default function Routes() {
+	const navigationRef = useNavigationContainerRef()
+	const isAuthenticated = useSelector(checkIsAuthenticated)
+
+	console.log('-------------- ROUTES .......', isAuthenticated)
+
 	return (
-		// <SafeAreaView style={tw`flex-1`} forceInset={{ top: 'never' }} edges={['top', 'left', 'right']}>
-		<NavigationContainer theme={routeTheme}>
-			<Stack.Navigator>
-				<Stack.Screen name="AppInitializer" component={AppInitializer} options={{ headerShown: false }} />
-				<Stack.Screen name="SetMasterPassword" component={SetMasterPassword} options={{ headerShown: false }} />
-				<Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-				<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
-				<Stack.Screen name="AddEntry" component={AddEntry} />
-				<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
-				<Stack.Screen
-					name="ViewAndEditProfile"
-					component={ViewAndEditProfile}
-					options={{ title: i18n.t('routes:view:edit:profile') }}
-				/>
-				<Stack.Screen name="AddProfile" component={AddProfile} options={{ title: i18n.t('routes:add:profile') }} />
-			</Stack.Navigator>
-		</NavigationContainer>
-		// </SafeAreaView>
+		<>
+			<AppWrapper rootNavigation={navigationRef} isAuthenticated={isAuthenticated}>
+				<NavigationContainer ref={navigationRef} theme={routeTheme}>
+					<Stack.Navigator>
+						{!isAuthenticated ? (
+							<>
+								<Stack.Screen name="AppInitializer" component={AppInitializer} options={{ headerShown: false }} />
+								<Stack.Screen name="SetMasterPassword" component={SetMasterPassword} options={{ headerShown: false }} />
+								<Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+							</>
+						) : (
+							<>
+								<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
+								<Stack.Screen name="AddEntry" component={AddEntry} />
+								<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
+								<Stack.Screen
+									name="ViewAndEditProfile"
+									component={ViewAndEditProfile}
+									options={{ title: i18n.t('routes:view:edit:profile') }}
+								/>
+								<Stack.Screen
+									name="AddProfile"
+									component={AddProfile}
+									options={{ title: i18n.t('routes:add:profile') }}
+								/>
+
+								{/* Settings */}
+								{/* <Stack.Screen name="Settings" component={Settings} /> */}
+								<Stack.Screen
+									name="Settings:ChangePassword"
+									component={ChangePassword}
+									options={{ title: i18n.t('routes:change:password') }}
+								/>
+								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
+							</>
+						)}
+					</Stack.Navigator>
+				</NavigationContainer>
+			</AppWrapper>
+		</>
 	)
 }

@@ -1,10 +1,9 @@
 import 'react-native-get-random-values'
 import { encrypt, decrypt } from '@src/common/utils'
 import { createTransform } from 'redux-persist'
-import { SecureStorage } from './secureStore'
 
-const encryptTransform = async (ss: SecureStorage) => {
-	const sk = await ss.getMK()
+const encryptTransform = async (sk: string | null, isSecureStore = false) => {
+	// const sk = await ss.getSSK()
 
 	return createTransform(
 		// transform state on its way to being serialized and persisted.
@@ -12,6 +11,9 @@ const encryptTransform = async (ss: SecureStorage) => {
 		(inboundState, _key) => {
 			let transformedState
 			try {
+				if (isSecureStore) {
+					console.log('inboundState - key', _key)
+				}
 				if (typeof sk === 'string') {
 					transformedState = encrypt(inboundState, sk)
 				}
@@ -25,10 +27,17 @@ const encryptTransform = async (ss: SecureStorage) => {
 		(outboundState, _key) => {
 			let transformedState
 			try {
+				console.log('outboundState - isSecureStore', isSecureStore)
+				if (isSecureStore) {
+					console.log('outboundState - key', _key)
+				}
+
 				if (typeof outboundState === 'string') {
 					if (typeof sk === 'string') {
 						transformedState = decrypt(outboundState, sk)
-						if (typeof transformedState === 'string') {
+						if (typeof transformedState === 'string' && !isSecureStore) {
+							console.log('outboundState - key', _key)
+							console.log('outboundState - transformedState', transformedState)
 							transformedState = JSON.parse(transformedState)
 						}
 					}

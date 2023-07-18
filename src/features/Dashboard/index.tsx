@@ -14,7 +14,7 @@ import Animated, { FadeInDown, FadeOutDown, ZoomInEasyDown, ZoomOutEasyDown } fr
 import ProfileMenu from './component/ProfileMenu'
 import Container from '@src/components/Container'
 import { DrawerParamList } from '@src/app/routes'
-import Screen from '@src/components/Screen'
+import Content from '@src/components/Content'
 
 type ContentView = {
 	view: DashboardContentView
@@ -58,27 +58,25 @@ export default function Dashboard({ route }: Props) {
 	}
 
 	return (
-		<Screen>
-			<Container personalizeHeader={true} style={tw`flex-1`}>
-				<Searchbar
-					placeholder={i18n.t('search:bar:placeholder:search')}
-					style={tw`m-2`}
-					onChangeText={onChangeSearch}
-					value={searchQuery}
-				/>
+		<Container personalizeHeader={true} style={tw`flex-1`}>
+			<Searchbar
+				placeholder={i18n.t('search:bar:placeholder:search')}
+				style={tw`m-2`}
+				onChangeText={onChangeSearch}
+				value={searchQuery}
+			/>
 
-				{displayView.view === DashboardContentView.Categories && (
-					<Animated.View entering={FadeInDown} exiting={FadeOutDown}>
-						<Categories onToggleDisplayView={onToggleDisplayView} />
-					</Animated.View>
-				)}
+			{displayView.view === DashboardContentView.Categories && (
+				<Animated.View entering={FadeInDown} exiting={FadeOutDown}>
+					<Categories onToggleDisplayView={onToggleDisplayView} />
+				</Animated.View>
+			)}
 
-				{displayView.view === DashboardContentView.Entries && (
-					<Animated.View entering={ZoomInEasyDown} exiting={ZoomOutEasyDown} style={tw`flex-1 m-2`}>
-						<ListEntries {...displayView.params} searchQuery={searchQuery} onToggleDisplayView={onToggleDisplayView} />
-					</Animated.View>
-				)}
-			</Container>
-		</Screen>
+			{displayView.view === DashboardContentView.Entries && (
+				<Animated.View entering={ZoomInEasyDown} exiting={ZoomOutEasyDown} style={tw`flex-1 m-2`}>
+					<ListEntries {...displayView.params} searchQuery={searchQuery} onToggleDisplayView={onToggleDisplayView} />
+				</Animated.View>
+			)}
+		</Container>
 	)
 }

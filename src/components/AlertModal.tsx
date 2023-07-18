@@ -36,17 +36,19 @@ export default function AlertModal(props: Props) {
 					onDismiss={onDismiss}
 					contentContainerStyle={tw.style(`bg-white p-4 m-4 rounded-lg`)}
 				>
-					<View
-						style={tw.style(`rounded-full p-2 border-4 border-white`, {
+					<MaterialCommunityIcons
+						name={icon.name}
+						size={icon.size}
+						color={icon.color}
+						style={tw.style(`rounded-full p-2 self-center border-4 border-white`, {
 							position: 'absolute',
-							alignSelf: 'center',
-							top: -(icon.size / 2),
-							marginBottom: 50,
+							top: -icon.size / 2,
+							lineHeight: icon.size,
+							textAlign: 'center',
+							textAlignVertical: 'center',
 							backgroundColor: iconStyle.backgroundColor || tw.color('red-400')
 						})}
-					>
-						<MaterialCommunityIcons name={icon.name} size={icon.size} color={icon.color} />
-					</View>
+					/>
 
 					<View style={tw.style(`p-2 pb-4`, { top: icon.size / 2 })}>{children}</View>
 				</Modal>

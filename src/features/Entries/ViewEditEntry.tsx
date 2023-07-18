@@ -20,7 +20,6 @@ import { OPMTypes } from '@src/common/types'
 import EntryForm from './component/EntryForm'
 import { EntryMode } from '@src/common/enums'
 import Container from '@src/components/Container'
-import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewEditEntry'>
 
@@ -113,6 +112,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}, [])
 
 	useEffect(() => {
+		console.log('entry', JSON.stringify(entry))
 		if (category && entry) {
 			const _fieldsOptions: OPM.FieldsOptions = {}
 			fields.forEach(f => {
@@ -168,18 +168,16 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}
 
 	return (
-		<Screen>
-			<Container personalizeHeader={true}>
-				<EntryForm
-					editable={editable}
-					entry={{ title, fieldsOptions, fieldsValues, fields }}
-					setTitle={setTitle}
-					setFieldsOptions={setFieldsOptions}
-					setFieldsValues={setFieldsValues}
-					setFields={setFields}
-					onChangeIcon={onChangeIcon}
-				/>
-			</Container>
-		</Screen>
+		<Container personalizeHeader={true}>
+			<EntryForm
+				editable={editable}
+				entry={{ title, fieldsOptions, fieldsValues, fields }}
+				setTitle={setTitle}
+				setFieldsOptions={setFieldsOptions}
+				setFieldsValues={setFieldsValues}
+				setFields={setFields}
+				onChangeIcon={onChangeIcon}
+			/>
+		</Container>
 	)
 }

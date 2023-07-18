@@ -71,7 +71,7 @@ const categoriesSlice = createSlice({
 })
 
 export const { selectAll: selectAllCategories, selectById: selectCategoryById } = categoriesAdapter.getSelectors(
-	(state: RootState) => state.categories
+	(state: RootState) => state.main.categories
 )
 export const { categoriesAddOne, categoriesAddMany, categoryUpdate, categoryRemove, resetCategories } =
 	categoriesSlice.actions

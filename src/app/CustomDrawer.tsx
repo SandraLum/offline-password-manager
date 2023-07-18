@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentProfile } from '@src/store/slices/appSlice'
 import Avatar from '@src/components/Avatar'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { invalidateSession } from '@src/store/slices/secureSlice'
+import { invalidateSession } from '@src/store/slices/authSlice'
 import { AppDispatch } from '@src/store'
 
 const Header = () => {
@@ -61,9 +61,9 @@ const Content = (props: DrawerContentComponentProps) => {
 	const dispatch = useDispatch<AppDispatch>()
 
 	function onLogout() {
-		dispatch(invalidateSession)
-		console.log('pop to top')
-		props.navigation.dispatch(StackActions.popToTop())
+		dispatch(invalidateSession(true))
+
+		// props.navigation.dispatch(StackActions.popToTop())
 	}
 
 	return (

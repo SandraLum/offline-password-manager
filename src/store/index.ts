@@ -1,7 +1,7 @@
 import { configureStore, MiddlewareArray, ThunkMiddleware } from '@reduxjs/toolkit'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { mainReducer } from './reducers'
+import { mainReducer, secureReducer } from './reducers'
 import { AnyAction, combineReducers } from 'redux'
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import { encryptTransform } from './storeTransform'
@@ -17,9 +17,7 @@ let persistor: Persistor
 let resetStore: () => void
 
 async function initStore() {
-	const secureStorage = SecureStore.createSecureStore({
-		keychainAccessible: SecureStore.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY
-	})
+	const secureStorage = SecureStore.createSecureStore()
 
 	await secureStorage.init()
 
@@ -27,20 +25,36 @@ async function initStore() {
 		key: 'main',
 		storage: AsyncStorage,
 		version: 1,
-		transforms: [await encryptTransform(secureStorage)],
-		blacklist: ['secure']
+		transforms: [await encryptTransform(await secureStorage.getSSK())],
+		blacklist: ['auth']
 	}
 
-	const appReducer = persistReducer(mainPersistConfig, combineReducers(mainReducer))
+	const securePersistConfig = {
+		key: 'secure',
+		storage: secureStorage,
+		version: 1,
+		transforms: [await encryptTransform(await secureStorage.getSSK(), true)]
+	}
+
+	// // Combine them together
+	const appReducer = combineReducers({
+		main: persistReducer(mainPersistConfig, combineReducers(mainReducer)),
+		secure: persistReducer(securePersistConfig, secureReducer)
+	})
+
+	// const appReducer = persistReducer(mainPersistConfig, combinedReducer)
+
+	// const appReducer = persistReducer(mainPersistConfig, combineReducers(mainReducer))
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rootReducer = (state: any, action: any) => {
 		if (action.type === 'RESET_APP') {
 			// remove for all keys defined in your persistConfig(s)
 			AsyncStorage.removeItem(`persist:${mainPersistConfig.key}`)
-
+			secureStorage.removeItem(`persist:${securePersistConfig.key}`)
 			state = undefined
 		}
+
 		return appReducer(state, action)
 	}
 

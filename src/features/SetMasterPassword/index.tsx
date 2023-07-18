@@ -7,13 +7,12 @@ import { View } from 'react-native'
 
 import { Button, TextInput as PaperTextInput, Text } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
-import Container from '@components/Container'
 import Content from '@components/Content'
-import { saveMasterPassword } from '@src/store/slices/secureSlice'
+import { saveMasterPassword } from '@src/store/slices/authSlice'
 import { initialize } from '@src/store/slices/appSlice'
 
 import { AppDispatch } from '@src/store'
-import { cryptoHS } from '@src/common/utils'
+import FormValidationErrors from '../Login/component/FormValidationErrors'
 
 export default function SetMasterPassword() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -25,6 +24,7 @@ export default function SetMasterPassword() {
 
 	const [hidePassword, setHidePassword] = useState(true)
 	const [hideConfirmPassword, setHideCfmPassword] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		dispatch(initialize)
@@ -56,6 +56,7 @@ export default function SetMasterPassword() {
 	}
 
 	async function onSavePassword() {
+		setIsLoading(true)
 		if (validatePassword(password, confirmPassword)) {
 			const success = await dispatch(saveMasterPassword(password))
 			if (success) {
@@ -65,6 +66,7 @@ export default function SetMasterPassword() {
 				setErrors([i18n.t('set-master-password:error:save:password')])
 			}
 		}
+		setIsLoading(false)
 	}
 
 	return (
@@ -109,19 +111,7 @@ export default function SetMasterPassword() {
 						}
 					/>
 
-					{/* Display errors */}
-					{errors.map((e, idx) => {
-						let error = e
-
-						if (errors.length > 1) {
-							error = '. ' + error
-						}
-						return (
-							<Text key={`pwd-error-${idx}`} style={tw`text-red-700 py-1`}>
-								{error}
-							</Text>
-						)
-					})}
+					<FormValidationErrors validationErrors={errors} />
 
 					<Button onPress={onSavePassword} mode="contained" style={tw`my-5`}>
 						{i18n.t('set-master-password:button:set-password')}
@@ -129,7 +119,12 @@ export default function SetMasterPassword() {
 					<Text>{`** ${i18n.t('set-master-password:text:note:enter-password')}`}</Text>
 
 					{/* SL:TODO remove */}
-					<Button onPress={() => navigation.navigate({ name: 'Login', params: {} })} mode="contained" style={tw`my-5`}>
+					<Button
+						loading={isLoading}
+						onPress={() => navigation.navigate({ name: 'Login', params: {} })}
+						mode="contained"
+						style={tw`my-5`}
+					>
 						{'Go to Login'}
 					</Button>
 				</View>

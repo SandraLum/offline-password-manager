@@ -15,7 +15,6 @@ import { emptyProfile, profilesAddOne } from './profilesSlice'
 import { generateUID } from '@src/common/utils'
 import { AppDispatch } from '@src/store'
 import Container from '@src/components/Container'
-import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddProfile'>
 
@@ -45,14 +44,12 @@ export default function AddProfile({ navigation }: Props) {
 	}, [dispatch, navigation, profile])
 
 	return (
-		<Screen>
-			<Container>
-				<ProfileForm editable={editable} profile={profile} setProfile={setProfile} />
+		<Container>
+			<ProfileForm editable={editable} profile={profile} setProfile={setProfile} />
 
-				<Button onPress={onSave} mode="contained" style={tw`m-2`}>
-					{i18n.t('button:label:save')}
-				</Button>
-			</Container>
-		</Screen>
+			<Button onPress={onSave} mode="contained" style={tw`m-2`}>
+				{i18n.t('button:label:save')}
+			</Button>
+		</Container>
 	)
 }

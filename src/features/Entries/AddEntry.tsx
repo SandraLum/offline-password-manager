@@ -21,7 +21,6 @@ import { useNavigation } from '@react-navigation/native'
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Container from '@src/components/Container'
-import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
@@ -114,18 +113,16 @@ export default function AddEntry({ route }: Props) {
 	}
 
 	return (
-		<Screen>
-			<Container personalizeHeader={true}>
-				<EntryForm
-					editable={editable}
-					entry={{ title, fieldsOptions, fieldsValues, fields }}
-					setTitle={setTitle}
-					setFieldsOptions={setFieldsOptions}
-					setFieldsValues={setFieldsValues}
-					setFields={setFields}
-					onChangeIcon={onChangeIcon}
-				/>
-			</Container>
-		</Screen>
+		<Container personalizeHeader={true}>
+			<EntryForm
+				editable={editable}
+				entry={{ title, fieldsOptions, fieldsValues, fields }}
+				setTitle={setTitle}
+				setFieldsOptions={setFieldsOptions}
+				setFieldsValues={setFieldsValues}
+				setFields={setFields}
+				onChangeIcon={onChangeIcon}
+			/>
+		</Container>
 	)
 }

@@ -8,7 +8,7 @@ import { FieldType } from '@src/common/templates'
 import { i18n } from '@src/app/locale'
 import IconSelector from '@components/IconSelector'
 import AddFieldForm from './AddFieldForm'
-import { getMK } from '@store/slices/secureSlice'
+import { getMK } from '@src/store/slices/authSlice'
 
 import { decrypt, encrypt, isEmpty } from '@src/common/utils'
 import { useSelector } from 'react-redux'

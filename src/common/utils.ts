@@ -99,8 +99,15 @@ export function encrypt(value: string | unknown, secret: string): string {
 	return encrypted
 }
 
-export function cryptoHS(value: string): string {
-	return CryptoJS.SHA256(value).toString(CryptoJS.enc.Hex)
+export function cryptoHS(value: string, salt: string): string {
+	const key512Bits = CryptoJS.PBKDF2(value + salt, salt, {
+		keySize: 512 / 32
+	})
+	return key512Bits.toString(CryptoJS.enc.Hex)
+}
+
+export function generateSalt() {
+	return CryptoJS.lib.WordArray.random(128 / 8).toString()
 }
 
 export function isEmpty(str: string | undefined | null) {
@@ -120,4 +127,8 @@ export function convertChar(value: number) {
 
 export function getRandom(min: number, max: number) {
 	return Math.random() * (max - min) + min
+}
+
+export function decode(arr: number[]) {
+	return arr.map(x => convertChar(x)).join('')
 }

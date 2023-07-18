@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import { createEntityAdapter, createSlice, createSelector, AnyAction } from '@reduxjs/toolkit'
 import { selectAllCategories } from '../Categories/categoriesSlice'
-import { getObjValue, union } from '@utils'
+import { clone, decrypt, encrypt, getObjValue, union } from '@utils'
 import { RootState } from '@src/store'
 // import { CategoryType } from '@common/enums'
 import { OPMTypes } from '@src/common/types'
@@ -43,18 +43,19 @@ const entriesSlice = createSlice({
 	reducers: {
 		entriesAddOne: entriesAdapter.addOne,
 		entriesAddMany: entriesAdapter.addMany,
+		entriesSetAll: entriesAdapter.setAll,
 		entryUpdate: entriesAdapter.updateOne,
 		entryRemove: entriesAdapter.removeOne
 	}
 })
 
 // export const selectEntriesByCategory = createSelector(
-// 	[state => state.entries, (state, category) => category],
+// 	[state => state.main.entries., (state, category) => category],
 // 	(items, category) => items.filter(item => item.category?.id === category?.id)
 // )
 
 export const { selectAll: selectAllEntries, selectById: selectEntryById } = entriesAdapter.getSelectors(
-	(state: RootState) => state.entries
+	(state: RootState) => state.main.entries
 )
 
 export const entriesAddOneToCurrentProfile =
@@ -111,6 +112,32 @@ export const selectAllEntriesByProfile = createSelector(
 	}
 )
 
+export const syncEntriesWithNewKey =
+	(oldPwd: string, pwd: string): OPMTypes.AppThunk =>
+	(dispatch, getState) => {
+		try {
+			const state = getState()
+			const entries = clone(selectAllEntries(state))
+
+			if (entries.length > 0) {
+				entries.forEach((entry: OPMTypes.Entry) => {
+					Object.keys(entry?.fieldsValues || {}).forEach(k => {
+						if (entry.fieldsValues?.[k]) {
+							const val = entry.fieldsValues[k]
+							const eVal = encrypt(decrypt(val, oldPwd), pwd)
+							entry.fieldsValues[k] = eVal
+						}
+					})
+				})
+
+				console.log('entries - results', entries)
+				dispatch(entriesSetAll(entries))
+			}
+		} catch (e) {
+			throw 'Error syncing entries upon change k'
+		}
+	}
+
 export type GroupEntry = {
 	category: OPMTypes.ICategory
 	entries: Omit<OPMTypes.Entry, 'category'>[]
@@ -119,6 +146,7 @@ export type GroupEntry = {
 export const selectAllGroupedEntriesByProfile = createSelector(
 	[selectAllEntries, selectAllCategories, (state, profileId) => selectProfileById(state, profileId)],
 	(items, categories, profile): GroupEntry[] => {
+		console.log('entries---- items', items)
 		const groupedIndexes: { [key: string | number]: number } = {}
 		return items.reduce((arr: GroupEntry[], curr) => {
 			if (profile?.entries?.includes(curr.id)) {
@@ -170,5 +198,5 @@ export const selectAllGroupedEntries = createSelector(
 	}
 )
 
-export const { entriesAddOne, entriesAddMany, entryUpdate, entryRemove } = entriesSlice.actions
+export const { entriesAddOne, entriesAddMany, entriesSetAll, entryUpdate, entryRemove } = entriesSlice.actions
 export default entriesSlice

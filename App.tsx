@@ -11,7 +11,6 @@ import Routes from '@src/app/routes'
 import { Provider as StoreProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { initStore, store, persistor } from '@src/store'
-import PromptLoginSession from '@src/components/PromptLoginSession'
 
 export default function App() {
 	const [isInitialized, setIsInitialized] = useState(false)
