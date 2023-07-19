@@ -29,10 +29,10 @@ export default function PasswordEmergencySheet() {
 			const createdOn = new Date().toLocaleString()
 			console.log('salt', sk)
 			const runOnce = `
-			const spanSk = document.getElementById('sk');
+			const spanSk = document.getElementById('valSk');
 			spanSk.innerText = spanSk.innerHTML = spanSk.textContent = '${sk}';
 
-			const spanCreatedOn = document.getElementById('createdOn');
+			const spanCreatedOn = document.getElementById('valCreatedOn');
 			spanCreatedOn.innerText = spanCreatedOn.innerHTML = spanCreatedOn.textContent = '${createdOn}';
 		`
 			setRunOnceScript(runOnce)
@@ -71,7 +71,7 @@ export default function PasswordEmergencySheet() {
 	// console.log('content', htmlContent)
 	return htmlContent && runOnceScript ? (
 		<>
-			<Button onPress={() => togglePDFView()}>{`Toggle `}</Button>
+			{/* <Button onPress={() => togglePDFView()}>{`Toggle `}</Button> */}
 			{pdfView ? (
 				<Pdf
 					style={tw`flex h-full w-full bg-red-500`}

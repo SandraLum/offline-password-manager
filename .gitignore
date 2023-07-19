@@ -20,3 +20,5 @@ __tests__/
 
 #self
 wip.txt
+*/_del/*
+*.old*
