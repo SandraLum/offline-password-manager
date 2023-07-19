@@ -22,6 +22,7 @@
     "crypto-js": "3.1.9-1",
     "expo": "~48.0.18",
     "expo-crypto": "~12.2.1",
+    "expo-dev-client": "~2.2.1",
     "expo-device": "~5.2.1",
     "expo-file-system": "~15.2.2",
     "expo-intent-launcher": "~10.5.2",
