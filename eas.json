@@ -7,9 +7,6 @@
 		"base": {
 			"node": "16.20.0",
 			"yarn": "1.22.19",
-			"env": {
-				"EXAMPLE_ENV": "example value"
-			},
 			"android": {
 				"image": "default",
 				"env": {
