@@ -10,8 +10,6 @@ import * as Print from 'expo-print'
 import * as FileSystem from 'expo-file-system'
 import * as IntentLauncher from 'expo-intent-launcher'
 
-import Pdf from 'react-native-pdf'
-
 export default function PasswordEmergencySheet() {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const content = useAssetContent(require('../../../assets/docs/PasswordEmergency.html'))
@@ -66,7 +64,7 @@ export default function PasswordEmergencySheet() {
 	async function launchPDFWebView(uri) {
 		try {
 			const cUri = await FileSystem.getContentUriAsync(uri)
-			setPDFWebView(uri)
+			setPDFWebView(cUri)
 		} catch (e) {
 			console.log(e)
 		}
@@ -95,7 +93,6 @@ export default function PasswordEmergencySheet() {
 	// console.log('content', htmlContent)
 	return htmlContent && runOnceScript ? (
 		<>
-			<Pdf source={{ uri: pdfUri }} />
 			<WebView
 				ref={refWebView}
 				style={tw`m-5`}
