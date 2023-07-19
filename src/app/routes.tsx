@@ -21,6 +21,8 @@ import ViewAndEditProfile from '@src/features/Profile/ViewAndEditProfile'
 import AddProfile from '@src/features/Profile/AddProfile'
 import ChangePassword from '@src/features/Settings/ChangePassword'
 
+import Testing from '@src/features/Settings/Testing'
+
 import { theme } from './theme'
 import CustomDrawer from './CustomDrawer'
 import AppInitializer from '@src/features/AppInitializer'
@@ -58,6 +60,7 @@ export type RootStackParamList = {
 	// Settings: {}
 	// SettingsStack: {}
 	'Settings:ChangePassword': {}
+	'Settings:Testing': {}
 }
 
 export type DrawerParamList = {
@@ -150,6 +153,8 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
+
+								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
 								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
 							</>
 						)}

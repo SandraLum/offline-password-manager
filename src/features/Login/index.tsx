@@ -1,20 +1,18 @@
-import tw from 'twrnc'
+import { View } from 'react-native'
+import { Button } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { WebView } from 'react-native'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import tw from 'twrnc'
 
 import Content from '@components/Content'
 import { unlock } from '@src/store/slices/authSlice'
 
 import { AppDispatch } from '@src/store'
 import EnterPasswordForm from './component/EnterPasswordForm'
-import { View } from 'react-native'
-import { Button, Portal } from 'react-native-paper'
-import { useState } from 'react'
+
 import { i18n } from '@src/app/locale'
 import { factoryReset } from '@src/store/slices/appSlice'
-import PasswordEmergencySheet from './PasswordEmergencySheet'
 
 // import { syncEntriesWithMKey } from '../Entries/entriesSlice'
 
@@ -73,10 +71,6 @@ export default function Login() {
 				<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
 					{'Reset Data'}
 				</Button>
-
-				<Portal>
-					<PasswordEmergencySheet />
-				</Portal>
 			</Content>
 		</View>
 	)
