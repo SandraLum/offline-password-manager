@@ -12,6 +12,7 @@ import { i18n } from '@src/app/locale'
 import { EntryMode, ProfileMode, DashboardContentView } from '@src/common/enums'
 
 import SetMasterPassword from '@src/features/SetMasterPassword'
+import Onboarding from '@src/features/Onboarding'
 import Login from '@src/features/Login'
 import Dashboard from '@src/features/Dashboard'
 import ViewAndEditProfile from '@src/features/Profile/ViewAndEditProfile'
@@ -31,8 +32,6 @@ import AppInitializer from '@src/features/AppInitializer'
 import { checkIsAuthenticated } from '@src/store/slices/authSlice'
 import { useSelector } from 'react-redux'
 import AppWrapper from './AppWrapper'
-import { Button, Text } from 'react-native-paper'
-import { View } from 'react-native'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -63,10 +62,11 @@ export type RootStackParamList = {
 	AddProfile: {}
 	// Settings: {}
 	// SettingsStack: {}
+	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
 	'PasswordRecovery:Form': {}
-	'PasswordRecovery:PDF': { uri: string }
+	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
 
 export type DrawerParamList = {
@@ -164,6 +164,7 @@ export default function Routes() {
 										animation: 'slide_from_right'
 									}}
 								>
+									<Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
 									<Stack.Screen
 										name="PasswordRecovery:Form"
 										component={PasswordRecoveryForm}

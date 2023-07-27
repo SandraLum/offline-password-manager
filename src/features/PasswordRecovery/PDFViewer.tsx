@@ -1,22 +1,20 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { View, Platform } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+// eslint-disable-next-line react-native/split-platform-components
+import { View, Platform, ToastAndroid } from 'react-native'
 import tw from 'twrnc'
 
-import { Button, IconButton, Menu } from 'react-native-paper'
+import { IconButton, Menu } from 'react-native-paper'
 import * as FileSystem from 'expo-file-system'
-import * as IntentLauncher from 'expo-intent-launcher'
 import * as Sharing from 'expo-sharing'
+import * as Print from 'expo-print'
 
-import PDF, { Source } from 'react-native-pdf'
+import PDF from 'react-native-pdf'
 import { i18n } from '@src/app/locale'
 
-import Animated, { SlideInRight, SlideOutRight } from 'react-native-reanimated'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 import { MaterialIcons } from '@expo/vector-icons'
-
-import * as DocumentPicker from 'expo-document-picker'
 
 export type PasswordRecoveryPDFRef = {
 	launch: (uri: string) => Promise<void>
@@ -26,43 +24,63 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PasswordRecovery:PDF'>
 
 export default function PDFViewer(props: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
-	const { uri } = props.route.params
+	const { uri, filename } = props.route.params
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const isAndroid = Platform.OS === 'android'
 	const refPDF = useRef<any | null>(null)
-	const [pdfSource, setPDFSource] = useState<Source | number | null>(null)
 	const [menuVisibility, setMenuVisibility] = useState<boolean>(false)
 
-	const saveAndShare2 = useCallback(async () => {
-		const src = pdfSource as Source
-		if (src.uri) {
-			await Sharing.shareAsync(src.uri, { UTI: '.pdf', mimeType: 'application/pdf' })
-		}
-	}, [pdfSource])
-
 	useEffect(() => {
-		async function saveAndShare() {
-			const src = pdfSource as Source
-			if (src.uri) {
-				await Sharing.shareAsync(src.uri, { UTI: '.pdf', mimeType: 'application/pdf' })
+		async function onShare() {
+			if (uri) {
+				await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' })
 			}
 		}
 
-		async function saveFile() {
+		async function onSave() {
 			if (isAndroid) {
-				const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync()
+				const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync(
+					FileSystem.documentDirectory
+				)
 
 				if (permissions.granted) {
 					// Gets SAF URI from response
-					const uri = permissions.directoryUri
+					const destinationUri = permissions.directoryUri
 
 					// Gets all files inside of selected directory
-					const files = await FileSystem.StorageAccessFramework.readDirectoryAsync(uri)
-					console.log(`Files inside ${uri}:\n\n${JSON.stringify(files)}`)
+					await FileSystem.StorageAccessFramework.readDirectoryAsync(destinationUri)
+					await copySAFFileTo(uri, destinationUri, filename)
 				}
 			} else {
-				await DocumentPicker.getDocumentAsync()
+				// For ios, use the share functionality instead
+				await onShare()
+			}
+		}
+
+		async function copySAFFileTo(from: string, to: string, filename: string) {
+			try {
+				const fileCreatedUri = await FileSystem.StorageAccessFramework.createFileAsync(to, filename, 'application/pdf')
+				const content = await FileSystem.readAsStringAsync(from, { encoding: 'base64' })
+				await FileSystem.writeAsStringAsync(fileCreatedUri, content, { encoding: 'base64' })
+
+				ToastAndroid.show(i18n.t('password:recovery:sheet:toast:save:success'), ToastAndroid.SHORT)
+			} catch (e) {
+				console.log('[Error] Saving file to selected folder', e)
+			}
+		}
+
+		async function onPrint() {
+			if (isAndroid) {
+				await Print.printAsync({ uri: uri })
+			} else {
+				const selectedPrinter = await Print.selectPrinterAsync() // iOS only
+				if (selectedPrinter) {
+					await Print.printAsync({
+						uri: uri,
+						printerUrl: selectedPrinter?.url // iOS only
+					})
+				}
 			}
 		}
 
@@ -78,37 +96,43 @@ export default function PDFViewer(props: Props) {
 						anchor={<IconButton icon="dots-vertical" onPress={() => setMenuVisibility(true)} />}
 						anchorPosition="bottom"
 					>
-						<Menu.Item
-							leadingIcon="folder-outline"
-							onPress={saveFile}
-							title={i18n.t('password:recovery:sheet:menu:save')}
-						/>
+						{isAndroid ? (
+							<Menu.Item
+								leadingIcon="folder-outline"
+								onPress={onSave}
+								title={i18n.t('password:recovery:sheet:menu:save')}
+							/>
+						) : (
+							<Menu.Item
+								leadingIcon={props => <MaterialIcons name={'ios-share'} {...props} />}
+								onPress={onShare}
+								title={i18n.t('password:recovery:sheet:menu:share')}
+							/>
+						)}
 						<Menu.Item
 							leadingIcon="printer-outline"
-							onPress={saveAndShare}
+							onPress={onPrint}
 							title={i18n.t('password:recovery:sheet:menu:print')}
 						/>
-						<Menu.Item
-							leadingIcon={props => <MaterialIcons name={isAndroid ? 'share' : 'ios-share'} {...props} />}
-							onPress={saveAndShare}
-							title={i18n.t('password:recovery:sheet:menu:share')}
-						/>
+
+						{isAndroid && (
+							<Menu.Item
+								leadingIcon={props => <MaterialIcons name={'share'} {...props} />}
+								onPress={onShare}
+								title={i18n.t('password:recovery:sheet:menu:share')}
+							/>
+						)}
 					</Menu>
 				)
 			}
 		})
-		setPDFSource({ uri: uri })
-	}, [isAndroid, menuVisibility, navigation, pdfSource, uri])
+	}, [filename, isAndroid, menuVisibility, navigation, uri])
 
 	async function resetScale() {
 		refPDF.current?.setNativeProps({ scale: 1 })
 	}
 
-	function onClose() {
-		navigation.goBack()
-	}
-
-	return pdfSource ? (
+	return uri ? (
 		<View style={tw`flex-1 bg-white`}>
 			<View style={tw`absolute z-20 right-1 top-1`}>
 				<IconButton
@@ -124,13 +148,7 @@ export default function PDFViewer(props: Props) {
 				/>
 			</View>
 
-			<PDF ref={refPDF} style={tw.style(`flex-1`)} source={pdfSource} spacing={0} fitPolicy={0} />
-
-			<View style={tw`flex flex-row justify-end p-3`}>
-				<Button mode="contained" onPress={onClose} style={tw`ml-4`}>
-					{i18n.t('password:recovery:sheet:button:done')}
-				</Button>
-			</View>
+			<PDF ref={refPDF} style={tw.style(`flex-1`)} source={{ uri }} spacing={0} fitPolicy={0} />
 		</View>
 	) : null
 }

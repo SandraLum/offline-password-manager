@@ -60,8 +60,8 @@ export default function SetMasterPassword() {
 		if (validatePassword(password, confirmPassword)) {
 			const success = await dispatch(saveMasterPassword(password))
 			if (success) {
-				console.log('saveMasterPassword - success', success)
-				navigation.navigate('App', { name: 'Dashboard', params: {} })
+				navigation.navigate('PasswordRecovery:Form')
+				// navigation.navigate('App', { name: 'Dashboard', params: {} })
 			} else {
 				setErrors([i18n.t('set-master-password:error:save:password')])
 			}

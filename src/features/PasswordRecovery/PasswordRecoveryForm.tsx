@@ -1,33 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, ScrollView, Platform } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { View, Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import tw from 'twrnc'
 import { useAssetContent } from '@src/common/hooks/useAssetContent'
 import { getSalt } from '@src/store/slices/secureSlice'
 
-import { Button, Text, ActivityIndicator, IconButton, Portal } from 'react-native-paper'
+import { Button, Text, ActivityIndicator } from 'react-native-paper'
 import * as Print from 'expo-print'
 import * as FileSystem from 'expo-file-system'
 import * as IntentLauncher from 'expo-intent-launcher'
-import * as Sharing from 'expo-sharing'
 
-import PDF, { Source } from 'react-native-pdf'
-import { WebViewSource } from 'react-native-webview/lib/WebViewTypes'
+import { WebViewMessageEvent, WebViewSource } from 'react-native-webview/lib/WebViewTypes'
 import { i18n } from '@src/app/locale'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native'
-import Animated, {
-	FadeIn,
-	FadeInDown,
-	FadeOutDown,
-	SlideInLeft,
-	SlideInRight,
-	SlideOutLeft,
-	SlideOutRight,
-	ZoomInEasyDown,
-	ZoomOutEasyDown
-} from 'react-native-reanimated'
-import PasswordRecoveryPDF, { PasswordRecoveryPDFRef } from './PasswordRecoveryPDF'
+import { ParamListBase, useNavigation } from '@react-navigation/native'
 
 export default function PasswordRecoveryForm() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
@@ -37,27 +23,15 @@ export default function PasswordRecoveryForm() {
 
 	const isAndroid = Platform.OS === 'android'
 	const refWebView = useRef<WebView>(null)
-	const refPDFViewer = useRef<PasswordRecoveryPDFRef>(null)
 
 	const [webviewSource, setWebViewSource] = useState<WebViewSource | null>()
 	const [runOnceScript, setRunOnceScript] = useState<string | null>()
 
-	const [pdfSource, setPDFSource] = useState<string>('')
-
 	const [isHtmlLoaded, setIsHtmlLoaded] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 
-	const [visiblePDFViewer, setVisiblePDFViewer] = useState(false)
-
-	const showPDFViewer = () => setVisiblePDFViewer(true)
-	const hidePDFViewer = () => setVisiblePDFViewer(false)
-
-	useFocusEffect(
-		useCallback(() => {
-			console.log('useFocusEffect', useFocusEffect)
-			hidePDFViewer()
-		}, [])
-	)
+	const today = new Date()
+	const filename = `PasswordRecoverySheet_${today.getDate()}_${today.getMonth()}_${today.getFullYear()}.pdf`
 
 	useEffect(() => {
 		async function init() {
@@ -82,20 +56,13 @@ export default function PasswordRecoveryForm() {
 	}, [content])
 
 	async function convertHTMLToPDF(html: string) {
-		// Convert html to PDF
 		const { uri } = await Print.printToFileAsync({ html })
-		console.log('uri', uri)
-
-		const today = new Date()
-		const finalUri =
-			FileSystem.cacheDirectory + `MyEmergencySheet_${today.getDate()}_${today.getMonth()}_${today.getFullYear()}.pdf`
+		const finalUri = FileSystem.cacheDirectory + filename
 		await FileSystem.copyAsync({ from: uri, to: finalUri })
-		console.log('copyTo', finalUri)
-
 		return finalUri
 	}
 
-	async function onMessageEvent(event: { nativeEvent: { data: any } }) {
+	async function onMessageEvent(event: WebViewMessageEvent) {
 		console.log('OnClick - MessageEvent')
 		const html = event.nativeEvent.data
 
@@ -129,8 +96,7 @@ export default function PasswordRecoveryForm() {
 	}
 
 	function launchDefaultViewer(uri: string) {
-		navigation.navigate('PasswordRecovery:PDF', { uri: uri })
-		// await refPDFViewer.current?.launch(uri)
+		navigation.navigate('PasswordRecovery:PDF', { uri: uri, filename: filename })
 	}
 
 	function onSaveClicked() {
@@ -152,7 +118,7 @@ export default function PasswordRecoveryForm() {
 			<View style={tw`absolute h-full w-full flex flex-col justify-center items-center self-center `}>
 				<ActivityIndicator size="large" style={tw`p-3`} />
 
-				<Text style={tw`text-base`}>Loading your recovery sheet...</Text>
+				<Text style={tw`text-base`}>Generating your password recovery...</Text>
 			</View>
 		)
 	}
@@ -163,7 +129,6 @@ export default function PasswordRecoveryForm() {
 		<>
 			<View style={tw`flex-1 m-2 bg-white rounded-lg`}>
 				<View style={tw`flex-1`}>
-					{/* <View style={tw`flex-1 m-2 bg-white rounded-lg p-1`}>*/}
 					<WebView
 						ref={refWebView}
 						source={webviewSource}
@@ -192,10 +157,7 @@ export default function PasswordRecoveryForm() {
 						</View>
 					)}
 				</View>
-				{/* </View> */}
 			</View>
-
-			{/* <PasswordRecoveryPDF ref={refPDFViewer} /> */}
 		</>
 	)
 }

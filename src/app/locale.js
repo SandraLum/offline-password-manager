@@ -50,6 +50,7 @@ const i18n = new I18n({
 		'password:recovery:sheet:menu:save': 'Save File',
 		'password:recovery:sheet:menu:print': 'Print',
 		'password:recovery:sheet:menu:share': 'Share',
+		'password:recovery:sheet:toast:save:success': 'Password recovery sheet saved.',
 		'settings:change-password:label:current-password': 'Current password',
 		'settings:change-password:label:new-password': 'New password',
 		'settings:change-password:text:current-password': 'Enter your current password',
