@@ -8,18 +8,23 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
-import SetMasterPassword from '@src/features/SetMasterPassword'
-import Login from '@src/features/Login'
-import Dashboard from '@src/features/Dashboard'
-import AddEntry from '@src/features/Entries/AddEntry'
-
 import { i18n } from '@src/app/locale'
 import { EntryMode, ProfileMode, DashboardContentView } from '@src/common/enums'
-import ViewEditEntry from '@src/features/Entries/ViewEditEntry'
-import Settings from '@src/features/Settings'
+
+import SetMasterPassword from '@src/features/SetMasterPassword'
+import Onboarding from '@src/features/Onboarding'
+import Login from '@src/features/Login'
+import Dashboard from '@src/features/Dashboard'
 import ViewAndEditProfile from '@src/features/Profile/ViewAndEditProfile'
 import AddProfile from '@src/features/Profile/AddProfile'
+import AddEntry from '@src/features/Entries/AddEntry'
+import ViewEditEntry from '@src/features/Entries/ViewEditEntry'
+import Settings from '@src/features/Settings'
 import ChangePassword from '@src/features/Settings/ChangePassword'
+import PasswordRecoveryForm from '@src/features/PasswordRecovery/PasswordRecoveryForm'
+import PasswordRecoveryPDF from '@src/features/PasswordRecovery/PDFViewer'
+
+import Testing from '@src/features/Settings/Testing'
 
 import { theme } from './theme'
 import CustomDrawer from './CustomDrawer'
@@ -57,7 +62,11 @@ export type RootStackParamList = {
 	AddProfile: {}
 	// Settings: {}
 	// SettingsStack: {}
+	Onboarding: {}
 	'Settings:ChangePassword': {}
+	'Settings:Testing': {}
+	'PasswordRecovery:Form': {}
+	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
 
 export type DrawerParamList = {
@@ -129,19 +138,44 @@ export default function Routes() {
 							</>
 						) : (
 							<>
-								<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
-								<Stack.Screen name="AddEntry" component={AddEntry} />
-								<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
-								<Stack.Screen
-									name="ViewAndEditProfile"
-									component={ViewAndEditProfile}
-									options={{ title: i18n.t('routes:view:edit:profile') }}
-								/>
-								<Stack.Screen
-									name="AddProfile"
-									component={AddProfile}
-									options={{ title: i18n.t('routes:add:profile') }}
-								/>
+								<Stack.Group>
+									<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
+									<Stack.Screen name="AddEntry" component={AddEntry} />
+									<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
+								</Stack.Group>
+
+								<Stack.Group>
+									<Stack.Screen
+										name="ViewAndEditProfile"
+										component={ViewAndEditProfile}
+										options={{ title: i18n.t('routes:view:edit:profile') }}
+									/>
+									<Stack.Screen
+										name="AddProfile"
+										component={AddProfile}
+										options={{ title: i18n.t('routes:add:profile') }}
+									/>
+								</Stack.Group>
+
+								<Stack.Group
+									screenOptions={{
+										presentation: 'transparentModal',
+										contentStyle: { backgroundColor: '#40404040' },
+										animation: 'slide_from_right'
+									}}
+								>
+									<Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
+									<Stack.Screen
+										name="PasswordRecovery:Form"
+										component={PasswordRecoveryForm}
+										options={{ headerShown: false }}
+									/>
+									<Stack.Screen
+										name="PasswordRecovery:PDF"
+										component={PasswordRecoveryPDF}
+										// options={{ title: 'Password Recovery Sheet' }}
+									/>
+								</Stack.Group>
 
 								{/* Settings */}
 								{/* <Stack.Screen name="Settings" component={Settings} /> */}
@@ -150,6 +184,8 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
+
+								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
 								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
 							</>
 						)}

@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { Searchbar } from 'react-native-paper'
+import { Searchbar, Button } from 'react-native-paper'
 
 import tw from 'twrnc'
 import Categories from '../Categories'
@@ -14,7 +14,6 @@ import Animated, { FadeInDown, FadeOutDown, ZoomInEasyDown, ZoomOutEasyDown } fr
 import ProfileMenu from './component/ProfileMenu'
 import Container from '@src/components/Container'
 import { DrawerParamList } from '@src/app/routes'
-import Content from '@src/components/Content'
 
 type ContentView = {
 	view: DashboardContentView
@@ -57,8 +56,15 @@ export default function Dashboard({ route }: Props) {
 		}
 	}
 
+	function onTesting() {
+		navigation.navigate('PasswordRecovery:Form')
+	}
+
 	return (
 		<Container personalizeHeader={true} style={tw`flex-1`}>
+			{/* SL: TODO Delete */}
+			<Button onPress={onTesting}>{'Testing'}</Button>
+
 			<Searchbar
 				placeholder={i18n.t('search:bar:placeholder:search')}
 				style={tw`m-2`}

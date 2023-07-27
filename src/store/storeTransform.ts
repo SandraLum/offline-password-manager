@@ -11,9 +11,6 @@ const encryptTransform = async (sk: string | null, isSecureStore = false) => {
 		(inboundState, _key) => {
 			let transformedState
 			try {
-				if (isSecureStore) {
-					console.log('inboundState - key', _key)
-				}
 				if (typeof sk === 'string') {
 					transformedState = encrypt(inboundState, sk)
 				}
@@ -27,17 +24,10 @@ const encryptTransform = async (sk: string | null, isSecureStore = false) => {
 		(outboundState, _key) => {
 			let transformedState
 			try {
-				console.log('outboundState - isSecureStore', isSecureStore)
-				if (isSecureStore) {
-					console.log('outboundState - key', _key)
-				}
-
 				if (typeof outboundState === 'string') {
 					if (typeof sk === 'string') {
 						transformedState = decrypt(outboundState, sk)
 						if (typeof transformedState === 'string' && !isSecureStore) {
-							console.log('outboundState - key', _key)
-							console.log('outboundState - transformedState', transformedState)
 							transformedState = JSON.parse(transformedState)
 						}
 					}

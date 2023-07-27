@@ -23,7 +23,12 @@ export default function Settings() {
 			<Content horizontal={false}>
 				<View style={tw`flex justify-center`}>
 					<List.Section>
-						<List.Subheader>General</List.Subheader>
+						<List.Subheader>{i18n.t('settings.subheader.general')}</List.Subheader>
+						<List.Item
+							title="Testing"
+							left={props => <List.Icon {...props} icon="help" />}
+							onPress={() => navigateTo({ screen: 'Settings:Testing' })}
+						/>
 						<List.Item title="Theme mode" left={props => <List.Icon {...props} icon="theme-light-dark" />} />
 						<List.Item title="Change theme" left={props => <List.Icon {...props} icon="palette" />} />
 						<List.Item title="Language" left={props => <List.Icon {...props} icon="globe-model" />} />

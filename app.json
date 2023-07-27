@@ -11,7 +11,17 @@
 			"image": "./assets/images/splash.png",
 			"backgroundColor": "#FEF9B0"
 		},
-		"plugins": ["expo-localization", "@config-plugins/react-native-blob-util", "@config-plugins/react-native-pdf"],
+		"plugins": [
+			"expo-localization",
+			"@config-plugins/react-native-blob-util",
+			"@config-plugins/react-native-pdf",
+			[
+				"expo-document-picker",
+				{
+					"iCloudContainerEnvironment": "Production"
+				}
+			]
+		],
 		"extra": {
 			"eas": {
 				"projectId": "6ce6e53e-664b-4a54-a4d1-944b78f70e9b"
@@ -19,6 +29,9 @@
 		},
 		"android": {
 			"package": "io.slamcode.offlinepasswordstore"
+		},
+		"ios": {
+			"usesIcloudStorage": true
 		}
 	}
 }
