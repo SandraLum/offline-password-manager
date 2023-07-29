@@ -22,6 +22,7 @@ export default function App() {
 			await initStore()
 			setIsInitialized(true)
 		}
+
 		init()
 
 		// const subscription = AppState.addEventListener('change', nextAppState => {

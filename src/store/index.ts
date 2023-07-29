@@ -24,7 +24,7 @@ async function initStore() {
 	const mainPersistConfig = {
 		key: 'main',
 		storage: AsyncStorage,
-		version: 1,
+		version: 1.1,
 		transforms: [await encryptTransform(await secureStorage.getSSK())],
 		blacklist: ['auth']
 	}

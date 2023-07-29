@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import tw from 'twrnc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Container({ children, personalizeHeader = false, ...props }: any) {
+export default function Screen({ children, personalizeHeader = false, ...props }: any) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const currentProfile = useSelector(selectCurrentProfile)
 

@@ -1,7 +1,7 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import { View, ScrollView, Alert } from 'react-native'
-import { Text, Divider, TextInput as PaperTextInput, IconButton } from 'react-native-paper'
+import { Text, Divider, TextInput as PaperTextInput, IconButton, Snackbar } from 'react-native-paper'
 
 import tw from 'twrnc'
 import { FieldType } from '@src/common/templates'
@@ -12,6 +12,9 @@ import { getMK } from '@src/store/slices/authSlice'
 
 import { decrypt, encrypt, isEmpty } from '@src/common/utils'
 import { useSelector } from 'react-redux'
+import { selectUserSettings } from '@src/features/Settings/settingSlice'
+import * as Clipboard from 'expo-clipboard'
+import * as ScreenCapture from 'expo-screen-capture'
 
 type Props = {
 	entry: {
@@ -38,13 +41,36 @@ export default function EntryForm({
 	onChangeIcon
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Props) {
-	// const secret = 'secret key 123'
 	const s = useSelector(getMK)
+	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
+	const [toastMessage, setToastMessage] = useState<string | null | undefined>()
+
+	useEffect(() => {
+		async function init() {
+			if (!allowScreenCapture) {
+				await ScreenCapture.preventScreenCaptureAsync()
+			}
+		}
+		init()
+	}, [allowScreenCapture])
+
+	function renderReadOnlyIcons(val: string) {
+		const renderIcons = []
+		console.log('allowCopy', allowCopy)
+		if (!editable && allowCopy) {
+			renderIcons.push(<IconButton icon="content-copy" onPress={() => copyToClipboard(val)} />)
+		}
+		return renderIcons
+	}
+
+	async function copyToClipboard(val: string) {
+		await Clipboard.setStringAsync(val)
+		setToastMessage('Copy to clipboard')
+	}
 
 	function getFieldComponent(f: OPM.Field) {
 		let component
 		const value = fieldsValues[f.id] || ''
-		console.log('value', value)
 
 		// Decrypt value
 		const decrypted = !isEmpty(value) ? decrypt(value, s) : ''
@@ -58,7 +84,7 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={f.placeholder}
-						style={tw.style(`bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-9')}
+						style={tw.style(`flex-1 bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-9')}
 						contentStyle={tw`border-0 px-2`}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
@@ -74,7 +100,7 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={f.placeholder}
-						style={tw.style(`bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-9')}
+						style={tw.style(`flex-1 bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-10')}
 						contentStyle={tw`border-0 px-2`}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
@@ -82,7 +108,7 @@ Props) {
 						right={
 							<PaperTextInput.Icon
 								icon={fieldsOptions[f.id]?.isSecure ? 'eye-off' : 'eye'}
-								style={tw`p-0 m-0`}
+								style={tw`p-0 m-0 mt-[8]`}
 								onPress={() =>
 									setFieldsOptions({
 										...fieldsOptions,
@@ -105,7 +131,7 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={f.placeholder}
-						style={tw.style(`bg-transparent justify-center`)}
+						style={tw.style(`flex-1 bg-transparent justify-center`)}
 						contentStyle={tw`border-0 px-2`}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
@@ -114,7 +140,12 @@ Props) {
 				)
 				break
 		}
-		return component
+		return (
+			<View style={tw`flex flex-row items-center`}>
+				{component || <View style={tw`flex-1`} />}
+				{renderReadOnlyIcons(decrypted)}
+			</View>
+		)
 	}
 
 	function onChangeValue(field: OPM.Field, value: string) {
@@ -230,6 +261,10 @@ Props) {
 				{/* Editable mode: To allow adding of fields */}
 				{editable && <AddFieldForm onAddField={onAddField} />}
 			</View>
+
+			<Snackbar visible={!!toastMessage} onDismiss={() => setToastMessage(null)}>
+				{toastMessage}
+			</Snackbar>
 		</ScrollView>
 	)
 }

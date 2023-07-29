@@ -1,25 +1,36 @@
 import { useState } from 'react'
 import { View } from 'react-native'
-import { Text, Searchbar, List } from 'react-native-paper'
+import { Text, Searchbar, List, Switch } from 'react-native-paper'
 
 import { i18n } from '@src/app/locale'
 import tw from 'twrnc'
-import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 import Content from '@src/components/Content'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUserSettings, setAllowCopy } from './settingSlice'
 
 export default function Settings() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+	const dispatch = useDispatch()
+	const { allowCopy } = useSelector(selectUserSettings)
 
 	function navigateTo({ screen, params = {} }: { screen: string; params?: object }) {
 		// navigation.navigate('App', { screen: 'SettingsStack', params: { screen: screen, params: params } })
 		navigation.navigate({ name: screen, params: params })
 	}
 
+	const [isAllowCopy, setIsAllowCopy] = useState(allowCopy)
+
+	const onToggleAllowCopy = () => {
+		setIsAllowCopy(!isAllowCopy)
+		dispatch(setAllowCopy(!isAllowCopy))
+	}
+
 	return (
-		<Container>
+		<Screen>
 			<Content horizontal={false}>
 				<View style={tw`flex justify-center`}>
 					<List.Section>
@@ -37,7 +48,11 @@ export default function Settings() {
 							description={'Password will be masked and will only be shown when you click on the eye icon'}
 							left={props => <List.Icon {...props} icon="eye-off" />}
 						/>
-						<List.Item title="Show copy buttons" left={props => <List.Icon {...props} icon="content-copy" />} />
+						<List.Item
+							title="Show copy buttons"
+							left={props => <List.Icon {...props} icon="content-copy" />}
+							right={() => <Switch value={isAllowCopy} onValueChange={onToggleAllowCopy} />}
+						/>
 					</List.Section>
 
 					<List.Section>
@@ -83,6 +98,6 @@ export default function Settings() {
 					</List.Section>
 				</View>
 			</Content>
-		</Container>
+		</Screen>
 	)
 }

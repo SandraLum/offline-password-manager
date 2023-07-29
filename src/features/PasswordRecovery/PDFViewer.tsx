@@ -15,6 +15,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 import { MaterialIcons } from '@expo/vector-icons'
+import Screen from '@src/components/Screen'
 
 export type PasswordRecoveryPDFRef = {
 	launch: (uri: string) => Promise<void>
@@ -133,7 +134,7 @@ export default function PDFViewer(props: Props) {
 	}
 
 	return uri ? (
-		<View style={tw`flex-1 bg-white`}>
+		<Screen style={tw`flex-1 bg-white`}>
 			<View style={tw`absolute z-20 right-1 top-1`}>
 				<IconButton
 					mode="contained-tonal"
@@ -149,6 +150,6 @@ export default function PDFViewer(props: Props) {
 			</View>
 
 			<PDF ref={refPDF} style={tw.style(`flex-1`)} source={{ uri }} spacing={0} fitPolicy={0} />
-		</View>
+		</Screen>
 	) : null
 }

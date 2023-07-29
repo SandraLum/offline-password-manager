@@ -5,6 +5,7 @@ import { Button, Text } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
 import { RootStackParamList } from '@src/app/routes'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>
 
@@ -13,19 +14,21 @@ export default function Onboarding({ navigation }: Props) {
 		navigation.navigate({ name: 'PasswordRecovery:Form', params: {} })
 	}
 	return (
-		<Content horizontal={false} contentContainerStyle={tw`flex-1 flex-col m-2 bg-white rounded-lg items-center`}>
-			<View style={tw.style({ padding: 30 })} />
-			<Image
-				resizeMode="cover"
-				source={require('./images/key-clipart.jpg')}
-				style={tw.style(`rounded-full`, { width: 200, height: 200 })}
-			/>
-			<Text style={tw.style(`text-2xl font-bold p-5 text-center`)}>{i18n.t('onboarding:label:welcome')}</Text>
-			<Text style={tw`text-slate-700 text-base px-6 text-center`}>{i18n.t('onboarding:note:success')}</Text>
-			<View style={tw.style({ padding: 30 })} />
-			<Button mode="contained" onPress={onNext}>
-				{i18n.t('onboarding:button:next')}
-			</Button>
-		</Content>
+		<Screen>
+			<Content horizontal={false} contentContainerStyle={tw`flex-1 flex-col m-2 bg-white rounded-lg items-center`}>
+				<View style={tw.style({ padding: 30 })} />
+				<Image
+					resizeMode="cover"
+					source={require('./images/key-clipart.jpg')}
+					style={tw.style(`rounded-full`, { width: 200, height: 200 })}
+				/>
+				<Text style={tw.style(`text-2xl font-bold p-5 text-center`)}>{i18n.t('onboarding:label:welcome')}</Text>
+				<Text style={tw`text-slate-700 text-base px-6 text-center`}>{i18n.t('onboarding:note:success')}</Text>
+				<View style={tw.style({ padding: 30 })} />
+				<Button mode="contained" onPress={onNext}>
+					{i18n.t('onboarding:button:next')}
+				</Button>
+			</Content>
+		</Screen>
 	)
 }

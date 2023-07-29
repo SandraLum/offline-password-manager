@@ -14,7 +14,7 @@ import { initialize } from '@src/store/slices/appSlice'
 
 import { AppDispatch } from '@src/store'
 import FormValidationErrors from '../Login/component/FormValidationErrors'
-import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 export default function ChangePassword() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -97,7 +97,7 @@ export default function ChangePassword() {
 	}
 
 	return (
-		<Container style={tw`flex-1 bg-white`}>
+		<Screen style={tw`flex-1 bg-white`}>
 			<Content horizontal={false} contentContainerStyle={tw`pt-5`}>
 				{mode === 'change' ? (
 					<>
@@ -190,6 +190,6 @@ export default function ChangePassword() {
 					</>
 				)}
 			</Content>
-		</Container>
+		</Screen>
 	)
 }

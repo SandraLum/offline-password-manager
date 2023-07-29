@@ -20,7 +20,7 @@ import { selectCurrentProfile } from '@src/store/slices/appSlice'
 import { useNavigation } from '@react-navigation/native'
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
@@ -113,7 +113,7 @@ export default function AddEntry({ route }: Props) {
 	}
 
 	return (
-		<Container personalizeHeader={false}>
+		<Screen personalizeHeader={false}>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}
@@ -123,6 +123,6 @@ export default function AddEntry({ route }: Props) {
 				setFields={setFields}
 				onChangeIcon={onChangeIcon}
 			/>
-		</Container>
+		</Screen>
 	)
 }

@@ -13,7 +13,7 @@ import { DashboardContentView } from '@src/common/enums'
 import ListEntries from '../Entries/ListEntries'
 import Animated, { FadeInDown, FadeOutDown, SlideInRight, SlideOutRight } from 'react-native-reanimated'
 import ProfileMenu from './component/ProfileMenu'
-import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 import { DrawerParamList } from '@src/app/routes'
 
 type ContentView = {
@@ -66,7 +66,7 @@ export default function Dashboard({ route }: Props) {
 	}
 
 	return (
-		<Container style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.7)`, paddingTop: headerHeight })}>
+		<Screen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.7)`, paddingTop: headerHeight })}>
 			{/* SL: TODO Delete */}
 			{/* <Button onPress={onTesting}>{`Testing`}</Button> */}
 
@@ -92,6 +92,6 @@ export default function Dashboard({ route }: Props) {
 					/>
 				</Animated.View>
 			)}
-		</Container>
+		</Screen>
 	)
 }

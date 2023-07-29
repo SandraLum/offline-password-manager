@@ -19,7 +19,7 @@ import { AppDispatch, RootState } from '@src/store'
 import { OPMTypes } from '@src/common/types'
 import EntryForm from './component/EntryForm'
 import { EntryMode } from '@src/common/enums'
-import Container from '@src/components/Container'
+import Screen from '@src/components/Screen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewEditEntry'>
 
@@ -168,7 +168,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}
 
 	return (
-		<Container personalizeHeader={true}>
+		<Screen personalizeHeader={true}>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}
@@ -178,6 +178,6 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 				setFields={setFields}
 				onChangeIcon={onChangeIcon}
 			/>
-		</Container>
+		</Screen>
 	)
 }

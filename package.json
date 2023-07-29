@@ -33,6 +33,7 @@
 		"expo-linking": "~4.0.1",
 		"expo-localization": "~14.1.1",
 		"expo-print": "~12.2.1",
+		"expo-screen-capture": "~5.1.1",
 		"expo-secure-store": "~12.1.1",
 		"expo-sharing": "~11.2.2",
 		"expo-splash-screen": "~0.18.2",
