@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit'
 
 import * as Templates from '@src/common/templates/index'
 
@@ -7,31 +7,36 @@ import { OPMTypes } from '@src/common/types'
 import { RootState } from '@src/store'
 import { generateUID } from '@utils'
 
-const defaultCategories: OPMTypes.Category[] = [
+const defaultCategories: OPMTypes.ICategory[] = [
 	{
 		// All Items has a designated id
 		id: '[ALLITEM]',
-		...Templates.Categories[CategoryType.AllItems],
+		type: CategoryType.AllItems,
+		// ...Templates.Categories[CategoryType.AllItems],
 		sort: 0
 	},
 	{
 		id: generateUID(),
-		...Templates.Categories[CategoryType.Login],
+		type: CategoryType.Login,
+		// ...Templates.Categories[CategoryType.Login],
 		sort: 1
 	},
 	{
 		id: generateUID(),
-		...Templates.Categories[CategoryType.Banking],
+		type: CategoryType.Banking,
+		// ...Templates.Categories[CategoryType.Banking],
 		sort: 2
 	},
 	{
 		id: generateUID(),
-		...Templates.Categories[CategoryType.CreditCard],
+		type: CategoryType.CreditCard,
+		// ...Templates.Categories[CategoryType.CreditCard],
 		sort: 3
 	},
 	{
 		id: generateUID(),
-		...Templates.Categories[CategoryType.Email],
+		type: CategoryType.Email,
+		// ...Templates.Categories[CategoryType.Email],
 		sort: 4
 	},
 	{
@@ -41,14 +46,15 @@ const defaultCategories: OPMTypes.Category[] = [
 	},
 	{
 		id: generateUID(),
-		...Templates.Categories[CategoryType.School],
+		type: CategoryType.School,
+		// ...Templates.Categories[CategoryType.School],
 		sort: 5
 	}
 ]
 
-const categoriesAdapter = createEntityAdapter<OPMTypes.Category>({
+const categoriesAdapter = createEntityAdapter<OPMTypes.ICategory>({
 	// Assume IDs are stored in a field other than `category.id`
-	selectId: (category: OPMTypes.Category) => category.id,
+	selectId: (category: OPMTypes.ICategory) => category.id,
 	// Keep the "all IDs" array sorted based on category sort prop
 	sortComparer: (a, b) => a.sort - b.sort
 })
@@ -73,14 +79,23 @@ const categoriesSlice = createSlice({
 export const { selectAll: selectAllCategories, selectById: selectCategoryById } = categoriesAdapter.getSelectors(
 	(state: RootState) => state.main.categories
 )
+
+export const selectAllCategoriesDetails = createSelector([selectAllCategories], (categories): OPMTypes.Category[] => {
+	return categories.map((c: OPMTypes.ICategory) => {
+		return { ...c, ...Templates.Categories[c.type] }
+	})
+})
+
+export const selectCategoryDetailById = createSelector(
+	[selectCategoryById],
+	(category): OPMTypes.Category | undefined => {
+		if (category) {
+			return { ...category, ...Templates.Categories[category.type] }
+		}
+	}
+)
+
 export const { categoriesAddOne, categoriesAddMany, categoryUpdate, categoryRemove, resetCategories } =
 	categoriesSlice.actions
 export { CategoryType }
 export default categoriesSlice
-
-// // Can still subscribe to the store
-// store.subscribe(() => console.log(store.getState()))
-
-// // Still pass action objects to `dispatch`, but they're created for us
-// store.dispatch(setMasterKey(password))
-// // {value: 1}

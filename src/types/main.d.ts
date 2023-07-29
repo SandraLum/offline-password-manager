@@ -124,6 +124,8 @@ declare namespace OPM {
 		color: string | undefined
 		size: number | undefined
 		backgroundColor: string | undefined
+		padding?: number
+		style?: ViewStyle
 	}
 
 	// type Entry = {

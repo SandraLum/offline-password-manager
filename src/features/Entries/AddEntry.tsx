@@ -12,7 +12,7 @@ import { i18n } from '@src/app/locale'
 import * as utils from '@utils'
 import { Entries as TemplateEntries } from '@src/common/templates'
 
-import { selectCategoryById } from '@src/features/Categories/categoriesSlice'
+import { selectCategoryDetailById } from '@src/features/Categories/categoriesSlice'
 import { defaultEntry, entriesAddOneToCurrentProfile } from '@src/features/Entries/entriesSlice'
 import { AppDispatch, RootState } from '@src/store'
 import EntryForm from './component/EntryForm'
@@ -29,7 +29,7 @@ export default function AddEntry({ route }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 	const { data } = route.params
 
-	const category = useSelector((state: RootState) => selectCategoryById(state, data.category.id))
+	const category = useSelector((state: RootState) => selectCategoryDetailById(state, data.category.id))
 	const currentProfile = useSelector(selectCurrentProfile)
 
 	const originalFields = useMemo<OPM.Field[]>(
@@ -113,7 +113,7 @@ export default function AddEntry({ route }: Props) {
 	}
 
 	return (
-		<Container personalizeHeader={true}>
+		<Container personalizeHeader={false}>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}

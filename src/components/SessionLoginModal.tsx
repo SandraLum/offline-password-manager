@@ -38,7 +38,6 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 			clearTimer()
 
 			const ts = await dispatch(sessionTimeLeft())
-			console.log('STM - SETTIMEOUT - TS', ts)
 			sessionTimerId.current = setTimeout(() => {
 				dispatch(invalidateSession())
 			}, ts + extendTs)
@@ -47,12 +46,8 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 	)
 
 	useEffect(() => {
-		console.log('ROUTE WRAPPER - init ------------------------')
-		console.log('isAuthenticated ------------------------', isAuthenticated)
-
 		const subscribeAppState = AppState.addEventListener('change', async nextAppState => {
 			if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-				console.log('STM - setTimeout - subscription')
 				if (isAuthenticated) {
 					setSessionTimeout()
 				}
@@ -63,13 +58,11 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 		const unsubscribeNavigation = rootNavigation?.addListener('state', async (e: any) => {
 			// You can get the raw navigation state (partial state object of the root navigator)
 			if (isAuthenticated) {
-				console.log('setTimeout - State change', e.type)
 				await setSessionTimeout(TimeoutInterval) //1min or 900000 = 15min //SLTODO
 			}
 		})
 
 		return () => {
-			console.log('ROUTE WRAPPER - Unmount ------------------------')
 			clearTimer()
 			subscribeAppState.remove()
 			unsubscribeNavigation?.()
@@ -82,7 +75,6 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 			hideModal()
 			clearTimer()
 		} else if (isAuthenticated && !isSessionValid && !visible) {
-			console.log('showModal')
 			showModal()
 		}
 	}, [isAuthenticated, isSessionValid, visible])
@@ -98,7 +90,6 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 		try {
 			const success = await dispatch(unlock(password))
 			if (success) {
-				console.log('STM - setTimeout - onLogin')
 				hideModal()
 				setSessionTimeout(TimeoutInterval)
 			} else {

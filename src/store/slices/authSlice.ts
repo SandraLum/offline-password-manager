@@ -123,10 +123,8 @@ export const verifyPassword =
 
 		const hsPwd = await encryptPassword(pwd)
 		const dVal = decrypt(state.secure.securePassphrase, hsPwd)
-		console.log('dVal', dVal, state.secure.securePassphrase)
 
 		if (dVal.slice(0, 38) === state.secure.secureTag) {
-			console.log('verifyPassword ....')
 			const arg = dVal.slice(38)
 			if (arg === cryptoHS(state.main.app.createdTs, dVal.slice(0, 38))) {
 				valid = true
@@ -145,7 +143,6 @@ export const unlock =
 		const { valid, hsVal } = await dispatch(verifyPassword(val))
 		if (valid) {
 			dispatch(setMK(hsVal))
-			console.log('unlock .... 2')
 			const ts = await Device.getUptimeAsync()
 			dispatch(setLts(ts))
 			if (!state.main.auth.isAuthenticated) {
@@ -159,7 +156,6 @@ export const unlock =
 export const sessionTimeLeft = (): OPMTypes.AppThunk<Promise<number>> => async (dispatch, getState) => {
 	const state = getState()
 	let tsSession = 0
-	console.log('sessionTimeLeft ---------')
 	if (
 		state.main.auth.mk !== null &&
 		state.main.auth.lts !== 0 &&
@@ -170,7 +166,6 @@ export const sessionTimeLeft = (): OPMTypes.AppThunk<Promise<number>> => async (
 
 		const period = TimeoutInterval
 		const elapsed = ts - state.main.auth.lts
-		console.log('Elapsed time (state.main.auth.lts - ts)', elapsed)
 		if (elapsed >= 0 && elapsed < period) {
 			tsSession = period - elapsed
 		}
@@ -181,7 +176,6 @@ export const sessionTimeLeft = (): OPMTypes.AppThunk<Promise<number>> => async (
 export const invalidateSession =
 	(forceLogout = false): OPMTypes.AppThunk =>
 	dispatch => {
-		console.log('invalidateSession - xxxxxxxxxxxxxxx')
 		dispatch(setMK(null))
 		dispatch(resetLts())
 
@@ -192,10 +186,7 @@ export const invalidateSession =
 
 export const checkIsSessionValid = (state: RootState) => state.main.auth.mk !== null && state.main.auth.lts !== 0
 
-export const checkIsAuthenticated = (state: RootState) => {
-	console.log('state', state)
-	return state.main.auth.isAuthenticated
-}
+export const checkIsAuthenticated = (state: RootState) => state.main.auth.isAuthenticated
 
 export const getMK = (state: RootState) => state.main.auth.mk
 

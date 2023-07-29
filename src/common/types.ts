@@ -14,18 +14,16 @@ export declare namespace OPMTypes {
 	type ICategory = {
 		id: string
 		// name: string
-		// type: CategoryType
+		type: CategoryType
+		sort: number
 	}
 
-	type Category = {
-		sort: number
-	} & TemplateCategory &
-		ICategory
+	type Category = TemplateCategory & ICategory
 
 	type Entry = {
 		id: string
 		title: OPM.EntryTitle
-		category: ICategory
+		category: { id: ICategory['id'] }
 		fields: OPM.Field[]
 		fieldsValues?: OPM.FieldsValues
 		lastUpdatedOn: number | string

@@ -23,7 +23,6 @@ export function getItem(key: string, options = DefaultSecureOptions) {
 }
 
 export function setItem(key: string, value: any, options = DefaultSecureOptions) {
-	console.log('key', key)
 	return ExpoSecureStore.setItemAsync(encodeKey(key), value, options)
 }
 
@@ -60,12 +59,10 @@ export function createSecureStore(options = DefaultSecureOptions): SecureStorage
 	}
 
 	async function init() {
-		console.log('innit')
 		const _t = await _getItem(k)
 		if (_t?.slice(0, 16) !== k) {
 			await _setItem(k, k.concat(generateUID()))
 		}
-		console.log('innit - end')
 	}
 
 	async function getSSK() {

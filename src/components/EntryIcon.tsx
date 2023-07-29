@@ -32,8 +32,6 @@ export default function EntryIcon(props: EntryIcon) {
 		iconType = 'badge'
 	}
 
-	console.log('iconType', editable, iconType, icon, name, style)
-
 	switch (iconType) {
 		case 'badge': {
 			const badgeIcon: OPM.BadgeIcon = icon as OPM.BadgeIcon

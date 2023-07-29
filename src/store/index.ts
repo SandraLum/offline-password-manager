@@ -42,10 +42,6 @@ async function initStore() {
 		secure: persistReducer(securePersistConfig, secureReducer)
 	})
 
-	// const appReducer = persistReducer(mainPersistConfig, combinedReducer)
-
-	// const appReducer = persistReducer(mainPersistConfig, combineReducers(mainReducer))
-
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rootReducer = (state: any, action: any) => {
 		if (action.type === 'RESET_APP') {

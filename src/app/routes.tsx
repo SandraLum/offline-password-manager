@@ -32,6 +32,7 @@ import AppInitializer from '@src/features/AppInitializer'
 import { checkIsAuthenticated } from '@src/store/slices/authSlice'
 import { useSelector } from 'react-redux'
 import AppWrapper from './AppWrapper'
+import Backup from '@src/features/Settings/Backup'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -65,6 +66,7 @@ export type RootStackParamList = {
 	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
+	'Settings:Backup': {}
 	'PasswordRecovery:Form': {}
 	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
@@ -122,8 +124,6 @@ function DrawerStack() {
 export default function Routes() {
 	const navigationRef = useNavigationContainerRef()
 	const isAuthenticated = useSelector(checkIsAuthenticated)
-
-	console.log('-------------- ROUTES .......', isAuthenticated)
 
 	return (
 		<>
@@ -184,7 +184,7 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
-
+								<Stack.Screen name="Settings:Backup" component={Backup} options={{ title: 'Backup' }} />
 								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
 								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
 							</>

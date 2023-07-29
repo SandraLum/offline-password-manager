@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigation, ParamListBase } from '@react-navigation/native'
 
 import { useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import tw from 'twrnc'
 import { i18n } from '@src/app/locale'
 
 import Content from '@src/components/Content'
-import { selectAllCategories } from '@src/features/Categories/categoriesSlice'
+import { selectAllCategoriesDetails } from '@src/features/Categories/categoriesSlice'
 import { GroupEntry, selectAllGroupedEntriesByProfile } from '@src/features/Entries/entriesSlice'
 import { DashboardContentView, EntryMode } from '@src/common/enums'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -23,7 +23,7 @@ import EntryIcon from '@src/components/EntryIcon'
 
 type Props = {
 	searchQuery: string
-	filter?: { categories: string[] }
+	filter?: { categoriesIds: string[] }
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onToggleDisplayView: (view: DashboardContentView, params?: any) => void
 }
@@ -36,7 +36,7 @@ export default function ListEntries(props: Props) {
 	const { filter, searchQuery = '', onToggleDisplayView } = props
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
-	const allCategories: OPMTypes.Category[] = useSelector(selectAllCategories)
+	const allCategories: OPMTypes.Category[] = useSelector(selectAllCategoriesDetails)
 	const allGroupedEntries = useSelector(state => selectAllGroupedEntriesByProfile(state, getCurrentProfileId(state)))
 	const [filteredGroupedEntries, setFilteredGroupedEntries] = useState<GroupEntryWithFilterState[]>([])
 
@@ -44,26 +44,33 @@ export default function ListEntries(props: Props) {
 	const [noMatches, setNoMatches] = useState<boolean>(false)
 	const [menuVisibility, setMenuVisibility] = useState<Record<string, boolean>>({})
 
+	const getCategory = useCallback(
+		(id: string) => {
+			return allCategories.find(c => c.id === id)
+		},
+		[allCategories]
+	)
+
 	// Filter:
 	useEffect(() => {
 		let filteredEntries = []
 		// filter by category
-		if (filter?.categories && filter.categories.length > 0) {
-			console.log('filter.categories', filter.categories)
-			filteredEntries = allGroupedEntries.filter(e => filter.categories.includes(e.category.id)) || []
-			console.log('filteredEntries.categories', filteredEntries)
+		if (filter?.categoriesIds && filter.categoriesIds.length > 0) {
+			filteredEntries = allGroupedEntries.filter(e => filter.categoriesIds.includes(e.category.id)) || []
 			if (filteredEntries.length === 0) {
-				filteredEntries = filter.categories.map(c => ({
-					category: { id: c },
-					entries: []
-				}))
+				filter.categoriesIds.forEach(id => {
+					const category = getCategory(id)
+					if (category) {
+						filteredEntries.push({ category, entries: [] })
+					}
+				})
 			}
 		} else {
 			filteredEntries = allGroupedEntries
 		}
 
 		setFilteredGroupedEntries(filteredEntries)
-	}, [allGroupedEntries, filter?.categories])
+	}, [allGroupedEntries, filter?.categoriesIds, getCategory])
 
 	useEffect(() => {
 		function filterByQuery(entries: GroupEntryWithFilterState[], searchQuery: string): GroupEntryWithFilterState[] {
@@ -125,10 +132,6 @@ export default function ListEntries(props: Props) {
 		})
 	}
 
-	function getCategory(id: string) {
-		return allCategories.find(c => c.id === id)
-	}
-
 	function onToggleMenu(category: OPMTypes.ICategory, visible: boolean) {
 		setMenuVisibility(m => ({ ...m, [category.id]: visible }))
 	}
@@ -144,7 +147,7 @@ export default function ListEntries(props: Props) {
 				) : (
 					filteredGroupedEntries.map(group => {
 						const entries = group.entries
-						const category = getCategory(group.category.id)
+						const category = group.category
 						const toDisplayCategory = category && searchMatches[category.id] !== 0
 						return (
 							toDisplayCategory && (
@@ -219,9 +222,18 @@ export default function ListEntries(props: Props) {
 											<List.Item
 												title={i18n.t('entries:label:no:entries')}
 												right={() => (
-													<Button mode="contained-tonal" onPress={() => onAddNewEntry(category)}>
-														{i18n.t('entries:button:add:new:entry')}
-													</Button>
+													// <Button mode="contained-tonal" onPress={() => onAddNewEntry(category)}>
+													// 	{i18n.t('entries:button:add:new:entry')}
+													// </Button>
+													<IconButton
+														mode="contained"
+														icon="plus"
+														size={24}
+														iconColor="white"
+														style={tw`m-0`}
+														containerColor={tw.color('green-400')}
+														onPress={() => onAddNewEntry(category)}
+													/>
 												)}
 												style={tw.style(`py-1 pr-2 mr-0 rounded-lg bg-zinc-50`)}
 											/>

@@ -14,6 +14,7 @@ import { WebViewMessageEvent, WebViewSource } from 'react-native-webview/lib/Web
 import { i18n } from '@src/app/locale'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
+import AlertModal from '@src/components/AlertModal'
 
 export default function PasswordRecoveryForm() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
@@ -29,6 +30,11 @@ export default function PasswordRecoveryForm() {
 
 	const [isHtmlLoaded, setIsHtmlLoaded] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
+	const [hasLaunchedViewer, sethasLaunchedViewer] = useState(false)
+	const [alertVisible, setAlertVisible] = useState(false)
+
+	const showAlert = () => setAlertVisible(true)
+	const hideAlert = () => setAlertVisible(false)
 
 	const today = new Date()
 	const filename = `PasswordRecoverySheet_${today.getDate()}_${today.getMonth()}_${today.getFullYear()}.pdf`
@@ -37,7 +43,6 @@ export default function PasswordRecoveryForm() {
 		async function init() {
 			const sk = await getSalt()
 			const createdOn = new Date().toLocaleString()
-			console.log('salt', sk)
 
 			const runOnce = `
 			const spanSk = document.getElementById('valSk');
@@ -55,22 +60,32 @@ export default function PasswordRecoveryForm() {
 		init()
 	}, [content])
 
-	async function convertHTMLToPDF(html: string) {
-		const { uri } = await Print.printToFileAsync({ html })
-		const finalUri = FileSystem.cacheDirectory + filename
-		await FileSystem.copyAsync({ from: uri, to: finalUri })
-		return finalUri
+	function onSaveClicked() {
+		setIsLoading(true)
+		try {
+			const run = `onSavePrint();`
+			refWebView?.current?.injectJavaScript(run)
+		} catch {
+			setIsLoading(false)
+		}
 	}
 
 	async function onMessageEvent(event: WebViewMessageEvent) {
-		console.log('OnClick - MessageEvent')
 		const html = event.nativeEvent.data
 
 		// Convert html to PDF
 		const uri = await convertHTMLToPDF(html)
 		await launchViewer(uri)
+		sethasLaunchedViewer(true)
 
 		setIsLoading(false)
+	}
+
+	async function convertHTMLToPDF(html: string) {
+		const { uri } = await Print.printToFileAsync({ html })
+		const finalUri = FileSystem.cacheDirectory + filename
+		await FileSystem.copyAsync({ from: uri, to: finalUri })
+		return finalUri
 	}
 
 	async function launchViewer(uri: string) {
@@ -99,18 +114,12 @@ export default function PasswordRecoveryForm() {
 		navigation.navigate('PasswordRecovery:PDF', { uri: uri, filename: filename })
 	}
 
-	function onSaveClicked() {
-		setIsLoading(true)
-		try {
-			const run = `onSavePrint();`
-			refWebView?.current?.injectJavaScript(run)
-		} catch {
-			setIsLoading(false)
-		}
+	function onClose() {
+		showAlert()
 	}
 
-	function onClose() {
-		navigation.goBack()
+	function onExit() {
+		navigation.navigate('Dashboard')
 	}
 
 	const Loading = () => {
@@ -148,9 +157,11 @@ export default function PasswordRecoveryForm() {
 
 					{isHtmlLoaded && (
 						<View style={tw`flex flex-row justify-end p-3`}>
-							<Button mode="contained-tonal" onPress={onClose}>
-								{i18n.t('password:recovery:sheet:button:close')}
-							</Button>
+							{hasLaunchedViewer && (
+								<Button mode="contained-tonal" onPress={onClose}>
+									{i18n.t('password:recovery:sheet:button:close')}
+								</Button>
+							)}
 							<Button mode="contained" loading={isLoading} onPress={onSaveClicked} style={tw`ml-4`}>
 								{i18n.t('password:recovery:sheet:button:save-share')}
 							</Button>
@@ -158,6 +169,27 @@ export default function PasswordRecoveryForm() {
 					)}
 				</View>
 			</View>
+
+			<AlertModal
+				visible={alertVisible}
+				icon={{ name: 'exclamation', color: tw.color('slate-100'), size: 36 }}
+				iconStyle={{ backgroundColor: tw.color('slate-500') }}
+				onDismiss={hideAlert}
+			>
+				<View style={tw`py-4 flex-col`}>
+					<Text style={tw`font-bold text-xl pb-4 text-center`}>{i18n.t('password:recovery:warning:prompt:title')}</Text>
+					<Text style={tw`text-base text-gray-700`}>{i18n.t('password:recovery:warning:prompt:text')}</Text>
+				</View>
+
+				<View style={tw`flex-row pt-1 justify-between`}>
+					<Button mode="outlined" textColor={tw.color('gray-500')} style={tw`border-gray-500`} onPress={hideAlert}>
+						{i18n.t('button:label:no:cancel')}
+					</Button>
+					<Button mode="contained" textColor="white" buttonColor={tw.color('green-600')} onPress={onExit}>
+						{i18n.t('button:label:yes:done')}
+					</Button>
+				</View>
+			</AlertModal>
 		</>
 	)
 }

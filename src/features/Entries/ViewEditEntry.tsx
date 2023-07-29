@@ -8,7 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
 import { i18n } from '@src/app/locale'
-import { selectCategoryById } from '@src/features/Categories/categoriesSlice'
+import { selectCategoryDetailById } from '@src/features/Categories/categoriesSlice'
 import {
 	defaultEntry,
 	entryRemoveFromCurrentProfile,
@@ -30,7 +30,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	const entry = useSelector((state: RootState) => selectEntryById(state, data.entry?.id))
 
 	const category: OPMTypes.Category | undefined = useSelector((state: RootState) =>
-		selectCategoryById(state, entry?.category.id || '')
+		selectCategoryDetailById(state, entry?.category.id || '')
 	)
 
 	const originalFields = useMemo<OPM.Field[]>(() => entry?.fields || [], [entry])

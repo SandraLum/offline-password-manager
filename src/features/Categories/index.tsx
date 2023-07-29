@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 import { Text, FlatList, View } from 'react-native'
-import { Button, Card } from 'react-native-paper'
+import { Button, Card, IconButton } from 'react-native-paper'
 
 import tw from 'twrnc'
 import { i18n } from '@src/app/locale'
@@ -12,12 +12,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 // Components
 import CategoryItemModal from './CategoryItemModal'
 
-import { selectAllCategories } from '@src/features/Categories/categoriesSlice'
+import { selectAllCategoriesDetails } from '@src/features/Categories/categoriesSlice'
 import { selectAllEntriesByProfile } from '@src/features/Entries/entriesSlice'
 import { CategoryType, DashboardContentView } from '@common/enums'
 import { OPMTypes } from '@common/types'
 import { getCurrentProfileId } from '@src/store/slices/appSlice'
 import CategoryIcon from '@src/components/CategoryIcon'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import Content from '@src/components/Content'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = { onToggleDisplayView: (view: DashboardContentView, params: any) => void }
@@ -26,7 +28,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dialogRef = useRef(null)
 
-	const allCategories = useSelector(selectAllCategories)
+	const allCategories = useSelector(selectAllCategoriesDetails)
 	const entries = useSelector(state => selectAllEntriesByProfile(state, getCurrentProfileId(state)))
 
 	const [categories, setCategories] = useState<OPMTypes.Category[]>([])
@@ -47,44 +49,59 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	}
 
 	function onViewEntries(category: OPMTypes.Category) {
-		// navigation.navigate({
-		// 	name: 'Entries',
-		// 	params: {
-		// 		filter: category.type === CategoryType.AllItems ? { categories: [] } : { categories: [category.id] }
-		// 	}
-		// })
 		onToggleDisplayView(DashboardContentView.Entries, {
-			filter: category.type === CategoryType.AllItems ? { categories: [] } : { categories: [category.id] }
+			filter: category.type === CategoryType.AllItems ? { categoriesIds: [] } : { categoriesIds: [category.id] }
 		})
 	}
 
 	function renderCard({ item: category }: { item: OPMTypes.Category }) {
 		const icon = category?.icon
 		const totalEntries = entries.filter(i => i.category?.id === category.id)?.length
-		return (
-			<Card mode="contained" style={tw.style(`flex-1 m-2 bg-white`)} onPress={() => onViewEntries(category)}>
-				<Card.Title
-					titleNumberOfLines={2}
-					title={category?.name}
-					subtitle={`Entries: ${totalEntries}`}
-					left={() => <CategoryIcon size={32} name={icon.name} backgroundColor={icon.bgColor} color={icon.color} />}
-					style={tw`m-0 p-1 min-h-0`}
-					titleStyle={tw`m-0 p-0 min-h-0 font-bold`}
-					leftStyle={tw`p-0 m-1`}
-					rightStyle={tw`p-0 m-0`}
-				/>
 
-				<Card.Actions>
-					<Button mode="contained-tonal" onPress={() => onAddNewEntry(category)}>
-						{i18n.t('categories:card:button:text:add')}
-					</Button>
-				</Card.Actions>
-			</Card>
+		return (
+			<>
+				<CategoryIcon
+					style={tw.style(`left-4 z-4`, { marginBottom: -25, elevation: 3 })}
+					size={40}
+					padding={8}
+					name={icon.name}
+					backgroundColor={icon.bgColor}
+					color={icon.color}
+				/>
+				<TouchableOpacity
+					style={tw.style(`flex rounded-lg px-3 pb-3`, { backgroundColor: 'rgba(209, 233, 235, 0.9)' })}
+					onPress={() => onViewEntries(category)}
+				>
+					<Text style={tw.style(`text-lg font-bold text-stone-600`, { marginTop: 30 })}>{category?.name}</Text>
+					<IconButton
+						mode="contained"
+						icon="star"
+						size={20}
+						iconColor="black"
+						containerColor="transparent"
+						style={tw`absolute items-center right-0`}
+						onPress={() => onViewEntries(category)}
+					/>
+					<View style={tw`flex flex-row items-center justify-between`}>
+						<Text>{i18n.t('categories:card:entries:count', { totalEntries: totalEntries })}</Text>
+
+						<IconButton
+							mode="contained"
+							icon="plus"
+							size={24}
+							iconColor="white"
+							style={tw`m-0`}
+							containerColor={tw.color('green-400')}
+							onPress={() => onAddNewEntry(category)}
+						/>
+					</View>
+				</TouchableOpacity>
+			</>
 		)
 	}
 
 	return (
-		<View style={tw`flex flex-col p-1`}>
+		<Content horizontal={false} contentContainerStyle={tw.style(`flex p-1`)}>
 			{/* All Items Card */}
 			{allItemsCategory ? (
 				<View>
@@ -114,12 +131,16 @@ export default function Categories({ onToggleDisplayView }: Props) {
 			{/* Categories */}
 			<View style={tw`pt-2`}>
 				<Text style={tw`font-bold p-1`}>{i18n.t('categories:card:title:category')}</Text>
-				<FlatList
+				{/* <FlatList
 					data={categories}
 					renderItem={({ item, index }) => {
 						const lastItem = index === categories.length - 1
 						return (
-							<View style={tw.style({ flex: lastItem && categories.length % 2 !== 0 ? 0.5 : 1 })}>
+							<View
+								style={tw.style(`p-3 z-20`, {
+									flex: lastItem && categories.length % 2 !== 0 ? 0.5 : 1
+								})}
+							>
 								{renderCard({ item })}
 							</View>
 						)
@@ -127,9 +148,20 @@ export default function Categories({ onToggleDisplayView }: Props) {
 					keyExtractor={item => `${item.id}`}
 					showsHorizontalScrollIndicator={false}
 					numColumns={2}
-				/>
+				/> */}
+
+				<View style={tw.style(`flex-row flex-wrap`)}>
+					{categories.map(item => {
+						return (
+							<View key={`category-card-${item.id}`} style={tw.style(`px-2 py-1`, { width: '50%' })}>
+								{renderCard({ item })}
+							</View>
+						)
+					})}
+				</View>
+
 				<CategoryItemModal ref={dialogRef} />
 			</View>
-		</View>
+		</Content>
 	)
 }

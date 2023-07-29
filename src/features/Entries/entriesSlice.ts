@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { createEntityAdapter, createSlice, createSelector, AnyAction } from '@reduxjs/toolkit'
-import { selectAllCategories } from '../Categories/categoriesSlice'
+import { selectAllCategoriesDetails } from '../Categories/categoriesSlice'
 import { clone, decrypt, encrypt, getObjValue, union } from '@utils'
 import { RootState } from '@src/store'
 // import { CategoryType } from '@common/enums'
@@ -139,12 +139,12 @@ export const syncEntriesWithNewKey =
 	}
 
 export type GroupEntry = {
-	category: OPMTypes.ICategory
+	category: OPMTypes.Category
 	entries: Omit<OPMTypes.Entry, 'category'>[]
 }
 
 export const selectAllGroupedEntriesByProfile = createSelector(
-	[selectAllEntries, selectAllCategories, (state, profileId) => selectProfileById(state, profileId)],
+	[selectAllEntries, selectAllCategoriesDetails, (state, profileId) => selectProfileById(state, profileId)],
 	(items, categories, profile): GroupEntry[] => {
 		console.log('entries---- items', items)
 		const groupedIndexes: { [key: string | number]: number } = {}
@@ -173,7 +173,7 @@ export const selectAllGroupedEntriesByProfile = createSelector(
 )
 
 export const selectAllGroupedEntries = createSelector(
-	[selectAllEntries, selectAllCategories],
+	[selectAllEntries, selectAllCategoriesDetails],
 	(items, categories): GroupEntry[] => {
 		const groupedIndexes: { [key: string | number]: number } = {}
 		return items.reduce((arr: GroupEntry[], curr) => {

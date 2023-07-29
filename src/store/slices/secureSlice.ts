@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { cryptoHS, decode, generateSalt } from '@src/common/utils'
 
 import { RootState } from '..'
-import { getItem, setItem } from '../secureStore'
+import { getItem, removeItem, setItem } from '../secureStore'
 
 type Security = {
 	secureTag: string | null
@@ -57,7 +57,7 @@ export const encryptPassword = async (pwd: string, resetSalt = false) => {
 }
 
 export const clearSecureData = async () => {
-	await setItem(saltKey, null)
+	await removeItem(saltKey)
 }
 
 const setSalt = async () => {
