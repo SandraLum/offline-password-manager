@@ -13,6 +13,7 @@ import { initialize } from '@src/store/slices/appSlice'
 
 import { AppDispatch } from '@src/store'
 import FormValidationErrors from '../Login/component/FormValidationErrors'
+import Screen from '@src/components/Screen'
 
 export default function SetMasterPassword() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -70,7 +71,7 @@ export default function SetMasterPassword() {
 	}
 
 	return (
-		<View style={tw`p-2`}>
+		<Screen style={tw`p-2`}>
 			<Content contentContainerStyle={tw`flex-1 py-5 px-2`}>
 				<View style={tw`flex-1 flex-col`}>
 					<Text style={tw`py-1 text-lg font-bold`}>{i18n.t('app:name:title')}</Text>
@@ -129,6 +130,6 @@ export default function SetMasterPassword() {
 					</Button>
 				</View>
 			</Content>
-		</View>
+		</Screen>
 	)
 }

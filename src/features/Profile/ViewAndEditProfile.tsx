@@ -13,10 +13,10 @@ import { ProfileMode } from '@src/common/enums'
 
 import ProfileForm from './component/ProfileForm'
 import AlertModal from '@src/components/AlertModal'
-import { selectProfileById, profileUpdate, emptyProfile } from './profilesSlice'
+import { selectProfileById, profileUpdate, emptyProfile } from '../../store/slices/profilesSlice'
 import { getCurrentProfileId, syncCurrentProfile } from '@src/store/slices/appSlice'
 import { AppDispatch } from '@src/store'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 import Content from '@src/components/Content'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewAndEditProfile'>
@@ -67,7 +67,7 @@ export default function ViewAndEditProfile({ navigation, route }: Props) {
 	if (!profile.id) return null
 
 	return (
-		<Screen>
+		<AuthScreen>
 			<Content contentContainerStyle={tw`h-full`} horizontal={false}>
 				<ProfileForm editable={editable} profile={profile} setProfile={setProfile} />
 
@@ -109,6 +109,6 @@ export default function ViewAndEditProfile({ navigation, route }: Props) {
 					</Button>
 				</View>
 			</AlertModal>
-		</Screen>
+		</AuthScreen>
 	)
 }

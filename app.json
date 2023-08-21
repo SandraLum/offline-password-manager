@@ -28,7 +28,10 @@
 			}
 		},
 		"android": {
-			"package": "io.slamcode.offlinepasswordstore"
+			"package": "io.slamcode.offlinepasswordstore",
+			"data": {
+				"mimeType": "application/opm"
+			}
 		},
 		"ios": {
 			"usesIcloudStorage": true

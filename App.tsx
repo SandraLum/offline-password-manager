@@ -4,6 +4,7 @@ import 'react-native-gesture-handler'
 import { useEffect, useState, useRef } from 'react'
 import { AppState, Modal } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import * as ScreenCapture from 'expo-screen-capture'
 
 import { theme, ThemeProvider } from '@src/app/theme'
 import { initLocalization } from '@src/app/locale'
@@ -11,32 +12,33 @@ import Routes from '@src/app/routes'
 import { Provider as StoreProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { initStore, store, persistor } from '@src/store'
+import { ToastProvider } from '@src/common/contexts/ToastContext'
+
+import { polyfillGlobal } from 'react-native/Libraries/Utilities/PolyfillFunctions'
+
+const applyGlobalPolyfills = () => {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const { TextEncoder, TextDecoder } = require('text-encoding')
+
+	polyfillGlobal('TextEncoder', () => TextEncoder)
+	polyfillGlobal('TextDecoder', () => TextDecoder)
+}
+
+applyGlobalPolyfills()
 
 export default function App() {
 	const [isInitialized, setIsInitialized] = useState(false)
-	const appState = useRef(AppState.currentState)
 
 	useEffect(() => {
 		const init = async () => {
+			await ScreenCapture.preventScreenCaptureAsync()
+
 			initLocalization()
 			await initStore()
 			setIsInitialized(true)
 		}
 
 		init()
-
-		// const subscription = AppState.addEventListener('change', nextAppState => {
-		// 	if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-		// 		// SL TODO: Check session
-		// 		console.log('App has come to the foreground!')
-		// 	}
-		// 	appState.current = nextAppState
-		// 	console.log('AppState', appState.current)
-		// })
-
-		// return () => {
-		// 	subscription.remove()
-		// }
 	}, [])
 
 	return isInitialized ? (

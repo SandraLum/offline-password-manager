@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import SessionLoginModal from '@src/components/SessionLoginModal'
 import { NavigationContainerRefWithCurrent } from '@react-navigation/core/lib/typescript/src/types'
+import { ToastProvider } from '@src/common/contexts/ToastContext'
 
 type Props = {
 	children: ReactNode
@@ -13,13 +14,16 @@ type Props = {
 }
 
 export default function AppWrapper({ rootNavigation, isAuthenticated, children }: Props) {
+	console.log('render appwrapper')
 	return (
 		// <SafeAreaView style={tw`flex-1`} forceInset={{ top: 'never' }} edges={['top', 'left', 'right']}>
-		<View style={tw`flex-1`}>
-			{children}
+		<ToastProvider>
+			<View style={tw`flex-1`}>
+				{children}
 
-			<SessionLoginModal rootNavigation={rootNavigation} isAuthenticated={isAuthenticated} />
-		</View>
+				<SessionLoginModal rootNavigation={rootNavigation} isAuthenticated={isAuthenticated} />
+			</View>
+		</ToastProvider>
 		//  </SafeAreaView>
 	)
 }

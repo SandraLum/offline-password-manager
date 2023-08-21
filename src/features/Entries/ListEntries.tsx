@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigation, ParamListBase } from '@react-navigation/native'
 
 import { useSelector } from 'react-redux'
@@ -9,8 +9,8 @@ import tw from 'twrnc'
 import { i18n } from '@src/app/locale'
 
 import Content from '@src/components/Content'
-import { selectAllCategoriesDetails } from '@src/features/Categories/categoriesSlice'
-import { GroupEntry, selectAllGroupedEntriesByProfile } from '@src/features/Entries/entriesSlice'
+import { selectAllCategories } from '@src/store/slices/categoriesSlice'
+import { GroupEntry, selectAllGroupedEntriesByProfile } from '@src/store/slices/entriesSlice'
 import { DashboardContentView, EntryMode } from '@src/common/enums'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { OPMTypes } from '@src/common/types'
@@ -23,7 +23,7 @@ import EntryIcon from '@src/components/EntryIcon'
 
 type Props = {
 	searchQuery: string
-	filter?: { categoriesIds: string[] }
+	filter?: { categories: string[] }
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onToggleDisplayView: (view: DashboardContentView, params?: any) => void
 }
@@ -36,7 +36,7 @@ export default function ListEntries(props: Props) {
 	const { filter, searchQuery = '', onToggleDisplayView } = props
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
-	const allCategories: OPMTypes.Category[] = useSelector(selectAllCategoriesDetails)
+	const allCategories: OPMTypes.Category[] = useSelector(selectAllCategories)
 	const allGroupedEntries = useSelector(state => selectAllGroupedEntriesByProfile(state, getCurrentProfileId(state)))
 	const [filteredGroupedEntries, setFilteredGroupedEntries] = useState<GroupEntryWithFilterState[]>([])
 
@@ -44,22 +44,17 @@ export default function ListEntries(props: Props) {
 	const [noMatches, setNoMatches] = useState<boolean>(false)
 	const [menuVisibility, setMenuVisibility] = useState<Record<string, boolean>>({})
 
-	const getCategory = useCallback(
-		(id: string) => {
-			return allCategories.find(c => c.id === id)
-		},
-		[allCategories]
-	)
-
 	// Filter:
 	useEffect(() => {
 		let filteredEntries = []
+		const categoriesFilter = filter?.categories
+
 		// filter by category
-		if (filter?.categoriesIds && filter.categoriesIds.length > 0) {
-			filteredEntries = allGroupedEntries.filter(e => filter.categoriesIds.includes(e.category.id)) || []
+		if (categoriesFilter && categoriesFilter.length > 0) {
+			filteredEntries = allGroupedEntries.filter(e => categoriesFilter.includes(e.category.type)) || []
 			if (filteredEntries.length === 0) {
-				filter.categoriesIds.forEach(id => {
-					const category = getCategory(id)
+				categoriesFilter.forEach(type => {
+					const category = allCategories.find(c => c.type === type)
 					if (category) {
 						filteredEntries.push({ category, entries: [] })
 					}
@@ -70,7 +65,7 @@ export default function ListEntries(props: Props) {
 		}
 
 		setFilteredGroupedEntries(filteredEntries)
-	}, [allGroupedEntries, filter?.categoriesIds, getCategory])
+	}, [allCategories, allGroupedEntries, filter?.categories])
 
 	useEffect(() => {
 		function filterByQuery(entries: GroupEntryWithFilterState[], searchQuery: string): GroupEntryWithFilterState[] {
@@ -82,11 +77,11 @@ export default function ListEntries(props: Props) {
 			if (query.length > 0) {
 				let count = 0
 				filteredEntries = entries.map(grp => {
-					matches[grp.category.id] = 0
+					matches[grp.category.type] = 0
 					const entries = grp.entries?.map(e => {
 						const match = e.title.name.search(new RegExp(searchQuery, 'i')) > -1
 						if (match) {
-							matches[grp.category.id] += 1
+							matches[grp.category.type] += 1
 							count++
 						}
 						return { ...e, isFiltered: !match }
@@ -117,7 +112,7 @@ export default function ListEntries(props: Props) {
 		navigation.navigate({
 			name: 'AddEntry',
 			params: {
-				data: { category: { id: category.id } }
+				data: { category: { type: category.type } }
 			}
 		})
 	}
@@ -133,7 +128,7 @@ export default function ListEntries(props: Props) {
 	}
 
 	function onToggleMenu(category: OPMTypes.ICategory, visible: boolean) {
-		setMenuVisibility(m => ({ ...m, [category.id]: visible }))
+		setMenuVisibility(m => ({ ...m, [category.type]: visible }))
 	}
 
 	return (
@@ -148,10 +143,11 @@ export default function ListEntries(props: Props) {
 					filteredGroupedEntries.map(group => {
 						const entries = group.entries
 						const category = group.category
-						const toDisplayCategory = category && searchMatches[category.id] !== 0
+						const toDisplayCategory = category && searchMatches[category.type] !== 0
+						const categoryType = category.type
 						return (
 							toDisplayCategory && (
-								<List.Section key={`c-${category.id}`} style={tw`pb-3 rounded-lg bg-white`}>
+								<List.Section key={`c-${categoryType}`} style={tw`pb-3 rounded-lg bg-white`}>
 									{/* Header */}
 									<List.Item
 										title=""
@@ -171,7 +167,7 @@ export default function ListEntries(props: Props) {
 											return (
 												<Menu
 													anchorPosition="bottom"
-													visible={!!menuVisibility[category.id]}
+													visible={!!menuVisibility[categoryType]}
 													onDismiss={() => onToggleMenu(category, false)}
 													anchor={
 														<IconButton
@@ -192,7 +188,7 @@ export default function ListEntries(props: Props) {
 
 									<View style={tw.style(`border-[#b8d1cc] rounded-lg mx-3`, { borderWidth: 1 })}>
 										{entries.length ? (
-											searchMatches[category.id] === 0 ? (
+											searchMatches[categoryType] === 0 ? (
 												<List.Item
 													title={i18n.t('entries:label:no:search:matches')}
 													style={tw.style(`py-1 rounded-lg bg-zinc-50`)}
@@ -201,7 +197,7 @@ export default function ListEntries(props: Props) {
 												entries.map((entry, index) =>
 													entry.isFiltered ? null : (
 														<List.Item
-															key={`c-${category.id}-i-${entry.id}`}
+															key={`c-${categoryType}-i-${entry.id}`}
 															title={entry.title.name}
 															onPress={() => onViewEntry(entry)}
 															left={() => <EntryIcon dense size={40} icon={entry.title.icon} name={entry.title.name} />}

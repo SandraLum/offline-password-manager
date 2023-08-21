@@ -12,7 +12,7 @@ import { i18n } from '@src/app/locale'
 
 import { ProfileMode } from '@src/common/enums'
 import { getCurrentProfileId, setCurrentProfile } from '@src/store/slices/appSlice'
-import { selectAllProfiles } from '@src/features/Profile/profilesSlice'
+import { selectAllProfiles } from '@src/store/slices/profilesSlice'
 import { OPMTypes } from '@src/common/types'
 import Avatar from '@src/components/Avatar'
 

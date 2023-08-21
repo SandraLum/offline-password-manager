@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { OPMTypes } from '@src/common/types'
-import { resetProfiles, selectAllProfiles, selectProfileById } from '@src/features/Profile/profilesSlice'
+import { resetProfiles, selectAllProfiles, selectProfileById } from '@src/store/slices/profilesSlice'
 
 import { RootState } from '..'
 import { clearSecureData } from './secureSlice'
@@ -69,6 +69,13 @@ export const reset = (): OPMTypes.AppThunk => (dispatch, getState) => {
 }
 
 export const factoryReset = (): OPMTypes.AppThunk => async dispatch => {
+	console.log('FACTORY RESET APP.............')
+	dispatch({ type: 'RESET_APP' })
+
+	await clearSecureData()
+}
+
+export const restoreState = (): OPMTypes.AppThunk => async dispatch => {
 	console.log('FACTORY RESET APP.............')
 	dispatch({ type: 'RESET_APP' })
 

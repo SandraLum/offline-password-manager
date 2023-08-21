@@ -13,12 +13,12 @@ import { DashboardContentView } from '@src/common/enums'
 import ListEntries from '../Entries/ListEntries'
 import Animated, { FadeInDown, FadeOutDown, SlideInRight, SlideOutRight } from 'react-native-reanimated'
 import ProfileMenu from './component/ProfileMenu'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 import { DrawerParamList } from '@src/app/routes'
 
 type ContentView = {
 	view: DashboardContentView
-	params?: { filter: { categoriesIds: string[] } }
+	params?: { filter: { categories: string[] } }
 }
 
 type Props = NativeStackScreenProps<DrawerParamList, 'Dashboard'>
@@ -62,13 +62,13 @@ export default function Dashboard({ route }: Props) {
 
 	// SL TODO: remove
 	function onTesting() {
-		navigation.navigate('Settings:Backup')
+		navigation.navigate('Settings:Testing')
 	}
 
 	return (
-		<Screen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.7)`, paddingTop: headerHeight })}>
+		<AuthScreen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.7)`, paddingTop: headerHeight })}>
 			{/* SL: TODO Delete */}
-			{/* <Button onPress={onTesting}>{`Testing`}</Button> */}
+			<Button onPress={onTesting}>{`Testing`}</Button>
 
 			<Searchbar
 				placeholder={i18n.t('search:bar:placeholder:search')}
@@ -92,6 +92,6 @@ export default function Dashboard({ route }: Props) {
 					/>
 				</Animated.View>
 			)}
-		</Screen>
+		</AuthScreen>
 	)
 }

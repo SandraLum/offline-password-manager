@@ -13,6 +13,9 @@ import EnterPasswordForm from './component/EnterPasswordForm'
 
 import { i18n } from '@src/app/locale'
 import { factoryReset } from '@src/store/slices/appSlice'
+import Screen from '@src/components/Screen'
+import { clone } from '@src/common/utils'
+import { getBackupState } from '../../store/slices/settingSlice'
 
 // import { syncEntriesWithMKey } from '../Entries/entriesSlice'
 
@@ -39,6 +42,8 @@ export default function Login() {
 
 	function Testing() {
 		console.log('Testing pressed.............')
+		const backupState = clone(dispatch(getBackupState))
+		console.log('backupState', backupState)
 		// dispatch(syncEntriesWithMKey('qqq111'))
 	}
 
@@ -47,7 +52,7 @@ export default function Login() {
 	}
 
 	return (
-		<View style={tw`w-full h-full p-2`}>
+		<Screen style={tw`w-full h-full p-2`}>
 			<Content contentContainerStyle={tw`w-full h-full flex-col py-5 px-2`}>
 				<EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} />
 
@@ -72,6 +77,6 @@ export default function Login() {
 					{'Reset Data'}
 				</Button>
 			</Content>
-		</View>
+		</Screen>
 	)
 }

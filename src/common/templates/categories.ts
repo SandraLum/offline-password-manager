@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import tw from 'twrnc'
 import { CategoryType } from '@src/common/enums'
 import { OPMTypes } from '@src/common/types'
@@ -6,9 +7,11 @@ type Categories = {
 	[key: string]: Omit<OPMTypes.TemplateCategory, 'type'> & { type: CategoryType }
 }
 
-export const Categories: Categories = {
-	[CategoryType.AllItems]: {
-		// id: CategoryType.AllItems, //[ALLITEM],
+const setIdFormat = (id: string) => `[${id}]`
+
+export const Categories: OPMTypes.TemplateCategory[] = [
+	{
+		// id: setIdFormat(CategoryType.AllItems),
 		name: 'All Items',
 		icon: {
 			name: 'format-list-bulleted-type',
@@ -17,7 +20,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.AllItems
 	},
-	[CategoryType.Login]: {
+	{
+		// id: setIdFormat(CategoryType.Login),
 		name: 'Login',
 		icon: {
 			name: 'key-variant',
@@ -26,7 +30,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.Login
 	},
-	[CategoryType.Banking]: {
+	{
+		// id: setIdFormat(CategoryType.Banking),
 		name: 'Banking',
 		icon: {
 			name: 'currency-usd',
@@ -35,7 +40,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.Banking
 	},
-	[CategoryType.Email]: {
+	{
+		// id: setIdFormat(CategoryType.Email),
 		name: 'Email',
 		icon: {
 			name: 'email',
@@ -44,7 +50,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.Email
 	},
-	[CategoryType.CreditCard]: {
+	{
+		// id: setIdFormat(CategoryType.CreditCard),
 		name: 'Credit Cards',
 		icon: {
 			name: 'credit-card',
@@ -53,7 +60,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.CreditCard
 	},
-	[CategoryType.Office]: {
+	{
+		// id: setIdFormat(CategoryType.Office),
 		name: 'Office',
 		icon: {
 			name: 'desktop-tower-monitor',
@@ -62,7 +70,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.Office
 	},
-	[CategoryType.Password]: {
+	{
+		// id: setIdFormat(CategoryType.Password),
 		name: 'Password',
 		icon: {
 			name: 'password',
@@ -71,7 +80,8 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.Password
 	},
-	[CategoryType.School]: {
+	{
+		// id: setIdFormat(CategoryType.School),
 		name: 'School',
 		icon: {
 			name: 'school',
@@ -80,4 +90,4 @@ export const Categories: Categories = {
 		},
 		type: CategoryType.School
 	}
-}
+]

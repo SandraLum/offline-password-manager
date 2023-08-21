@@ -6,7 +6,7 @@ import { cryptoHS, decrypt, encrypt, generateUID } from '@src/common/utils'
 
 import { RootState } from '..'
 import { encryptPassword, setSecurePassphrase, setSecureTag } from './secureSlice'
-import { syncEntriesWithNewKey } from '@src/features/Entries/entriesSlice'
+import { syncEntriesWithNewKey } from '@src/store/slices/entriesSlice'
 
 // Authentication flow:
 // - redux store contains 2 types of store: Async and Secure store
@@ -130,7 +130,6 @@ export const verifyPassword =
 				valid = true
 			}
 		}
-
 		return { valid: valid, hsVal: hsPwd }
 	}
 

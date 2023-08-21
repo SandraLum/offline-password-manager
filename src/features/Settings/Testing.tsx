@@ -1,13 +1,15 @@
 import tw from 'twrnc'
 import Content from '@components/Content'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 import { Portal } from 'react-native-paper'
 import PasswordRecoveryForm from '@src/features/PasswordRecovery/PasswordRecoveryForm'
+import ExportOPM from './ExportOPM'
 
 export default function Testing() {
 	return (
-		<Screen style={tw`flex-1 bg-white`}>
-			<PasswordRecoveryForm />
-		</Screen>
+		<AuthScreen style={tw`flex-1 bg-white`}>
+			{/* <PasswordRecoveryForm /> */}
+			<ExportOPM />
+		</AuthScreen>
 	)
 }

@@ -8,18 +8,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
 import { i18n } from '@src/app/locale'
-import { selectCategoryDetailById } from '@src/features/Categories/categoriesSlice'
+import { selectCategoryByType } from '@src/store/slices/categoriesSlice'
 import {
 	defaultEntry,
 	entryRemoveFromCurrentProfile,
 	entryUpdate,
 	selectEntryById
-} from '@src/features/Entries/entriesSlice'
+} from '@src/store/slices/entriesSlice'
 import { AppDispatch, RootState } from '@src/store'
 import { OPMTypes } from '@src/common/types'
 import EntryForm from './component/EntryForm'
 import { EntryMode } from '@src/common/enums'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewEditEntry'>
 
@@ -30,7 +30,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	const entry = useSelector((state: RootState) => selectEntryById(state, data.entry?.id))
 
 	const category: OPMTypes.Category | undefined = useSelector((state: RootState) =>
-		selectCategoryDetailById(state, entry?.category.id || '')
+		selectCategoryByType(state, entry?.category.type || '')
 	)
 
 	const originalFields = useMemo<OPM.Field[]>(() => entry?.fields || [], [entry])
@@ -168,7 +168,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}
 
 	return (
-		<Screen personalizeHeader={true}>
+		<AuthScreen personalizeHeader={true}>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}
@@ -178,6 +178,6 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 				setFields={setFields}
 				onChangeIcon={onChangeIcon}
 			/>
-		</Screen>
+		</AuthScreen>
 	)
 }

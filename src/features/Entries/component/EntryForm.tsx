@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useContext, useEffect, useState } from 'react'
 
 import { View, ScrollView, Alert } from 'react-native'
 import { Text, Divider, TextInput as PaperTextInput, IconButton, Snackbar } from 'react-native-paper'
@@ -12,9 +12,10 @@ import { getMK } from '@src/store/slices/authSlice'
 
 import { decrypt, encrypt, isEmpty } from '@src/common/utils'
 import { useSelector } from 'react-redux'
-import { selectUserSettings } from '@src/features/Settings/settingSlice'
+import { selectUserSettings } from '@src/store/slices/settingSlice'
 import * as Clipboard from 'expo-clipboard'
 import * as ScreenCapture from 'expo-screen-capture'
+import { ToastContext } from '@src/common/contexts/ToastContext'
 
 type Props = {
 	entry: {
@@ -31,6 +32,41 @@ type Props = {
 	onChangeIcon: (icon?: OPM.ComplexIcon) => void
 }
 
+type OptionalProps = {
+	showCopy: boolean
+	data: { copy: string }
+	OnCopyPressed?: (msg: string) => void
+	showRemove: boolean
+	onRemovePressed?: () => void
+}
+
+const OptionalActions = (props: OptionalProps) => {
+	const { showCopy = false, showRemove = false, data = { copy: '' }, OnCopyPressed, onRemovePressed } = props
+	async function copyToClipboard() {
+		if (data.copy) {
+			await Clipboard.setStringAsync(data.copy)
+			if (OnCopyPressed) {
+				OnCopyPressed('Copied to clipboard')
+			}
+		}
+	}
+
+	return (
+		<>
+			{showCopy && data.copy ? <IconButton icon="content-copy" onPress={copyToClipboard} /> : null}
+			{showRemove ? (
+				<IconButton
+					icon="close-circle"
+					iconColor="grey"
+					size={20}
+					style={tw`font-bold p-0`}
+					onPress={onRemovePressed}
+				/>
+			) : null}
+		</>
+	)
+}
+
 export default function EntryForm({
 	entry: { title, fieldsOptions, fieldsValues, fields },
 	setTitle,
@@ -41,9 +77,9 @@ export default function EntryForm({
 	onChangeIcon
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Props) {
+	const { invokeToast } = useContext(ToastContext)
 	const s = useSelector(getMK)
 	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
-	const [toastMessage, setToastMessage] = useState<string | null | undefined>()
 
 	useEffect(() => {
 		async function init() {
@@ -53,20 +89,6 @@ Props) {
 		}
 		init()
 	}, [allowScreenCapture])
-
-	function renderReadOnlyIcons(val: string) {
-		const renderIcons = []
-		console.log('allowCopy', allowCopy)
-		if (!editable && allowCopy) {
-			renderIcons.push(<IconButton icon="content-copy" onPress={() => copyToClipboard(val)} />)
-		}
-		return renderIcons
-	}
-
-	async function copyToClipboard(val: string) {
-		await Clipboard.setStringAsync(val)
-		setToastMessage('Copy to clipboard')
-	}
 
 	function getFieldComponent(f: OPM.Field) {
 		let component
@@ -140,12 +162,7 @@ Props) {
 				)
 				break
 		}
-		return (
-			<View style={tw`flex flex-row items-center`}>
-				{component || <View style={tw`flex-1`} />}
-				{renderReadOnlyIcons(decrypted)}
-			</View>
-		)
+		return { field: component, value: decrypted }
 	}
 
 	function onChangeValue(field: OPM.Field, value: string) {
@@ -183,88 +200,84 @@ Props) {
 	}
 
 	return (
-		<ScrollView
-			nestedScrollEnabled={true}
-			showsVerticalScrollIndicator={true}
-			style={tw`w-full h-full`}
-			contentContainerStyle={tw.style(`flex`)}
-		>
-			<View style={tw`w-full px-2 py-0 bg-white`}>
-				<View style={tw`flex py-2 flex-row items-center`}>
-					<IconSelector
-						bordered={editable}
-						editable={editable}
-						size={40}
-						icon={title.icon}
-						name={title.name}
-						onChangeIcon={onChangeIcon}
-					/>
+		<>
+			<ScrollView
+				nestedScrollEnabled={true}
+				showsVerticalScrollIndicator={true}
+				style={tw`w-full h-full`}
+				contentContainerStyle={tw.style(`flex`)}
+			>
+				<View style={tw`w-full px-2 py-0 bg-white`}>
+					<View style={tw`flex py-2 flex-row items-center`}>
+						<IconSelector
+							bordered={editable}
+							editable={editable}
+							size={40}
+							icon={title.icon}
+							name={title.name}
+							onChangeIcon={onChangeIcon}
+						/>
 
-					<PaperTextInput
-						dense
-						mode={editable ? 'outlined' : 'flat'}
-						editable={editable}
-						value={title.name}
-						onChangeText={text => setTitle({ ...title, name: text })}
-						style={tw.style(`flex-1 justify-center text-5 bg-transparent`, !editable && 'font-bold')}
-						contentStyle={tw.style(!editable && 'pl-1')}
-						error={title.name.trim() === ''}
-						underlineColor="transparent"
-						activeUnderlineColor="transparent"
-						placeholder={i18n.t('entry:form:field:input:placeholder:title')}
-						focusable={true}
-						right={
-							editable && title.name.length > 0 ? (
-								<PaperTextInput.Icon
-									icon="close-circle-outline"
-									forceTextInputFocus={true}
-									onPress={() => setTitle({ ...title, name: '' })}
-								/>
-							) : null
-						}
-					/>
-				</View>
-				{/* eslint-disable-next-line react-native/no-inline-styles */}
-				<Divider style={{ borderBottomWidth: 1, borderColor: tw.color('teal-700') }} />
+						<PaperTextInput
+							dense
+							mode={editable ? 'outlined' : 'flat'}
+							editable={editable}
+							value={title.name}
+							onChangeText={text => setTitle({ ...title, name: text })}
+							style={tw.style(`flex-1 justify-center text-5 bg-transparent`, !editable && 'font-bold')}
+							contentStyle={tw.style(!editable && 'pl-1')}
+							error={title.name.trim() === ''}
+							underlineColor="transparent"
+							activeUnderlineColor="transparent"
+							placeholder={i18n.t('entry:form:field:input:placeholder:title')}
+							focusable={true}
+							right={
+								editable && title.name.length > 0 ? (
+									<PaperTextInput.Icon
+										icon="close-circle-outline"
+										forceTextInputFocus={true}
+										onPress={() => setTitle({ ...title, name: '' })}
+									/>
+								) : null
+							}
+						/>
+					</View>
+					{/* eslint-disable-next-line react-native/no-inline-styles */}
+					<Divider style={{ borderBottomWidth: 1, borderColor: tw.color('teal-700') }} />
 
-				{/* Render fields */}
-				{fields.map((f: OPM.Field, index: number) => {
-					const field = getFieldComponent(f)
+					{/* Render fields */}
+					{fields.map((f: OPM.Field, index: number) => {
+						const { field, value } = getFieldComponent(f)
 
-					return field ? (
-						<Fragment key={`f-${index}-${f.id}`}>
-							<View style={tw`flex-col justify-center pb-2`}>
-								<Text style={tw`text-3 pl-2 py-1 font-bold`}>{f.label}</Text>
+						return field ? (
+							<Fragment key={`f-${index}-${f.id}`}>
+								<View style={tw`flex-col justify-center pb-2`}>
+									<Text style={tw`text-3 pl-2 py-1 font-bold`}>{f.label}</Text>
 
-								<View style={tw`flex-row items-center`}>
-									<View style={tw`flex-1`}>{field}</View>
-									{editable && (
-										<IconButton
-											icon="close-circle"
-											iconColor="grey"
-											size={20}
-											// containerColor="red"
-											style={tw`font-bold p-0`}
-											onPress={() => onRemoveField(f)}
+									<View style={tw`flex-row items-center`}>
+										<View style={tw`flex-1`}>{field}</View>
+										{/* {renderReadOnlyIcons(f.id)} */}
+										<OptionalActions
+											showRemove={editable}
+											showCopy={!editable && allowCopy}
+											data={{ copy: value }}
+											OnCopyPressed={message => invokeToast(message)}
+											onRemovePressed={() => onRemoveField(f)}
 										/>
-									)}
+									</View>
 								</View>
-							</View>
-							<Divider
-								// eslint-disable-next-line react-native/no-inline-styles
-								style={{ borderBottomWidth: 0.8, borderColor: tw.color(editable ? 'stone-300' : 'stone-700') }}
-							/>
-						</Fragment>
-					) : null
-				})}
+								<Divider
+									// eslint-disable-next-line react-native/no-inline-styles
+									style={{ borderBottomWidth: 0.8, borderColor: tw.color(editable ? 'stone-300' : 'stone-700') }}
+								/>
+							</Fragment>
+						) : null
+					})}
 
-				{/* Editable mode: To allow adding of fields */}
-				{editable && <AddFieldForm onAddField={onAddField} />}
-			</View>
-
-			<Snackbar visible={!!toastMessage} onDismiss={() => setToastMessage(null)}>
-				{toastMessage}
-			</Snackbar>
-		</ScrollView>
+					{/* Editable mode: To allow adding of fields */}
+					{editable && <AddFieldForm onAddField={onAddField} />}
+				</View>
+			</ScrollView>
+		</>
 	)
 }

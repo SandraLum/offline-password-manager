@@ -12,8 +12,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 // Components
 import CategoryItemModal from './CategoryItemModal'
 
-import { selectAllCategoriesDetails } from '@src/features/Categories/categoriesSlice'
-import { selectAllEntriesByProfile } from '@src/features/Entries/entriesSlice'
+import { selectAllCategories } from '@src/store/slices/categoriesSlice'
+import { selectAllEntriesByProfile } from '@src/store/slices/entriesSlice'
 import { CategoryType, DashboardContentView } from '@common/enums'
 import { OPMTypes } from '@common/types'
 import { getCurrentProfileId } from '@src/store/slices/appSlice'
@@ -28,7 +28,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dialogRef = useRef(null)
 
-	const allCategories = useSelector(selectAllCategoriesDetails)
+	const allCategories = useSelector(selectAllCategories)
 	const entries = useSelector(state => selectAllEntriesByProfile(state, getCurrentProfileId(state)))
 
 	const [categories, setCategories] = useState<OPMTypes.Category[]>([])
@@ -43,20 +43,20 @@ export default function Categories({ onToggleDisplayView }: Props) {
 		navigation.navigate({
 			name: 'AddEntry',
 			params: {
-				data: { category: { id: category.id } }
+				data: { category: { type: category.type } }
 			}
 		})
 	}
 
 	function onViewEntries(category: OPMTypes.Category) {
 		onToggleDisplayView(DashboardContentView.Entries, {
-			filter: category.type === CategoryType.AllItems ? { categoriesIds: [] } : { categoriesIds: [category.id] }
+			filter: category.type === CategoryType.AllItems ? { categories: [] } : { categories: [category.type] }
 		})
 	}
 
 	function renderCard({ item: category }: { item: OPMTypes.Category }) {
 		const icon = category?.icon
-		const totalEntries = entries.filter(i => i.category?.id === category.id)?.length
+		const totalEntries = entries.filter(i => i.category.type === category.type)?.length
 
 		return (
 			<>
@@ -153,7 +153,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 				<View style={tw.style(`flex-row flex-wrap`)}>
 					{categories.map(item => {
 						return (
-							<View key={`category-card-${item.id}`} style={tw.style(`px-2 py-1`, { width: '50%' })}>
+							<View key={`category-card-${item.type}`} style={tw.style(`px-2 py-1`, { width: '50%' })}>
 								{renderCard({ item })}
 							</View>
 						)

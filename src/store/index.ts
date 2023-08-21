@@ -50,7 +50,13 @@ async function initStore() {
 			secureStorage.removeItem(`persist:${securePersistConfig.key}`)
 			state = undefined
 		}
-
+		if (action.type === 'RESTORE_STATE') {
+			console.log('RESTORE_STATE:payload', action.payload)
+			// remove for all keys defined in your persistConfig(s)
+			// AsyncStorage.removeItem(`persist:${mainPersistConfig.key}`)
+			// secureStorage.removeItem(`persist:${securePersistConfig.key}`)
+			state = action.payload
+		}
 		return appReducer(state, action)
 	}
 

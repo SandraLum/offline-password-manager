@@ -15,7 +15,7 @@ import { i18n } from '@src/app/locale'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import AlertModal from '@src/components/AlertModal'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 export default function PasswordRecoveryForm() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
@@ -136,8 +136,8 @@ export default function PasswordRecoveryForm() {
 	if (!webviewSource || !runOnceScript) return null
 
 	return (
-		<Screen>
-			<View style={tw`flex-1 m-2 bg-white rounded-lg`}>
+		<>
+			<AuthScreen style={tw`flex-1 m-2 bg-white rounded-lg`}>
 				<View style={tw`flex-1`}>
 					<WebView
 						ref={refWebView}
@@ -169,7 +169,7 @@ export default function PasswordRecoveryForm() {
 						</View>
 					)}
 				</View>
-			</View>
+			</AuthScreen>
 
 			<AlertModal
 				visible={alertVisible}
@@ -191,6 +191,6 @@ export default function PasswordRecoveryForm() {
 					</Button>
 				</View>
 			</AlertModal>
-		</Screen>
+		</>
 	)
 }

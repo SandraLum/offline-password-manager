@@ -11,10 +11,10 @@ import { i18n } from '@src/app/locale'
 import { OPMTypes } from '@src/common/types'
 
 import ProfileForm from './component/ProfileForm'
-import { emptyProfile, profilesAddOne } from './profilesSlice'
+import { emptyProfile, profilesAddOne } from '../../store/slices/profilesSlice'
 import { generateUID } from '@src/common/utils'
 import { AppDispatch } from '@src/store'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddProfile'>
 
@@ -44,12 +44,12 @@ export default function AddProfile({ navigation }: Props) {
 	}, [dispatch, navigation, profile])
 
 	return (
-		<Screen>
+		<AuthScreen>
 			<ProfileForm editable={editable} profile={profile} setProfile={setProfile} />
 
 			<Button onPress={onSave} mode="contained" style={tw`m-2`}>
 				{i18n.t('button:label:save')}
 			</Button>
-		</Screen>
+		</AuthScreen>
 	)
 }

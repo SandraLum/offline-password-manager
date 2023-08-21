@@ -12,15 +12,15 @@ import { i18n } from '@src/app/locale'
 import * as utils from '@utils'
 import { Entries as TemplateEntries } from '@src/common/templates'
 
-import { selectCategoryDetailById } from '@src/features/Categories/categoriesSlice'
-import { defaultEntry, entriesAddOneToCurrentProfile } from '@src/features/Entries/entriesSlice'
+import { selectCategoryByType } from '@src/store/slices/categoriesSlice'
+import { defaultEntry, entriesAddOneToCurrentProfile } from '@src/store/slices/entriesSlice'
 import { AppDispatch, RootState } from '@src/store'
 import EntryForm from './component/EntryForm'
 import { selectCurrentProfile } from '@src/store/slices/appSlice'
 import { useNavigation } from '@react-navigation/native'
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
@@ -29,7 +29,7 @@ export default function AddEntry({ route }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 	const { data } = route.params
 
-	const category = useSelector((state: RootState) => selectCategoryDetailById(state, data.category.id))
+	const category = useSelector((state: RootState) => selectCategoryByType(state, data.category.type))
 	const currentProfile = useSelector(selectCurrentProfile)
 
 	const originalFields = useMemo<OPM.Field[]>(
@@ -113,7 +113,7 @@ export default function AddEntry({ route }: Props) {
 	}
 
 	return (
-		<Screen personalizeHeader={false}>
+		<AuthScreen personalizeHeader={true}>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}
@@ -123,6 +123,6 @@ export default function AddEntry({ route }: Props) {
 				setFields={setFields}
 				onChangeIcon={onChangeIcon}
 			/>
-		</Screen>
+		</AuthScreen>
 	)
 }

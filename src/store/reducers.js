@@ -1,10 +1,10 @@
 import appSlice from '@store/slices/appSlice'
 import secureSlice from '@src/store/slices/secureSlice'
 import authSlice from '@src/store/slices/authSlice'
-import categoriesSlice from '@src/features/Categories/categoriesSlice'
-import entriesSlice from '@src/features/Entries/entriesSlice'
-import profilesSlice from '@src/features/Profile/profilesSlice'
-import settingSlice from '@src/features/Settings/settingSlice'
+import categoriesSlice from '@src/store/slices/categoriesSlice'
+import entriesSlice from '@src/store/slices/entriesSlice'
+import profilesSlice from '@src/store/slices/profilesSlice'
+import settingSlice from '@src/store/slices/settingSlice'
 
 export const mainReducer = {
 	app: appSlice.reducer,

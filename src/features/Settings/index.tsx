@@ -1,36 +1,55 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { Text, Searchbar, List, Switch } from 'react-native-paper'
+import * as ScreenCapture from 'expo-screen-capture'
 
 import { i18n } from '@src/app/locale'
 import tw from 'twrnc'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 import Content from '@src/components/Content'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUserSettings, setAllowCopy } from './settingSlice'
+import { selectUserSettings, setAllowCopy, setAllowScreenCapture } from '../../store/slices/settingSlice'
 
 export default function Settings() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dispatch = useDispatch()
-	const { allowCopy } = useSelector(selectUserSettings)
+	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
 
 	function navigateTo({ screen, params = {} }: { screen: string; params?: object }) {
 		// navigation.navigate('App', { screen: 'SettingsStack', params: { screen: screen, params: params } })
 		navigation.navigate({ name: screen, params: params })
 	}
 
+	const [showOptions, setShowOptions] = useState({ screenCapture: false })
 	const [isAllowCopy, setIsAllowCopy] = useState(allowCopy)
+	const [isAllowScreenCapture, setIsAllowScreenCapture] = useState(allowScreenCapture)
+
+	useEffect(() => {
+		const init = async () => {
+			const avail = await ScreenCapture.isAvailableAsync()
+			console.log('avail', avail)
+			setShowOptions(o => ({ ...o, screenCapture: avail }))
+		}
+		init()
+	}, [])
 
 	const onToggleAllowCopy = () => {
-		setIsAllowCopy(!isAllowCopy)
-		dispatch(setAllowCopy(!isAllowCopy))
+		const allow = !isAllowCopy
+		setIsAllowCopy(allow)
+		dispatch(setAllowCopy(allow))
+	}
+
+	const onToggleAllowScreenCapture = async () => {
+		const allow = !isAllowScreenCapture
+		setIsAllowScreenCapture(allow)
+		dispatch(setAllowScreenCapture(allow))
 	}
 
 	return (
-		<Screen>
+		<AuthScreen>
 			<Content horizontal={false}>
 				<View style={tw`flex justify-center`}>
 					<List.Section>
@@ -56,8 +75,32 @@ export default function Settings() {
 					</List.Section>
 
 					<List.Section>
-						<List.Subheader>Security</List.Subheader>
-						<List.Item title="Allow screenshot" left={props => <List.Icon {...props} icon="cellphone-screenshot" />} />
+						<List.Subheader>Import and Export</List.Subheader>
+
+						<List.Item
+							title="Export"
+							description={'Backup and exports the current entries into a backup file.'}
+							left={props => <List.Icon {...props} icon="export" />}
+							onPress={() => navigateTo({ screen: 'Settings:Export' })}
+						/>
+						<List.Item
+							title="Import"
+							description={
+								'Imports and restores a valid backup file into the app. The current entries will be overwritten.'
+							}
+							left={props => <List.Icon {...props} icon="import" />}
+						/>
+					</List.Section>
+
+					<List.Section>
+						<List.Subheader>{`Security`}</List.Subheader>
+						{showOptions.screenCapture ? (
+							<List.Item
+								title="Allow screenshot"
+								left={props => <List.Icon {...props} icon="cellphone-screenshot" />}
+								right={() => <Switch value={isAllowScreenCapture} onValueChange={onToggleAllowScreenCapture} />}
+							/>
+						) : null}
 						<List.Item
 							title="Change Password"
 							left={props => <List.Icon {...props} icon="lock" />}
@@ -79,25 +122,8 @@ export default function Settings() {
 							left={props => <List.Icon {...props} icon="delete-forever" />}
 						/>
 					</List.Section>
-
-					<List.Section>
-						<List.Subheader>Import and Export</List.Subheader>
-
-						<List.Item
-							title="Export"
-							description={'Backup and exports the current entries into a backup file.'}
-							left={props => <List.Icon {...props} icon="export" />}
-						/>
-						<List.Item
-							title="Import"
-							description={
-								'Imports and restores a valid backup file into the app. The current entries will be overwritten.'
-							}
-							left={props => <List.Icon {...props} icon="import" />}
-						/>
-					</List.Section>
 				</View>
 			</Content>
-		</Screen>
+		</AuthScreen>
 	)
 }

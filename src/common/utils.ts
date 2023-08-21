@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import 'react-native-get-random-values'
 import * as CryptoJS from 'crypto-js'
 import { randomUUID } from 'expo-crypto'
@@ -84,7 +85,7 @@ export function decrypt(value: string, secret: string): string {
 			decrypted = CryptoJS.AES.decrypt(decrypted, secret).toString(CryptoJS.enc.Utf8)
 		}
 	} catch (e) {
-		console.warn('Unable to decrypt', e)
+		console.warn('[Error] Unable to decrypt', e)
 	}
 	return decrypted
 }
@@ -94,7 +95,7 @@ export function encrypt(value: string | unknown, secret: string): string {
 	try {
 		encrypted = CryptoJS.AES.encrypt(encrypted, secret).toString()
 	} catch (e) {
-		console.warn('Unable to encrypt', e)
+		console.warn('[Error] Unable to encrypt', e)
 	}
 	return encrypted
 }
@@ -131,4 +132,37 @@ export function getRandom(min: number, max: number) {
 
 export function decode(arr: number[]) {
 	return arr.map(x => convertChar(x)).join('')
+}
+
+export function intArrayShift(arr: Uint8Array, offset: number, reverse = false) {
+	const result = new Uint8Array(arr.length)
+	const len = arr.length - offset
+
+	if (reverse) {
+		result.set(arr.slice(len))
+		result.set(arr.slice(0, len), offset)
+	} else {
+		result.set(arr.slice(offset))
+		result.set(arr.slice(0, offset), len)
+	}
+	return result
+}
+
+export function formatDate(dt: Date, format?: string) {
+	const yyyy = dt.getFullYear()
+	let mm: string | number = dt.getMonth() + 1
+	let dd: string | number = dt.getDate()
+
+	if (dd < 10) dd = '0' + dd
+	if (mm < 10) mm = '0' + mm
+
+	const replaced = format
+		? format
+				.replace('dd', dd.toString())
+				.replace('mm', mm.toString())
+				.replace('yyyy', yyyy.toString())
+				.replace('yy', yyyy.toString().substring(2))
+		: dt.toLocaleString()
+
+	return replaced
 }

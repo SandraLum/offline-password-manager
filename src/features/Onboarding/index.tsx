@@ -5,7 +5,7 @@ import { Button, Text } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
 import { RootStackParamList } from '@src/app/routes'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>
 
@@ -14,7 +14,7 @@ export default function Onboarding({ navigation }: Props) {
 		navigation.navigate({ name: 'PasswordRecovery:Form', params: {} })
 	}
 	return (
-		<Screen>
+		<AuthScreen>
 			<Content horizontal={false} contentContainerStyle={tw`flex-1 flex-col m-2 bg-white rounded-lg items-center`}>
 				<View style={tw.style({ padding: 30 })} />
 				<Image
@@ -29,6 +29,6 @@ export default function Onboarding({ navigation }: Props) {
 					{i18n.t('onboarding:button:next')}
 				</Button>
 			</Content>
-		</Screen>
+		</AuthScreen>
 	)
 }

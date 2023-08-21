@@ -14,11 +14,10 @@ import { initialize } from '@src/store/slices/appSlice'
 
 import { AppDispatch } from '@src/store'
 import FormValidationErrors from '../Login/component/FormValidationErrors'
-import Screen from '@src/components/Screen'
+import AuthScreen from '@src/components/AuthScreen'
 
 export default function ChangePassword() {
 	const dispatch = useDispatch<AppDispatch>()
-	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [mode, setMode] = useState<'change' | 'success'>('change')
@@ -31,10 +30,6 @@ export default function ChangePassword() {
 	const [hidecurrentPassword, setHidecurrentPassword] = useState(true)
 	const [hidePassword, setHidePassword] = useState(true)
 	const [hideConfirmPassword, setHideCfmPassword] = useState(true)
-
-	useEffect(() => {
-		dispatch(initialize)
-	}, [dispatch])
 
 	function validatePassword(pwd: string, cfmPwd: string): boolean {
 		const errorMessages = []
@@ -51,7 +46,7 @@ export default function ChangePassword() {
 		return valid
 	}
 
-	function validatecurrentPassword(pwd: string): boolean {
+	function validateCurrentPassword(pwd: string): boolean {
 		const errorMessages = []
 		let valid = true
 		if (pwd.length === 0) {
@@ -62,7 +57,7 @@ export default function ChangePassword() {
 		return valid
 	}
 
-	function onChangecurrentPassword(text: string) {
+	function onChangeCurrentPassword(text: string) {
 		setCurrentPassword(text)
 	}
 
@@ -80,7 +75,7 @@ export default function ChangePassword() {
 		setIsLoading(true)
 		// setMode('success')
 
-		if (validatecurrentPassword(currentPassword)) {
+		if (validateCurrentPassword(currentPassword)) {
 			const result = await dispatch(verifyPassword(currentPassword))
 			if (!result.valid) {
 				setCurrentPasswordErrors([i18n.t('settings:change-password:error:save:current-password')])
@@ -97,7 +92,7 @@ export default function ChangePassword() {
 	}
 
 	return (
-		<Screen style={tw`flex-1 bg-white`}>
+		<AuthScreen style={tw`flex-1 bg-white`}>
 			<Content horizontal={false} contentContainerStyle={tw`pt-5`}>
 				{mode === 'change' ? (
 					<>
@@ -115,7 +110,7 @@ export default function ChangePassword() {
 								mode="outlined"
 								label={i18n.t('settings:change-password:text:current-password')}
 								value={currentPassword}
-								onChangeText={onChangecurrentPassword}
+								onChangeText={onChangeCurrentPassword}
 								secureTextEntry={hidecurrentPassword}
 								right={
 									<PaperTextInput.Icon
@@ -190,6 +185,6 @@ export default function ChangePassword() {
 					</>
 				)}
 			</Content>
-		</Screen>
+		</AuthScreen>
 	)
 }

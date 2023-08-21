@@ -1,11 +1,11 @@
 /* eslint-disable indent */
 import { createEntityAdapter, createSlice, createSelector, AnyAction } from '@reduxjs/toolkit'
-import { selectAllCategoriesDetails } from '../Categories/categoriesSlice'
+import { CategoryType, selectAllCategories } from './categoriesSlice'
 import { clone, decrypt, encrypt, getObjValue, union } from '@utils'
 import { RootState } from '@src/store'
 // import { CategoryType } from '@common/enums'
 import { OPMTypes } from '@src/common/types'
-import { profileUpdate, selectProfileById } from '../Profile/profilesSlice'
+import { profileUpdate, selectProfileById } from './profilesSlice'
 import { selectCurrentProfile } from '@src/store/slices/appSlice'
 
 // Model:
@@ -21,9 +21,7 @@ import { selectCurrentProfile } from '@src/store/slices/appSlice'
 export const defaultEntry: OPMTypes.Entry = {
 	id: '',
 	title: { name: '' },
-	// category: { id: '', name: '', type: CategoryType.AllItems },
-	// SL Todo: clean up
-	category: { id: '' },
+	category: { type: CategoryType.Login },
 	fields: [],
 	fieldsValues: {},
 	lastUpdatedOn: new Date().valueOf()
@@ -144,9 +142,8 @@ export type GroupEntry = {
 }
 
 export const selectAllGroupedEntriesByProfile = createSelector(
-	[selectAllEntries, selectAllCategoriesDetails, (state, profileId) => selectProfileById(state, profileId)],
+	[selectAllEntries, selectAllCategories, (state, profileId) => selectProfileById(state, profileId)],
 	(items, categories, profile): GroupEntry[] => {
-		console.log('entries---- items', items)
 		const groupedIndexes: { [key: string | number]: number } = {}
 		return items.reduce((arr: GroupEntry[], curr) => {
 			if (profile?.entries?.includes(curr.id)) {
@@ -156,7 +153,7 @@ export const selectAllGroupedEntriesByProfile = createSelector(
 					const { category, ...entry } = curr
 					const index = groupedIndexes[groupedKey]
 					if (index === undefined) {
-						const foundCategory = categories.find(c => c.id === curr.category.id)
+						const foundCategory = categories.find(c => c.type === curr.category.type)
 						if (!foundCategory) throw 'Category not found'
 
 						//New group
@@ -173,7 +170,7 @@ export const selectAllGroupedEntriesByProfile = createSelector(
 )
 
 export const selectAllGroupedEntries = createSelector(
-	[selectAllEntries, selectAllCategoriesDetails],
+	[selectAllEntries, selectAllCategories],
 	(items, categories): GroupEntry[] => {
 		const groupedIndexes: { [key: string | number]: number } = {}
 		return items.reduce((arr: GroupEntry[], curr) => {
@@ -183,7 +180,7 @@ export const selectAllGroupedEntries = createSelector(
 				const { category, ...entry } = curr
 				const index = groupedIndexes[groupedKey]
 				if (index === undefined) {
-					const foundCategory = categories.find(c => c.id === curr.category.id)
+					const foundCategory = categories.find(c => c.type === curr.category.type)
 					if (!foundCategory) throw 'Category not found'
 
 					//New group

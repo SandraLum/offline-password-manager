@@ -2,20 +2,22 @@ import { AnyAction, ThunkAction } from '@reduxjs/toolkit'
 import { CategoryType } from '@src/common/enums'
 import { RootState } from '@src/store'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { FileInfo } from 'expo-file-system/build/FileSystem.types'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace OPMTypes {
 	type TemplateCategory = {
+		// id: string
 		name: string
 		icon: OPM.Icon
 		type: CategoryType
 	}
 
 	type ICategory = {
-		id: string
+		// id: string
 		// name: string
 		type: CategoryType
-		sort: number
+		sort?: number
 	}
 
 	type Category = TemplateCategory & ICategory
@@ -23,7 +25,7 @@ export declare namespace OPMTypes {
 	type Entry = {
 		id: string
 		title: OPM.EntryTitle
-		category: { id: ICategory['id'] }
+		category: { type: ICategory['type'] }
 		fields: OPM.Field[]
 		fieldsValues?: OPM.FieldsValues
 		lastUpdatedOn: number | string
@@ -42,6 +44,45 @@ export declare namespace OPMTypes {
 	}
 
 	type EmptyProfile = Omit<Profile, 'id'> & { id?: string }
+
+	type ExportCSVData = {
+		type: 'csv'
+		success: true
+		profile: Profile
+		filename: string
+		fileUri: string
+		fileInfo: FileInfo
+	}
+
+	type ExportOPMData = {
+		type: 'opm'
+		success: true
+		filename: string
+		fileUri: string
+		fileInfo: FileInfo
+	}
+
+	type ExportCSVError = {
+		type: 'csv'
+		success: false
+		error: string
+		profile: Profile
+	}
+
+	type ExportOPMError = {
+		type: 'opm'
+		success: false
+		error: string
+	}
+
+	type ExportedFile = {
+		id: number | string
+	} & (ExportCSVData | ExportOPMData | ExportCSVError | ExportOPMError)
+
+	type ExportedFiles = {
+		type: 'csv' | 'opm'
+		files: ExportedFile[]
+	}
 
 	export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>
 }

@@ -32,7 +32,11 @@ import AppInitializer from '@src/features/AppInitializer'
 import { checkIsAuthenticated } from '@src/store/slices/authSlice'
 import { useSelector } from 'react-redux'
 import AppWrapper from './AppWrapper'
-import Backup from '@src/features/Settings/Backup'
+import Export from '@src/features/Settings/Export'
+import ExportGenerated from '@src/features/Settings/ExportGenerated'
+import { OPMTypes } from '@src/common/types'
+import ExportGeneration from '@src/features/Settings/ExportGeneration'
+import { CategoryType } from '../../_to_delete/20230405/categories.1'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -46,14 +50,14 @@ export type RootStackParamList = {
 	Login: {}
 	App: NavigatorScreenParams<DrawerParamList>
 	AddEntry: {
-		data: { category: { id: string } }
+		data: { category: { type: CategoryType } }
 	}
 	ViewEditEntry: {
 		data: { entry: { id: string } }
 		mode: EntryMode.READ | EntryMode.EDIT
 	}
 	Entries: {
-		filter: { categories: string[] }
+		filter: { categories: CategoryType[] }
 		title: string
 	}
 	ViewAndEditProfile: {
@@ -66,7 +70,9 @@ export type RootStackParamList = {
 	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
-	'Settings:Backup': {}
+	'Settings:Export': {}
+	'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { hsPwd: string; profileIds: string[] } }
+	'Settings:ExportGenerated': OPMTypes.ExportedFiles
 	'PasswordRecovery:Form': {}
 	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
@@ -184,8 +190,19 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
-								<Stack.Screen name="Settings:Backup" component={Backup} options={{ title: 'Backup' }} />
+								<Stack.Screen name="Settings:Export" component={Export} options={{ title: 'Export' }} />
+								<Stack.Screen
+									name="Settings:ExportGenerated"
+									component={ExportGenerated}
+									options={{ title: 'Export Generated Files' }}
+								/>
+								<Stack.Screen
+									name="Settings:ExportGeneration"
+									component={ExportGeneration}
+									options={{ title: 'Generating Export files' }}
+								/>
 								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
+
 								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
 							</>
 						)}
