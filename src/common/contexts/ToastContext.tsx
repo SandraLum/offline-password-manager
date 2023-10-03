@@ -26,22 +26,22 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
 	const defaultOptions: ToastOptions = { dismissDuration: 500 }
 	const [toast, setSnack] = useState<Toast>({ message: '', open: false })
 
-	function invokeToast(msg = '', options = {}) {
-		setSnack({ message: msg, open: true, options: options })
+	function invokeToast(message = '', options?: ToastOptions) {
+		if (options) {
+			setSnack(o => ({ ...o, message: message, options: options }))
+		}
+		setSnack(o => ({ ...o, open: true }))
 	}
 	function onDismiss() {
 		setSnack({ message: null, open: false })
 	}
 
+	const dismissDuration = toast.options?.dismissDuration || defaultOptions.dismissDuration
 	return (
 		<ToastContext.Provider value={{ toast, invokeToast }}>
 			{children}
 
-			<Snackbar
-				visible={toast.open}
-				onDismiss={onDismiss}
-				duration={toast.options?.dismissDuration || defaultOptions.dismissDuration}
-			>
+			<Snackbar visible={toast.open} onDismiss={onDismiss} duration={dismissDuration}>
 				{toast.message}
 			</Snackbar>
 		</ToastContext.Provider>

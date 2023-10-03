@@ -25,6 +25,10 @@ const settingSlice = createSlice({
 		},
 		setAllowScreenCapture: (state, action) => {
 			state.allowScreenCapture = action.payload
+		},
+		clearSettings: state => {
+			state.allowCopy = initialState.allowCopy
+			state.allowScreenCapture = initialState.allowScreenCapture
 		}
 	}
 })
@@ -66,5 +70,5 @@ export const getBackupState: OPMTypes.AppThunk<RootState> = (dispatch, getState)
 	return getState()
 }
 
-export const { setAllowCopy, setAllowScreenCapture } = settingSlice.actions
+export const { setAllowCopy, setAllowScreenCapture, clearSettings } = settingSlice.actions
 export default settingSlice

@@ -2,21 +2,21 @@ import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolk
 
 import * as Templates from '@src/common/templates/index'
 
-import { CategoryType } from '@src/common/enums'
 import { OPMTypes } from '@src/common/types'
 import { RootState } from '@src/store'
 
 // Custom categories -
-const defaultCategories: OPMTypes.Category[] = ([] as OPMTypes.TemplateCategory[]).concat(Templates.Categories)
+// const defaultCategories: OPMTypes.Category[] = ([] as OPMTypes.TemplateCategory[]).concat(Templates.Categories)
+// const defaultCategories: OPMTypes.Category[] = []
 
 const categoriesAdapter = createEntityAdapter<OPMTypes.Category>({
 	// Assume IDs are stored in a field other than `category.id`
-	selectId: (category: OPMTypes.ICategory) => category.type
+	selectId: (category: OPMTypes.ICategory) => category.id
 	// Keep the "all IDs" array sorted based on category sort prop
 	// sortComparer: (a, b) => a.sort - b.sort
 })
 
-const initialState = categoriesAdapter.upsertMany(categoriesAdapter.getInitialState(), defaultCategories)
+const initialState = categoriesAdapter.upsertMany(categoriesAdapter.getInitialState(), [])
 
 const categoriesSlice = createSlice({
 	name: 'categories',
@@ -28,35 +28,23 @@ const categoriesSlice = createSlice({
 		categoryRemove: categoriesAdapter.removeOne,
 		resetCategories: state => {
 			categoriesAdapter.removeAll(state)
-			return categoriesAdapter.upsertMany(categoriesAdapter.getInitialState(), defaultCategories)
+			return categoriesAdapter.upsertMany(categoriesAdapter.getInitialState(), [])
 		}
 	}
 })
 
-export const { selectAll: selectAllCategories, selectById: selectCategoryByType } = categoriesAdapter.getSelectors(
-	(state: RootState) => state.main.categories
+// Note: This is not the best way, temporarily creating it as selector until
+// the decision to add custom category feature.
+export const selectAllCategories = createSelector(
+	(state: RootState) => state.main.categories,
+	_ => ([] as OPMTypes.Category[]).concat(Templates.Categories)
 )
 
-// export const selectAllCategoriesDetails = createSelector([selectAllCategories], (categories): OPMTypes.Category[] => {
-// 	return categories.map((c: OPMTypes.ICategory) => {
-// 		return { ...c, ...Templates.Categories[c.type] }
-// 	})
-// })
-
-// SL TODO:
-// export const selectCategoryDetailById = createSelector(
-// 	[state => state, (_, type) => type],
-// 	(state, type): OPMTypes.Category | undefined => {
-// 		const category = selectCategoryByType(state, type)
-// 		if (category) {
-// 			return { ...category, ...Templates.Categories[category.type] }
-// 		} else {
-// 			return Object.entries(Templates.Categories).filter(c=> c.type === type)
-// 		}
-// 	}
-// )
+export const selectCategoryById = createSelector(
+	[state => state, (_, id: OPMTypes.Category['id']) => id],
+	(_state, id): OPMTypes.Category => Templates.Categories.filter(c => c.id === id)?.[0]
+)
 
 export const { categoriesAddOne, categoriesAddMany, categoryUpdate, categoryRemove, resetCategories } =
 	categoriesSlice.actions
-export { CategoryType }
 export default categoriesSlice

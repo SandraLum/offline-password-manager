@@ -4,12 +4,12 @@
 		"slug": "offlinepasswordstore",
 		"version": "0.0.1",
 		"orientation": "portrait",
-		"icon": "./assets/images/lock-icon.png",
-		"primaryColor": "#00A0DF",
+		"icon": "./assets/images/logo-key-1024.png",
+		"primaryColor": "#589CA9",
 		"description": "",
 		"splash": {
-			"image": "./assets/images/splash.png",
-			"backgroundColor": "#FEF9B0"
+			"image": "./assets/images/logo-splash.png",
+			"backgroundColor": "#F2F1EF"
 		},
 		"plugins": [
 			"expo-localization",

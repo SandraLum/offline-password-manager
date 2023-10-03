@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { createSlice } from '@reduxjs/toolkit'
 import { OPMTypes } from '@src/common/types'
 import { resetProfiles, selectAllProfiles, selectProfileById } from '@src/store/slices/profilesSlice'
@@ -7,6 +8,7 @@ import { clearSecureData } from './secureSlice'
 
 type App = {
 	currentProfile: { id?: OPMTypes.Profile['id'] }
+	onboarded: boolean
 	version: number | string
 	createdTs: number
 	lastUpdatedTs: number
@@ -14,6 +16,7 @@ type App = {
 
 const initialState: App = {
 	currentProfile: {},
+	onboarded: false,
 	version: 0,
 	createdTs: 0,
 	lastUpdatedTs: 0
@@ -71,16 +74,28 @@ export const reset = (): OPMTypes.AppThunk => (dispatch, getState) => {
 export const factoryReset = (): OPMTypes.AppThunk => async dispatch => {
 	console.log('FACTORY RESET APP.............')
 	dispatch({ type: 'RESET_APP' })
-
 	await clearSecureData()
 }
 
-export const restoreState = (): OPMTypes.AppThunk => async dispatch => {
-	console.log('FACTORY RESET APP.............')
-	dispatch({ type: 'RESET_APP' })
+export const restoreState =
+	(retrieveState: any): OPMTypes.AppThunk =>
+	async dispatch => {
+		console.log('RESTORE STATE.............', retrieveState)
+		// - decrypt the data
+		// - Check the version of the data
+		// - Check if migration scripts needs to be run
+		// - Clear the existing data
+		//		- profiles
+		//		- entries
+		//		- settings
+		//		- categories
+		//		- appSlice => currentProfile: { id?: OPMTypes.Profile['id'] }
+		// - Insert profile first
+		// - Insert entries
 
-	await clearSecureData()
-}
+		// dispatch({ type: 'RESET_APP' })
+		// await clearSecureData()
+	}
 
 export const selectCurrentProfile = (state: RootState) => {
 	return selectProfileById(state, state.main.app.currentProfile.id)

@@ -1,13 +1,24 @@
-export enum CategoryType {
-	AllItems = 'AllItems',
-	Login = 'Login',
-	Banking = 'Banking',
-	Email = 'Email',
-	CreditCard = 'CreditCard',
-	Office = 'Office',
-	Password = 'Password',
-	School = 'School'
+export enum CategoryId {
+	AllItems = '[AllItems]',
+	Login = '[Login]',
+	Banking = '[Banking]',
+	Email = '[Email]',
+	CreditCard = '[CreditCard]',
+	Office = '[Office]',
+	Password = '[Password]',
+	School = '[School]'
 }
+
+// export enum CategoryType {
+// 	AllItems = 'AllItems',
+// 	Login = 'Login',
+// 	Banking = 'Banking',
+// 	Email = 'Email',
+// 	CreditCard = 'CreditCard',
+// 	Office = 'Office',
+// 	Password = 'Password',
+// 	School = 'School'
+// }
 
 export enum FieldType {
 	TextInput = 'TextInput',
@@ -36,4 +47,4 @@ export enum DashboardContentView {
 	Entries = 2
 }
 
-export default { CategoryType, FieldType, EntryMode, ProfileMode, DashboardContentView }
+export default { FieldType, EntryMode, ProfileMode, DashboardContentView }

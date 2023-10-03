@@ -9,7 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
 import { i18n } from '@src/app/locale'
-import { EntryMode, ProfileMode, DashboardContentView } from '@src/common/enums'
+import { EntryMode, ProfileMode, DashboardContentView, CategoryId } from '@src/common/enums'
 
 import SetMasterPassword from '@src/features/SetMasterPassword'
 import Onboarding from '@src/features/Onboarding'
@@ -36,7 +36,6 @@ import Export from '@src/features/Settings/Export'
 import ExportGenerated from '@src/features/Settings/ExportGenerated'
 import { OPMTypes } from '@src/common/types'
 import ExportGeneration from '@src/features/Settings/ExportGeneration'
-import { CategoryType } from '../../_to_delete/20230405/categories.1'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -50,14 +49,14 @@ export type RootStackParamList = {
 	Login: {}
 	App: NavigatorScreenParams<DrawerParamList>
 	AddEntry: {
-		data: { category: { type: CategoryType } }
+		data: { category: { id: OPMTypes.Category['id'] } }
 	}
 	ViewEditEntry: {
 		data: { entry: { id: string } }
 		mode: EntryMode.READ | EntryMode.EDIT
 	}
 	Entries: {
-		filter: { categories: CategoryType[] }
+		filter: { categories: CategoryId[] }
 		title: string
 	}
 	ViewAndEditProfile: {

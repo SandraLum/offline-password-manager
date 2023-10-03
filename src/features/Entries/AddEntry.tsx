@@ -12,7 +12,7 @@ import { i18n } from '@src/app/locale'
 import * as utils from '@utils'
 import { Entries as TemplateEntries } from '@src/common/templates'
 
-import { selectCategoryByType } from '@src/store/slices/categoriesSlice'
+import { selectCategoryById } from '@src/store/slices/categoriesSlice'
 import { defaultEntry, entriesAddOneToCurrentProfile } from '@src/store/slices/entriesSlice'
 import { AppDispatch, RootState } from '@src/store'
 import EntryForm from './component/EntryForm'
@@ -29,12 +29,14 @@ export default function AddEntry({ route }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 	const { data } = route.params
 
-	const category = useSelector((state: RootState) => selectCategoryByType(state, data.category.type))
+	const category = useSelector((state: RootState) => selectCategoryById(state, data.category.id))
 	const currentProfile = useSelector(selectCurrentProfile)
+
+	console.log('Add Entry: category', category)
 
 	const originalFields = useMemo<OPM.Field[]>(
 		() =>
-			category ? TemplateEntries[category.type].fields.map((f: OPM.IField) => ({ ...f, id: utils.generateUID() })) : [],
+			category ? TemplateEntries[category.id].fields.map((f: OPM.IField) => ({ ...f, id: utils.generateUID() })) : [],
 		[category]
 	)
 

@@ -11,8 +11,11 @@ import { i18n } from '@src/app/locale'
 
 import * as DocumentPicker from 'expo-document-picker'
 import * as Crypto from 'expo-crypto'
-import { useState } from 'react'
-import { getMK } from '@src/store/slices/authSlice'
+import { useContext, useState } from 'react'
+import { getMK, verifyPassword } from '@src/store/slices/authSlice'
+import { restoreState } from '@src/store/slices/appSlice'
+import tw from 'twrnc'
+import { ToastContext } from '@src/common/contexts/ToastContext'
 
 const Buffer = require('buffer/').Buffer
 
@@ -21,10 +24,9 @@ const Buffer = require('buffer/').Buffer
 export default function ExportOPM() {
 	const dispatch = useDispatch<AppDispatch>()
 	const isAndroid = Platform.OS === 'android'
+	const { invokeToast } = useContext(ToastContext)
 
 	const [currentPassword, setCurrentPassword] = useState('')
-	const [password, setPassword] = useState('')
-	const [salt, setSalt] = useState('')
 
 	// SL: TODO replace with password entering ui (think of changing the modal to prompt for password)
 	const mk = useSelector(getMK)
@@ -33,17 +35,23 @@ export default function ExportOPM() {
 	// console.log('persistor', persistor)
 
 	async function onExportOPM() {
-		const backupState = clone(dispatch(getBackupState))
-		delete backupState['main']?.['_persist']
-		delete backupState['secure']?.['_persist']
-		// console.log('backupState', backupState)
-		// const encoded = await encode(backupState)
-		// if (encoded) {
-		// 	const decoded = await decode(encoded)
-		// }
+		const { valid } = await dispatch(verifyPassword(currentPassword))
+		console.log('valid', valid)
+		if (valid) {
+			const clonedState = clone(dispatch(getBackupState))
+			delete clonedState['main']?.['_persist']
+			delete clonedState['secure']?.['_persist']
+			// console.log('backupState', clonedState)
+			// const encoded = await encode(clonedState)
+			// if (encoded) {
+			// 	const decoded = await decode(encoded)
+			// }
 
-		// Testing()
-		await onDownload(await encode(backupState))
+			// Testing()
+			await saveToDisk(await encode(clonedState))
+		} else {
+			invokeToast('Invalid password, please enter your valid password', { dismissDuration: 4000 })
+		}
 	}
 
 	async function encode(content: any) {
@@ -60,30 +68,7 @@ export default function ExportOPM() {
 		}
 	}
 
-	function decode(content: string) {
-		try {
-			const arrContent = new Uint8Array(content.split(',').map(Number))
-			const arr = intArrayShift(arrContent, Math.round(arrContent.length / 10), false)
-			const bufB64 = new Buffer(arr, 'binary').toString()
-			const decoded = Buffer.from(bufB64, 'base64').toString()
-			const decrypted = decrypt(decoded, mk)
-			const parsed = JSON.parse(decrypted)
-			if (parsed['[OPM_BKUP]'] && parsed['[OPM_BKUP]'].isBackup === true) {
-				if (parsed['[OPM_BKUP]'].version < appVersion) {
-					// Prompt the user to update the app if it is of a lower version than the backed up store
-					ToastAndroid.show(
-						'An older version of your app is detected. Please upgrade your app before restoring the backup.',
-						ToastAndroid.LONG
-					)
-					return
-				}
-			}
-		} catch (e) {
-			console.log('[ERROR] Unable to decode:', e)
-		}
-	}
-
-	async function onDownload(content: any) {
+	async function saveToDisk(content: any) {
 		// console.log('ondownload', content)
 		// setSelectRecord(record)
 		if (isAndroid) {
@@ -145,43 +130,17 @@ export default function ExportOPM() {
 		}
 	}
 
-	async function onReadOPM() {
-		// SL TODO: read opm file and decode and restore in store/index
-		try {
-			const result = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true })
-			console.log('result', result)
-			if (result.type === 'success') {
-				const content = await FileSystem.readAsStringAsync(result.uri, { encoding: 'utf8' })
-				console.log('decoded:content', content)
-				const restoreState = decode(content)
-				console.log('decoded:restoreState', typeof restoreState)
-
-				// dispatch({ type: 'RESTORE_STATE', payload: restoreState })
-			}
-			// const val = decode(str)
-			// delete backupState['main']?.['_persist']
-			// delete backupState['secure']?.['_persist']
-		} catch (e) {
-			console.warn('[ERROR]: Unable to read/restore backup file')
-		}
-	}
-
 	return (
 		<>
-			<Button onPress={onExportOPM}>{`Export OPM`}</Button>
+			{/* Export Feature */}
+			<Text style={tw`p-3`}>Export OPM</Text>
 
-			<View>
-				<Text>Restore State</Text>
-				<TextInput
-					value={currentPassword}
-					onChangeText={val => setCurrentPassword(val)}
-					label="Enter your master password"
-				/>
-				<TextInput value={password} onChangeText={val => setPassword(val)} label="Enter your master password" />
-				<TextInput value={salt} onChangeText={val => setSalt(val)} label="Enter your salt" />
-
-				<Button onPress={onReadOPM}>{`Read OPM Backup`}</Button>
-			</View>
+			<TextInput
+				value={currentPassword}
+				onChangeText={val => setCurrentPassword(val)}
+				label="Enter your master password"
+			/>
+			<Button mode="outlined" onPress={onExportOPM}>{`Export OPM`}</Button>
 		</>
 	)
 }

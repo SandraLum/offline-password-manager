@@ -1,4 +1,6 @@
-import { CategoryType, FieldType } from '@common/enums'
+import { CategoryId, FieldType } from '@common/enums'
+import { OPMTypes } from '../types'
+import { setIdFormat } from '../utils'
 
 // type IEntries = {
 // 	[key<typeof CategoryType>]: OPM.TemplateEntry
@@ -37,11 +39,11 @@ const FieldTypes = {
 	[FieldType.File]: { isFormField: true }
 }
 
-const Entries: Record<CategoryType, OPM.TemplateEntry> = {
-	[CategoryType.AllItems]: {
+const Entries: Record<OPMTypes.Category['id'], OPM.TemplateEntry> = {
+	[CategoryId.AllItems]: {
 		fields: []
 	},
-	[CategoryType.Login]: {
+	[CategoryId.Login]: {
 		fields: [
 			{ label: 'Username', fieldType: FieldType.TextInput },
 			{
@@ -58,7 +60,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.Banking]: {
+	[CategoryId.Banking]: {
 		fields: [
 			{
 				label: 'Account',
@@ -73,7 +75,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.Email]: {
+	[CategoryId.Email]: {
 		fields: [
 			{ label: 'Account', fieldType: FieldType.TextInput },
 			{ label: 'Email', fieldType: FieldType.TextInput },
@@ -84,7 +86,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.CreditCard]: {
+	[CategoryId.CreditCard]: {
 		fields: [
 			{
 				label: 'Card Number',
@@ -109,7 +111,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.Office]: {
+	[CategoryId.Office]: {
 		fields: [
 			{ label: 'Office', fieldType: FieldType.TextInput },
 			{ label: 'Username/ID', fieldType: FieldType.TextInput },
@@ -119,7 +121,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.Password]: {
+	[CategoryId.Password]: {
 		fields: [
 			{ label: 'Label', fieldType: FieldType.TextInput },
 			{ label: 'Password', fieldType: FieldType.Password, fieldOptions: { secure: true } },
@@ -128,7 +130,7 @@ const Entries: Record<CategoryType, OPM.TemplateEntry> = {
 			{ label: 'Last Modified On', fieldType: FieldType.Label }
 		]
 	},
-	[CategoryType.School]: {
+	[CategoryId.School]: {
 		fields: [
 			{ label: 'Account', fieldType: FieldType.TextInput },
 			{ label: 'Password', fieldType: FieldType.Password, fieldOptions: { secure: true } },

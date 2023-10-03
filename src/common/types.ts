@@ -1,5 +1,4 @@
 import { AnyAction, ThunkAction } from '@reduxjs/toolkit'
-import { CategoryType } from '@src/common/enums'
 import { RootState } from '@src/store'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FileInfo } from 'expo-file-system/build/FileSystem.types'
@@ -7,25 +6,30 @@ import { FileInfo } from 'expo-file-system/build/FileSystem.types'
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace OPMTypes {
 	type TemplateCategory = {
-		// id: string
+		id: string
 		name: string
 		icon: OPM.Icon
-		type: CategoryType
+		// type: CategoryType
 	}
 
 	type ICategory = {
-		// id: string
+		id: string
 		// name: string
-		type: CategoryType
+		// type: CategoryType
 		sort?: number
 	}
 
 	type Category = TemplateCategory & ICategory
 
+	type Categories = {
+		[key: string]: TemplateCategory
+		// [key: string]: Omit<OPMTypes.TemplateCategory, 'type'> & { type: CategoryType }
+	}
+
 	type Entry = {
 		id: string
 		title: OPM.EntryTitle
-		category: { type: ICategory['type'] }
+		category: { id: ICategory['id'] }
 		fields: OPM.Field[]
 		fieldsValues?: OPM.FieldsValues
 		lastUpdatedOn: number | string

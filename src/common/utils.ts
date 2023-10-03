@@ -13,15 +13,15 @@ export function generateUID(fnCheckForDuplicates?: (id: string) => boolean): str
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function clone(value: any) {
-	if (Array.isArray(value)) {
+	console.log('clone typeof value', typeof value)
+	if (Array.isArray(value) || typeof value === 'object') {
 		try {
+			console.log('parse')
 			return JSON.parse(JSON.stringify(value))
 		} catch {
 			console.warn('Invalid JSON')
 			return value
 		}
-	} else if (typeof value === 'object') {
-		return { ...value }
 	}
 	return value
 }
@@ -166,3 +166,5 @@ export function formatDate(dt: Date, format?: string) {
 
 	return replaced
 }
+
+export const setIdFormat = (id: string) => `[${id}]`

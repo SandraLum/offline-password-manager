@@ -3,13 +3,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { mainReducer, secureReducer } from './reducers'
 import { AnyAction, combineReducers } from 'redux'
-import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
+import {
+	persistReducer,
+	persistStore,
+	FLUSH,
+	REHYDRATE,
+	PAUSE,
+	PERSIST,
+	PURGE,
+	REGISTER,
+	createMigrate
+} from 'redux-persist'
 import { encryptTransform } from './storeTransform'
 
 import Reactotron from '../../ReactotronConfig'
 import * as SecureStore from './secureStore'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { Persistor } from 'redux-persist/es/types'
+import { mainMigrations, secureMigrations } from './migration'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let store: ToolkitStore<any, any, MiddlewareArray<[ThunkMiddleware<any, AnyAction, undefined>]>>
@@ -24,16 +35,18 @@ async function initStore() {
 	const mainPersistConfig = {
 		key: 'main',
 		storage: AsyncStorage,
-		version: 1.1,
+		version: 0,
 		transforms: [await encryptTransform(await secureStorage.getSSK())],
-		blacklist: ['auth']
+		blacklist: ['auth'],
+		migrate: createMigrate(mainMigrations, { debug: true })
 	}
 
 	const securePersistConfig = {
 		key: 'secure',
 		storage: secureStorage,
-		version: 1,
-		transforms: [await encryptTransform(await secureStorage.getSSK(), true)]
+		version: 0,
+		transforms: [await encryptTransform(await secureStorage.getSSK(), true)],
+		migrate: createMigrate(secureMigrations, { debug: true })
 	}
 
 	// // Combine them together

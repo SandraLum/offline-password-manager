@@ -65,7 +65,7 @@ export default function ExportGeneration({ route }: Props) {
 							const filteredEntries = allEntries.filter(item => entriesIds.includes(item.id))
 
 							filteredEntries.forEach((entry: OPMTypes.Entry) => {
-								const category = allCategories.find(c => c.type === entry.category.type)
+								const category = allCategories.find(c => c.id === entry.category.id)
 								if (!category) return
 
 								const groupName = category.name

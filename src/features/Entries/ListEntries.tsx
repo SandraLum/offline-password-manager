@@ -3,7 +3,7 @@ import { useNavigation, ParamListBase } from '@react-navigation/native'
 
 import { useSelector } from 'react-redux'
 import { View, Text } from 'react-native'
-import { Button, List, Menu, IconButton } from 'react-native-paper'
+import { List, Menu, IconButton } from 'react-native-paper'
 
 import tw from 'twrnc'
 import { i18n } from '@src/app/locale'
@@ -51,10 +51,10 @@ export default function ListEntries(props: Props) {
 
 		// filter by category
 		if (categoriesFilter && categoriesFilter.length > 0) {
-			filteredEntries = allGroupedEntries.filter(e => categoriesFilter.includes(e.category.type)) || []
+			filteredEntries = allGroupedEntries.filter(e => categoriesFilter.includes(e.category.id)) || []
 			if (filteredEntries.length === 0) {
 				categoriesFilter.forEach(type => {
-					const category = allCategories.find(c => c.type === type)
+					const category = allCategories.find(c => c.id === type)
 					if (category) {
 						filteredEntries.push({ category, entries: [] })
 					}
@@ -63,7 +63,6 @@ export default function ListEntries(props: Props) {
 		} else {
 			filteredEntries = allGroupedEntries
 		}
-
 		setFilteredGroupedEntries(filteredEntries)
 	}, [allCategories, allGroupedEntries, filter?.categories])
 
@@ -77,11 +76,11 @@ export default function ListEntries(props: Props) {
 			if (query.length > 0) {
 				let count = 0
 				filteredEntries = entries.map(grp => {
-					matches[grp.category.type] = 0
+					matches[grp.category.id] = 0
 					const entries = grp.entries?.map(e => {
 						const match = e.title.name.search(new RegExp(searchQuery, 'i')) > -1
 						if (match) {
-							matches[grp.category.type] += 1
+							matches[grp.category.id] += 1
 							count++
 						}
 						return { ...e, isFiltered: !match }
@@ -112,7 +111,7 @@ export default function ListEntries(props: Props) {
 		navigation.navigate({
 			name: 'AddEntry',
 			params: {
-				data: { category: { type: category.type } }
+				data: { category: { id: category.id } }
 			}
 		})
 	}
@@ -128,7 +127,7 @@ export default function ListEntries(props: Props) {
 	}
 
 	function onToggleMenu(category: OPMTypes.ICategory, visible: boolean) {
-		setMenuVisibility(m => ({ ...m, [category.type]: visible }))
+		setMenuVisibility(m => ({ ...m, [category.id]: visible }))
 	}
 
 	return (
@@ -143,8 +142,8 @@ export default function ListEntries(props: Props) {
 					filteredGroupedEntries.map(group => {
 						const entries = group.entries
 						const category = group.category
-						const toDisplayCategory = category && searchMatches[category.type] !== 0
-						const categoryType = category.type
+						const toDisplayCategory = category && searchMatches[category.id] !== 0
+						const categoryType = category.id
 						return (
 							toDisplayCategory && (
 								<List.Section key={`c-${categoryType}`} style={tw`pb-3 rounded-lg bg-white`}>

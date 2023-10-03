@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
-import { Text, FlatList, View } from 'react-native'
-import { Button, Card, IconButton } from 'react-native-paper'
+import { Text, View } from 'react-native'
+import { Card, IconButton } from 'react-native-paper'
 
 import tw from 'twrnc'
 import { i18n } from '@src/app/locale'
@@ -14,7 +14,7 @@ import CategoryItemModal from './CategoryItemModal'
 
 import { selectAllCategories } from '@src/store/slices/categoriesSlice'
 import { selectAllEntriesByProfile } from '@src/store/slices/entriesSlice'
-import { CategoryType, DashboardContentView } from '@common/enums'
+import { CategoryId, DashboardContentView } from '@common/enums'
 import { OPMTypes } from '@common/types'
 import { getCurrentProfileId } from '@src/store/slices/appSlice'
 import CategoryIcon from '@src/components/CategoryIcon'
@@ -28,35 +28,35 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dialogRef = useRef(null)
 
-	const allCategories = useSelector(selectAllCategories)
+	const categories = useSelector(selectAllCategories)
 	const entries = useSelector(state => selectAllEntriesByProfile(state, getCurrentProfileId(state)))
 
-	const [categories, setCategories] = useState<OPMTypes.Category[]>([])
-	const [allItemsCategory, setAllItemsCategory] = useState<OPMTypes.Category | null>()
+	const [otherCategories, setOtherCategories] = useState<OPMTypes.Category[]>([])
+	const [allCategory, setAllCategories] = useState<OPMTypes.Category | null>()
 
 	useEffect(() => {
-		setAllItemsCategory(allCategories.find(c => c.type === CategoryType.AllItems))
-		setCategories(allCategories.filter(c => c.type !== CategoryType.AllItems) || [])
-	}, [allCategories])
+		setAllCategories(categories.find(c => c.id === CategoryId.AllItems))
+		setOtherCategories(categories.filter(c => c.id !== CategoryId.AllItems) || [])
+	}, [categories])
 
 	function onAddNewEntry(category: OPMTypes.Category) {
 		navigation.navigate({
 			name: 'AddEntry',
 			params: {
-				data: { category: { type: category.type } }
+				data: { category: { type: category.id } }
 			}
 		})
 	}
 
 	function onViewEntries(category: OPMTypes.Category) {
 		onToggleDisplayView(DashboardContentView.Entries, {
-			filter: category.type === CategoryType.AllItems ? { categories: [] } : { categories: [category.type] }
+			filter: category.id === CategoryId.AllItems ? { categories: [] } : { categories: [category.id] }
 		})
 	}
 
-	function renderCard({ item: category }: { item: OPMTypes.Category }) {
+	function renderCard(category: OPMTypes.Category) {
 		const icon = category?.icon
-		const totalEntries = entries.filter(i => i.category.type === category.type)?.length
+		const totalEntries = entries.filter(i => i.category.id === category.id)?.length
 
 		return (
 			<>
@@ -101,22 +101,22 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	}
 
 	return (
-		<Content horizontal={false} contentContainerStyle={tw.style(`flex p-1`)}>
+		<Content horizontal={false} contentContainerStyle={tw.style(`flex p-1`)} style={tw`flex`}>
 			{/* All Items Card */}
-			{allItemsCategory ? (
+			{allCategory ? (
 				<View>
-					<Card mode="contained" style={tw.style(`m-1 bg-white`)} onPress={() => onViewEntries(allItemsCategory)}>
+					<Card mode="contained" style={tw.style(`m-1 bg-white`)} onPress={() => onViewEntries(allCategory)}>
 						<Card.Title
 							titleNumberOfLines={2}
-							title={allItemsCategory.name}
+							title={allCategory.name}
 							subtitle={`Entries: ${entries.length}`}
 							left={() => (
 								<View style={tw`flex flex-row`}>
 									<CategoryIcon
 										size={32}
-										name={allItemsCategory.icon.name}
-										backgroundColor={allItemsCategory.icon.bgColor}
-										color={allItemsCategory.icon.color}
+										name={allCategory.icon.name}
+										backgroundColor={allCategory.icon.bgColor}
+										color={allCategory.icon.color}
 									/>
 								</View>
 							)}
@@ -131,30 +131,12 @@ export default function Categories({ onToggleDisplayView }: Props) {
 			{/* Categories */}
 			<View style={tw`pt-2`}>
 				<Text style={tw`font-bold p-1`}>{i18n.t('categories:card:title:category')}</Text>
-				{/* <FlatList
-					data={categories}
-					renderItem={({ item, index }) => {
-						const lastItem = index === categories.length - 1
-						return (
-							<View
-								style={tw.style(`p-3 z-20`, {
-									flex: lastItem && categories.length % 2 !== 0 ? 0.5 : 1
-								})}
-							>
-								{renderCard({ item })}
-							</View>
-						)
-					}}
-					keyExtractor={item => `${item.id}`}
-					showsHorizontalScrollIndicator={false}
-					numColumns={2}
-				/> */}
 
 				<View style={tw.style(`flex-row flex-wrap`)}>
-					{categories.map(item => {
+					{otherCategories.map(c => {
 						return (
-							<View key={`category-card-${item.type}`} style={tw.style(`px-2 py-1`, { width: '50%' })}>
-								{renderCard({ item })}
+							<View key={`category-card-${c.id}`} style={tw.style(`px-2 py-1`, { width: '50%' })}>
+								{renderCard(c)}
 							</View>
 						)
 					})}

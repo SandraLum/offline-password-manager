@@ -55,7 +55,7 @@ export const saveMasterPassword =
 		const state = getState()
 		//if (state.secure.secureTag === null && state.secure.securePassphrase === null) {
 
-		const hsPwd = await encryptPassword(pwd, true)
+		const hsPwd = await encryptPassword(pwd, { generateNewSalt: true })
 		dispatch(setMK(hsPwd))
 
 		const tag = '[' + generateUID() + ']'

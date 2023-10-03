@@ -40,14 +40,20 @@ export const redirectScreen = (state: RootState) => {
 	return screen
 }
 
-export const encryptPassword = async (pwd: string, resetSalt = false) => {
-	let encrypted
+type SaltOptions = { generateNewSalt?: boolean; salt?: string } | undefined
+export const encryptPassword = async (pwd: string, saltOptions: SaltOptions) => {
+	let encrypted, salt
 
 	//Store the salt into the secure store, create a PDF out of it
-	if (resetSalt) {
-		await setSalt()
+	if (saltOptions?.salt) {
+		salt = saltOptions.salt
+	} else {
+		if (saltOptions?.generateNewSalt) {
+			await setSalt()
+		}
+		salt = await getSalt()
 	}
-	const salt = await getSalt()
+
 	if (salt) {
 		encrypted = cryptoHS(pwd, salt)
 	} else {

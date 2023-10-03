@@ -61,6 +61,11 @@ export const resetProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
 	profilesAdapter.upsertMany(profilesAdapter.getInitialState(), defaultProfiles)
 }
 
+export const clearProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
+	const state = getState()
+	profilesAdapter.removeAll(state)
+}
+
 export const { selectAll: selectAllProfiles, selectById: selectProfileById } = profilesAdapter.getSelectors(
 	(state: RootState) => state.main.profiles
 )
