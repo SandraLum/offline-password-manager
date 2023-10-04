@@ -1,4 +1,4 @@
-package io.slamcode.offlinepasswordstore;
+package io.slamcode.bondpass;
 
 import android.app.Application;
 import android.content.res.Configuration;
