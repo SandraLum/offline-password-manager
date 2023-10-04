@@ -125,7 +125,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'io.slamcode.offlinepasswordstore'
+    namespace "com.offlinepasswordstore"
     defaultConfig {
         applicationId 'io.slamcode.offlinepasswordstore'
         minSdkVersion rootProject.ext.minSdkVersion
