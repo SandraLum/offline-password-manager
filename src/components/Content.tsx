@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native'
 export default function Content({ children, contentContainerStyle, ...props }: any) {
 	return (
 		<ScrollView
-			horizontal={true}
+			horizontal={false}
 			showsVerticalScrollIndicator={true}
 			showsHorizontalScrollIndicator={false}
 			contentContainerStyle={contentContainerStyle}

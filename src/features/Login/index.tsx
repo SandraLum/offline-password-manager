@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View, ImageBackground, Platform, Image, Text } from 'react-native'
 import { Button } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
@@ -22,6 +22,10 @@ import { getBackupState } from '../../store/slices/settingSlice'
 export default function Login() {
 	const dispatch = useDispatch<AppDispatch>()
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
+	const isAndroid = Platform.OS === 'android'
+	const bgImage = require('../../../assets/images/login-bg.jpg')
+	const logo = require('../../../assets/images/logo-key-256.png')
 
 	async function onLogin(password: string): Promise<string | null> {
 		let error = null
@@ -52,31 +56,47 @@ export default function Login() {
 	}
 
 	return (
-		<Screen style={tw`w-full h-full p-2`}>
-			<Content contentContainerStyle={tw`w-full h-full flex-col py-5 px-2`}>
-				<EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} />
+		<ImageBackground
+			source={bgImage}
+			blurRadius={isAndroid ? 2 : 6}
+			resizeMode="cover"
+			imageStyle={{ opacity: 0.6, backgroundColor: 'black' }}
+		>
+			<Screen style={tw`w-full h-full p-2`}>
+				<Content contentContainerStyle={tw`w-full h-full flex-col py-5 px-2`}>
+					<View style={tw`flex flex-row items-center`}>
+						<Image
+							style={tw.style(`h-[25] w-[25]`, { backgroundColor: 'transparent', borderRadius: 20 })}
+							resizeMode="contain"
+							source={logo}
+						/>
+						<Text style={tw`text-3xl p-2 font-bold text-[#F9AB4A]`}>Bondpass</Text>
+					</View>
 
-				{/* {error && <Text style={tw`text-red-700 py-1`}>{error}</Text>} */}
+					<EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} />
 
-				{/* SL:TODO remove */}
-				<Button
-					onPress={() => navigation.navigate({ name: 'SetMasterPassword', params: {} })}
-					mode="contained"
-					style={tw`my-5`}
-				>
-					{'Go to Set Password'}
-				</Button>
+					{/* {error && <Text style={tw`text-red-700 py-1`}>{error}</Text>} */}
 
-				{/* SL:TODO remove */}
-				<Button buttonColor={tw.color('blue-500')} onPress={() => Testing()} mode="contained" style={tw`my-5`}>
-					{'Testing button'}
-				</Button>
+					{/* SL:TODO remove */}
+					<Button
+						onPress={() => navigation.navigate({ name: 'SetMasterPassword', params: {} })}
+						mode="contained"
+						style={tw`my-5`}
+					>
+						{'Go to Set Password'}
+					</Button>
 
-				{/* SL:TODO remove */}
-				<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
-					{'Reset Data'}
-				</Button>
-			</Content>
-		</Screen>
+					{/* SL:TODO remove */}
+					<Button buttonColor={tw.color('blue-500')} onPress={() => Testing()} mode="contained" style={tw`my-5`}>
+						{'Testing button'}
+					</Button>
+
+					{/* SL:TODO remove */}
+					<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
+						{'Reset Data'}
+					</Button>
+				</Content>
+			</Screen>
+		</ImageBackground>
 	)
 }

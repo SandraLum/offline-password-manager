@@ -5,7 +5,7 @@ import { I18n } from 'i18n-js'
 // Set the key-value pairs for the different languages you want to support.
 const i18n = new I18n({
 	en: {
-		'app:name:title': 'Family Password Manager',
+		'app:name:title': 'Bondpass',
 		'set-master-password:text:password': 'Password',
 		'set-master-password:text:confirm-password': 'Confirm Password',
 		'set-master-password:button:set-password': 'Set Password',
@@ -15,7 +15,7 @@ const i18n = new I18n({
 		'set-master-password:error:save:password': 'There was an error setting your password, please try again',
 		'login:button:unlock': 'Unlock',
 		'login:label:biometrics': 'Unlock via Biometrics',
-		'login:text:enter:password': 'Enter your password to login',
+		'login:text:enter:password': 'Enter your password to unlock',
 		'login:text:enter:password:unlock': 'Enter your password to unlock',
 		'login:error:password:empty': 'Please enter your password',
 		'login:error:password:invalid': 'Incorrect password, please try again.',

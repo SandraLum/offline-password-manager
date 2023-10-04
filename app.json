@@ -8,7 +8,8 @@
 		"primaryColor": "#589CA9",
 		"description": "",
 		"splash": {
-			"image": "./assets/images/logo-splash.png",
+			"image": "./assets/images/logo-key-192.png",
+			"resizeMode": "contain",
 			"backgroundColor": "#F2F1EF"
 		},
 		"plugins": [
