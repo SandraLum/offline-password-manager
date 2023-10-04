@@ -6888,7 +6888,7 @@ memory-cache@~0.2.0:
 
 merge-options@^3.0.4:
   version "3.0.4"
-  resolved "https://registry.npmjs.org/merge-options/-/merge-options-3.0.4.tgz"
+  resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-3.0.4.tgz#84709c2aa2a4b24c1981f66c179fe5565cc6dbb7"
   integrity sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==
   dependencies:
     is-plain-obj "^2.1.0"
