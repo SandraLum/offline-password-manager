@@ -27,6 +27,7 @@ export default function ExportOPM() {
 	const { invokeToast } = useContext(ToastContext)
 
 	const [currentPassword, setCurrentPassword] = useState('')
+	const [pin, setPin] = useState('')
 
 	// SL: TODO replace with password entering ui (think of changing the modal to prompt for password)
 	const mk = useSelector(getMK)
@@ -140,6 +141,8 @@ export default function ExportOPM() {
 				onChangeText={val => setCurrentPassword(val)}
 				label="Enter your master password"
 			/>
+
+			<TextInput value={pin} onChangeText={val => setPin(val)} label="Set a PIN to export your data" />
 			<Button mode="outlined" onPress={onExportOPM}>{`Export OPM`}</Button>
 		</>
 	)
