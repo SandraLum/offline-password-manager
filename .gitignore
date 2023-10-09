@@ -82,5 +82,3 @@ yarn-error.log
 .expo/
 web-build/
 dist/
-
-# @end expo-cli

@@ -1,6 +1,6 @@
 {
 	"expo": {
-		"name": "Offline Password Store",
+		"name": "Bondpass Password Manager",
 		"slug": "offlinepasswordstore",
 		"version": "0.0.1",
 		"orientation": "portrait",
@@ -29,10 +29,7 @@
 			}
 		},
 		"android": {
-			"package": "io.slamcode.offlinepasswordstore",
-			"data": {
-				"mimeType": "application/opm"
-			}
+			"package": "io.slamcode.bondpass"
 		},
 		"ios": {
 			"usesIcloudStorage": true

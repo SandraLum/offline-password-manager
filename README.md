@@ -1,1 +1,1 @@
-# offline-password-manager
+# Bondpass Password Manager
