@@ -9,6 +9,7 @@ module.exports = {
 		'react-native/react-native': true
 	},
 	extends: [
+		'@react-native',
 		'eslint:recommended',
 		'plugin:react/recommended',
 		'plugin:react-hooks/recommended',
