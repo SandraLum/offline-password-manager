@@ -4,12 +4,13 @@
 		"slug": "offlinepasswordstore",
 		"version": "0.0.1",
 		"orientation": "portrait",
-		"icon": "./assets/images/logo-key-1024.png",
+		"icon": "./assets/images/icon.png",
 		"primaryColor": "#589CA9",
 		"description": "",
 		"splash": {
-			"image": "./assets/images/logo-splash.png",
-			"backgroundColor": "#F2F1EF"
+			"image": "./assets/images/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
 		},
 		"plugins": [
 			"expo-localization",
@@ -28,7 +29,11 @@
 			}
 		},
 		"android": {
-			"package": "io.slamcode.bondpass"
+			"package": "io.slamcode.bondpass",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			}
 		},
 		"ios": {
 			"usesIcloudStorage": true

@@ -3,7 +3,7 @@ import tw from 'twrnc'
 import { useDispatch } from 'react-redux'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { View } from 'react-native'
+import { Image, ImageBackground, Platform, View } from 'react-native'
 
 import { Button, TextInput as PaperTextInput, Text } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
@@ -18,6 +18,10 @@ import Screen from '@src/components/Screen'
 export default function SetMasterPassword() {
 	const dispatch = useDispatch<AppDispatch>()
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
+	const isAndroid = Platform.OS === 'android'
+	const bgImage = require('../../../assets/images/login-bg.jpg')
+	const logo = require('../../../assets/images/icon.png')
 
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setCfmPassword] = useState('')
@@ -61,7 +65,7 @@ export default function SetMasterPassword() {
 		if (validatePassword(password, confirmPassword)) {
 			const success = await dispatch(saveMasterPassword(password))
 			if (success) {
-				navigation.navigate('PasswordRecovery:Form')
+				navigation.navigate('Onboarding')
 				// navigation.navigate('App', { name: 'Dashboard', params: {} })
 			} else {
 				setErrors([i18n.t('set-master-password:error:save:password')])
@@ -71,65 +75,88 @@ export default function SetMasterPassword() {
 	}
 
 	return (
-		<Screen style={tw`p-2`}>
-			<Content contentContainerStyle={tw`flex-1 py-5 px-2`}>
-				<View style={tw`flex-1 flex-col`}>
-					<Text style={tw`py-1 text-lg font-bold`}>{i18n.t('app:name:title')}</Text>
+		<ImageBackground
+			source={bgImage}
+			blurRadius={isAndroid ? 2 : 6}
+			resizeMode="cover"
+			imageStyle={{ opacity: 0.7, backgroundColor: 'black' }}
+		>
+			<Screen style={tw`w-full h-full p-2`}>
+				<Content contentContainerStyle={tw`flex-1 flex-col py-5 px-2`}>
+					<View style={tw`flex flex-row items-center`}>
+						<Image
+							style={tw.style(`h-[25] w-[25] mr-2`)}
+							resizeMode="contain"
+							source={require('../../../assets/images/icon-192.png')}
+						/>
 
-					<Text style={tw`py-1`}>
-						This is an offline password app where you could keep your password entries in encrypted manner. Another
-						feature of this app is you can create different profiles for your family or loved ones so that you can help
-						to keep track
-					</Text>
+						<Image
+							style={tw.style(`w-[50]`, { backgroundColor: 'transparent' })}
+							resizeMode="contain"
+							source={require('../../../assets/images/app_name.png')}
+						/>
 
-					<PaperTextInput
-						mode="outlined"
-						label={i18n.t('set-master-password:text:password')}
-						value={password}
-						onChangeText={onChangePassword}
-						secureTextEntry={hidePassword}
-						right={
-							<PaperTextInput.Icon
-								icon={hidePassword ? 'eye-off' : 'eye'}
-								style={tw`p-0 m-0`}
-								onPress={() => setHidePassword(!hidePassword)}
-							/>
-						}
-						error={errors.length > 0}
-					/>
-					<PaperTextInput
-						mode="outlined"
-						label={i18n.t('set-master-password:text:confirm-password')}
-						value={confirmPassword}
-						onChangeText={onChangeConfirmPassword}
-						secureTextEntry={hideConfirmPassword}
-						right={
-							<PaperTextInput.Icon
-								icon={hideConfirmPassword ? 'eye-off' : 'eye'}
-								style={tw`p-0 m-0`}
-								onPress={() => setHideCfmPassword(!hideConfirmPassword)}
-							/>
-						}
-					/>
+						{/* <Text style={tw`text-3xl p-2 font-bold text-[#F9AB4A]`}>Bondpass</Text> */}
+					</View>
 
-					<FormValidationErrors validationErrors={errors} />
+					<View style={tw`flex-1 flex-col`}>
+						{/* <Text style={tw`py-1 text-lg font-bold`}>{i18n.t('app:name:title')}</Text> */}
 
-					<Button onPress={onSavePassword} mode="contained" style={tw`my-5`}>
-						{i18n.t('set-master-password:button:set-password')}
-					</Button>
-					<Text>{`** ${i18n.t('set-master-password:text:note:enter-password')}`}</Text>
+						<Text style={tw`py-1 text-white`}>
+							This is an offline password app where you could keep your password entries in encrypted manner. Another
+							feature of this app is you can create different profiles for your family or loved ones so that you can
+							help to keep track
+						</Text>
 
-					{/* SL:TODO remove */}
-					<Button
-						loading={isLoading}
-						onPress={() => navigation.navigate({ name: 'Login', params: {} })}
-						mode="contained"
-						style={tw`my-5`}
-					>
-						{'Go to Login'}
-					</Button>
-				</View>
-			</Content>
-		</Screen>
+						<PaperTextInput
+							mode="outlined"
+							label={i18n.t('set-master-password:text:password')}
+							value={password}
+							onChangeText={onChangePassword}
+							secureTextEntry={hidePassword}
+							right={
+								<PaperTextInput.Icon
+									icon={hidePassword ? 'eye-off' : 'eye'}
+									style={tw`p-0 m-0`}
+									onPress={() => setHidePassword(!hidePassword)}
+								/>
+							}
+							error={errors.length > 0}
+						/>
+						<PaperTextInput
+							mode="outlined"
+							label={i18n.t('set-master-password:text:confirm-password')}
+							value={confirmPassword}
+							onChangeText={onChangeConfirmPassword}
+							secureTextEntry={hideConfirmPassword}
+							right={
+								<PaperTextInput.Icon
+									icon={hideConfirmPassword ? 'eye-off' : 'eye'}
+									style={tw`p-0 m-0`}
+									onPress={() => setHideCfmPassword(!hideConfirmPassword)}
+								/>
+							}
+						/>
+
+						<FormValidationErrors validationErrors={errors} />
+
+						<Button onPress={onSavePassword} mode="contained" style={tw`my-5`}>
+							{i18n.t('set-master-password:button:set-password')}
+						</Button>
+						<Text style={tw`text-white`}>{`** ${i18n.t('set-master-password:text:note:enter-password')}`}</Text>
+
+						{/* SL:TODO remove */}
+						<Button
+							loading={isLoading}
+							onPress={() => navigation.navigate({ name: 'Login', params: {} })}
+							mode="contained"
+							style={tw`my-5`}
+						>
+							{'Go to Login'}
+						</Button>
+					</View>
+				</Content>
+			</Screen>
+		</ImageBackground>
 	)
 }

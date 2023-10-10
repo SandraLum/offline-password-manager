@@ -15,6 +15,7 @@ import Animated, { FadeInDown, FadeOutDown, SlideInRight, SlideOutRight } from '
 import ProfileMenu from './component/ProfileMenu'
 import AuthScreen from '@src/components/AuthScreen'
 import { DrawerParamList } from '@src/app/routes'
+import Content from '@src/components/Content'
 
 type ContentView = {
 	view: DashboardContentView

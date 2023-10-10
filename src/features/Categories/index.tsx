@@ -101,7 +101,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	}
 
 	return (
-		<Content horizontal={false} contentContainerStyle={tw.style(`flex p-1`)} style={tw`flex`}>
+		<Content contentContainerStyle={tw.style(`flex p-1`)}>
 			{/* All Items Card */}
 			{allCategory ? (
 				<View>

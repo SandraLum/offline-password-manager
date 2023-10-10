@@ -94,8 +94,7 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
-
-
+    
     defaultConfig {
         applicationId 'io.slamcode.bondpass'
         minSdkVersion rootProject.ext.minSdkVersion

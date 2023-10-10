@@ -10,11 +10,13 @@ import AuthScreen from '@src/components/AuthScreen'
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>
 
 export default function Onboarding({ navigation }: Props) {
+	console.log('orientation')
+
 	function onNext() {
 		navigation.navigate({ name: 'PasswordRecovery:Form', params: {} })
 	}
 	return (
-		<AuthScreen>
+		<AuthScreen style={tw`flex-1`}>
 			<Content horizontal={false} contentContainerStyle={tw`flex-1 flex-col m-2 bg-white rounded-lg items-center`}>
 				<View style={tw.style({ padding: 30 })} />
 				<Image
