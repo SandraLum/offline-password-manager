@@ -25,7 +25,7 @@ export default function Login() {
 
 	const isAndroid = Platform.OS === 'android'
 	const bgImage = require('../../../assets/images/login-bg.jpg')
-	const logo = require('../../../assets/images/logo-key-256.png')
+	const logo = require('../../../assets/images/icon.png')
 
 	async function onLogin(password: string): Promise<string | null> {
 		let error = null
@@ -66,11 +66,17 @@ export default function Login() {
 				<Content contentContainerStyle={tw`w-full h-full flex-col py-5 px-2`}>
 					<View style={tw`flex flex-row items-center`}>
 						<Image
-							style={tw.style(`h-[25] w-[25]`, { backgroundColor: 'transparent', borderRadius: 20 })}
+							style={tw.style(`h-[25] w-[25] mr-2`)}
 							resizeMode="contain"
-							source={logo}
+							source={require('../../../assets/images/icon-192.png')}
 						/>
-						<Text style={tw`text-3xl p-2 font-bold text-[#F9AB4A]`}>Bondpass</Text>
+
+						<Image
+							style={tw.style(`w-[50]`, { backgroundColor: 'transparent' })}
+							resizeMode="contain"
+							source={require('../../../assets/images/app_name.png')}
+						/>
+						{/* <Text style={tw`text-3xl p-2 font-bold text-[#F9AB4A]`}>Bondpass</Text> */}
 					</View>
 
 					<EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} />
