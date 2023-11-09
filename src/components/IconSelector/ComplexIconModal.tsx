@@ -2,7 +2,7 @@ import { Modal, Portal, Text, IconButton, Button } from 'react-native-paper'
 import tw from 'twrnc'
 
 import { Image, TouchableOpacity, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native'
 import { GenericIcons, BrandIcons } from '@src/common/assets/icons'
 import { i18n } from '@src/app/locale'
 

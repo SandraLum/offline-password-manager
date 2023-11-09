@@ -26,6 +26,7 @@ const categoriesSlice = createSlice({
 		categoriesAddMany: categoriesAdapter.addMany,
 		categoryUpdate: categoriesAdapter.updateOne,
 		categoryRemove: categoriesAdapter.removeOne,
+		categoryRemoveAll: categoriesAdapter.removeAll,
 		resetCategories: state => {
 			categoriesAdapter.removeAll(state)
 			return categoriesAdapter.upsertMany(categoriesAdapter.getInitialState(), [])
@@ -45,6 +46,16 @@ export const selectCategoryById = createSelector(
 	(_state, id): OPMTypes.Category => Templates.Categories.filter(c => c.id === id)?.[0]
 )
 
-export const { categoriesAddOne, categoriesAddMany, categoryUpdate, categoryRemove, resetCategories } =
-	categoriesSlice.actions
+export const clearCategories: OPMTypes.AppThunk = dispatch => {
+	dispatch(categoryRemoveAll())
+}
+
+export const {
+	categoriesAddOne,
+	categoriesAddMany,
+	categoryUpdate,
+	categoryRemove,
+	categoryRemoveAll,
+	resetCategories
+} = categoriesSlice.actions
 export default categoriesSlice

@@ -18,7 +18,7 @@ import { CategoryId, DashboardContentView } from '@common/enums'
 import { OPMTypes } from '@common/types'
 import { getCurrentProfileId } from '@src/store/slices/appSlice'
 import CategoryIcon from '@src/components/CategoryIcon'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native'
 import Content from '@src/components/Content'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

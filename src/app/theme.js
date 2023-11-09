@@ -64,7 +64,7 @@ const theme = {
 		onError: 'rgb(255, 255, 255)',
 		errorContainer: 'rgb(255, 218, 214)',
 		onErrorContainer: 'rgb(65, 0, 2)',
-		background: 'rgb(250, 253, 253)',
+		background: 'rgb(250, 253, 253)', //'rgb(250, 253, 253)',
 		onBackground: 'rgb(25, 28, 29)',
 		surface: 'rgb(250, 253, 253)',
 		onSurface: 'rgb(25, 28, 29)',

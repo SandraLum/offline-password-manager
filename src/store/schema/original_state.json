@@ -1,0 +1,129 @@
+{
+	"[OPM_BKUP]": {
+		"isBackup": true,
+		"version": 0
+	},
+	"data": {
+		"main": {
+			"app": {
+				"currentProfile": {
+					"id": "f8057af7-9b12-4508-ab92-5ed47337b5cb"
+				},
+				"onboarded": false,
+				"version": 0,
+				"createdTs": 1696988838117,
+				"lastUpdatedTs": 0
+			},
+			"auth": {
+				"mk": "1cf61b98a7fc80929475bbfff9bb98463d331d0e1cfcf1a6e779f4ffcf34df4ecd9a9df9f83f8f12657f7e0aa3906f1f1f5cab37ba127d20a5e26f0fcabdef73",
+				"lts": 12052358,
+				"isAuthenticated": true,
+				"isLoading": false
+			},
+			"categories": {
+				"ids": [],
+				"entities": {}
+			},
+			"entries": {
+				"ids": ["6677c4ce-f3ed-48aa-a16e-79047599147e"],
+				"entities": {
+					"6677c4ce-f3ed-48aa-a16e-79047599147e": {
+						"id": "6677c4ce-f3ed-48aa-a16e-79047599147e",
+						"category": {
+							"id": "[Login]",
+							"name": "Login",
+							"icon": {
+								"name": "key-variant",
+								"bgColor": "#06b6d4",
+								"color": "#f5f5f5"
+							}
+						},
+						"title": {
+							"name": "Login-111",
+							"icon": {
+								"color": "#06b6d4"
+							}
+						},
+						"fields": [
+							{
+								"label": "Username",
+								"fieldType": "TextInput",
+								"id": "0dfe4f64-fa86-4923-9375-27becaa9d894"
+							},
+							{
+								"label": "Password",
+								"fieldType": "Password",
+								"fieldOptions": {
+									"secure": true
+								},
+								"id": "3043026a-597c-4fec-aaf0-69ddabba7b68"
+							},
+							{
+								"label": "Website",
+								"fieldType": "TextInput",
+								"id": "a9347b09-fd50-468f-b47a-504ebd932b07"
+							},
+							{
+								"label": "Note",
+								"fieldType": "TextArea",
+								"id": "e0f7ce5b-3d07-4fbc-9174-c37e9d3f1e42"
+							},
+							{
+								"label": "Created",
+								"fieldType": "Label",
+								"id": "f6669b8a-5301-4b41-91b9-bb6b128abda6"
+							},
+							{
+								"label": "Last Modified On",
+								"fieldType": "Label",
+								"id": "5b4c52c1-16cf-48bb-aaf8-dd98dbbc0a9b"
+							}
+						],
+						"fieldsValues": {
+							"0dfe4f64-fa86-4923-9375-27becaa9d894": "U2FsdGVkX1/FRUEgMNHAF0aqklvjh3fO84nTMEtsSn4="
+						},
+						"lastUpdatedOn": 1696999725128
+					}
+				}
+			},
+			"profiles": {
+				"ids": ["f8057af7-9b12-4508-ab92-5ed47337b5cb", "53174d08-1a52-4f40-9cc5-7c1ac57af5d7"],
+				"entities": {
+					"f8057af7-9b12-4508-ab92-5ed47337b5cb": {
+						"id": "f8057af7-9b12-4508-ab92-5ed47337b5cb",
+						"name": "Me",
+						"description": "Personal",
+						"avatar": {
+							"name": "account",
+							"color": "#ffedd5",
+							"style": {
+								"backgroundColor": "#f97316"
+							}
+						},
+						"entries": ["6677c4ce-f3ed-48aa-a16e-79047599147e"]
+					},
+					"53174d08-1a52-4f40-9cc5-7c1ac57af5d7": {
+						"id": "53174d08-1a52-4f40-9cc5-7c1ac57af5d7",
+						"name": "Family member 1",
+						"description": "Family member",
+						"avatar": {
+							"name": "account",
+							"color": "#ddd6fe",
+							"style": {
+								"backgroundColor": "#9333ea"
+							}
+						}
+					}
+				}
+			},
+			"setting": {
+				"allowCopy": true,
+				"allowScreenCapture": false
+			}
+		},
+		"secure": {
+			"secureTag": "[e95e39c2-297c-4a52-8383-5b51d33a3e88]",
+			"securePassphrase": "U2FsdGVkX18uiQJBntj1Tl+P+BPyLTSRQbWT0CCtQjn/mOxVHrJ3m6PTFXobOgRLCtxtQh3Y5okhGx0OcwOmakd0TK9skdMN3fm2JGdvqIMpdQrm0VNgYhWFt4I3XNKLE0WoB+jRGZv+SjC3D6sKyutHNuFqUEAWZ/9/bUFD6pLjm7bN3eE4/2zqELHwWzKEb/Wk7SibLjH5QD6Zu4OLXifunNhWh5l6xRA/zhhML3J0D8QW38GRaZegacdTsKHs"
+		}
+	}
+}

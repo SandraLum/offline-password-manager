@@ -14,17 +14,17 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { initStore, store, persistor } from '@src/store'
 import { ToastProvider } from '@src/common/contexts/ToastContext'
 
-import { polyfillGlobal } from 'react-native/Libraries/Utilities/PolyfillFunctions'
+// import { polyfillGlobal } from 'react-native/Libraries/Utilities/PolyfillFunctions'
 
-const applyGlobalPolyfills = () => {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	const { TextEncoder, TextDecoder } = require('text-encoding')
+// const applyGlobalPolyfills = () => {
+// 	// eslint-disable-next-line @typescript-eslint/no-var-requires
+// 	const { TextEncoder, TextDecoder } = require('text-encoding')
 
-	polyfillGlobal('TextEncoder', () => TextEncoder)
-	polyfillGlobal('TextDecoder', () => TextDecoder)
-}
+// 	polyfillGlobal('TextEncoder', () => TextEncoder)
+// 	polyfillGlobal('TextDecoder', () => TextDecoder)
+// }
 
-applyGlobalPolyfills()
+// applyGlobalPolyfills()
 
 export default function App() {
 	const [isInitialized, setIsInitialized] = useState(false)

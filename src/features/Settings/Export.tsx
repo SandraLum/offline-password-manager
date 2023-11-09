@@ -50,10 +50,10 @@ export default function Export() {
 	}
 
 	async function verifyCurrentPassword() {
-		let result: { valid: boolean; hsVal?: string | null } = { valid: false, hsVal: null }
+		let result: { valid: boolean; key?: string | null } = { valid: false, key: null }
 		if (validateCurrentPassword(currentPassword)) {
 			result = await dispatch(verifyPassword(currentPassword))
-			if (!result.valid || !result.hsVal) {
+			if (!result.valid || !result.key) {
 				result.valid = false
 				setCurrentPasswordErrors([i18n.t('settings:change-password:error:save:current-password')])
 				invokeToast(i18n.t('settings:change-password:error:save:current-password'))
@@ -64,8 +64,8 @@ export default function Export() {
 
 	async function onExport() {
 		setIsLoading(true)
-		const { valid, hsVal } = await verifyCurrentPassword()
-		if (valid && hsVal) {
+		const { valid, key } = await verifyCurrentPassword()
+		if (valid && key) {
 			let profileIds = []
 			if (profileChecked === ALLPROFILEID) {
 				profileIds = allProfiles.map(p => p.id)
@@ -75,7 +75,7 @@ export default function Export() {
 			console.log('profileIds', profileIds)
 			navigation.navigate({
 				name: 'Settings:ExportGeneration',
-				params: { type: fileFormatChecked, data: { profileIds, hsPwd: hsVal } }
+				params: { type: fileFormatChecked, data: { profileIds, key: key } }
 			})
 		}
 		setIsLoading(false)

@@ -96,6 +96,7 @@ export function encrypt(value: string | unknown, secret: string): string {
 		encrypted = CryptoJS.AES.encrypt(encrypted, secret).toString()
 	} catch (e) {
 		console.warn('[Error] Unable to encrypt', e)
+		throw e
 	}
 	return encrypted
 }

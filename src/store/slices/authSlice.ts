@@ -55,14 +55,14 @@ export const saveMasterPassword =
 		const state = getState()
 		//if (state.secure.secureTag === null && state.secure.securePassphrase === null) {
 
-		const hsPwd = await encryptPassword(pwd, { generateNewSalt: true })
-		dispatch(setMK(hsPwd))
+		const mk = await encryptPassword(pwd, { generateNewSalt: true })
+		dispatch(setMK(mk))
 
 		const tag = '[' + generateUID() + ']'
 		dispatch(setSecureTag(tag))
 
 		const ts = cryptoHS(state.main.app.createdTs, tag)
-		const eVal = encrypt(tag.concat(ts), hsPwd)
+		const eVal = encrypt(tag.concat(ts), mk)
 		dispatch(setSecurePassphrase(eVal))
 
 		return await dispatch(unlock(pwd))
@@ -79,18 +79,18 @@ export const changeMasterPassword =
 				state.secure.secureTag !== null &&
 				state.secure.securePassphrase !== null
 			) {
-				const mk = state.main.auth.mk
-				const hsPwd = await encryptPassword(pwd)
+				const oldKey = state.main.auth.mk
+				const newKey = await encryptPassword(pwd)
 
 				// SyncEntries
-				dispatch(syncEntriesWithNewKey(mk, hsPwd))
-				dispatch(setMK(hsPwd))
+				dispatch(syncEntriesWithNewKey(oldKey, newKey))
+				dispatch(setMK(newKey))
 
 				const tag = '[' + generateUID() + ']'
 				dispatch(setSecureTag(tag))
 
 				const ts = cryptoHS(state.main.app.createdTs, tag)
-				const eVal = encrypt(tag.concat(ts), hsPwd)
+				const eVal = encrypt(tag.concat(ts), newKey)
 				dispatch(setSecurePassphrase(eVal))
 
 				return await dispatch(unlock(pwd))
@@ -103,26 +103,26 @@ export const changeMasterPassword =
 // This is to overwrite mk values
 // Verify with previous decrypted value is valid before allow overwritting
 // export const resetEMK =
-// 	(preVal: string, hsVal: string): OPMTypes.AppThunk =>
+// 	(preVal: string, key: string): OPMTypes.AppThunk =>
 // 	(dispatch, getState) => {
 // 		const state = getState()
 
-// 		dispatch(setMK(hsVal))
+// 		dispatch(setMK(key))
 // 		const tag = '[' + generateUID() + ']'
 // 		dispatch(setMkTag(tag))
 // 		const ts = state.main.app.createdTs
-// 		const eVal = encrypt(tag.concat(ts), hsVal)
+// 		const eVal = encrypt(tag.concat(ts), key)
 // 		dispatch(setSecurePassphrase(eVal))
 // 	}
 
 export const verifyPassword =
-	(pwd: string): OPMTypes.AppThunk<Promise<{ valid: boolean; hsVal?: string | null }>> =>
+	(pwd: string): OPMTypes.AppThunk<Promise<{ valid: boolean; key?: string | null }>> =>
 	async (_dispatch, getState) => {
 		const state = getState()
 		let valid = false
 
-		const hsPwd = await encryptPassword(pwd)
-		const dVal = decrypt(state.secure.securePassphrase, hsPwd)
+		const key = await encryptPassword(pwd)
+		const dVal = decrypt(state.secure.securePassphrase, key)
 
 		if (dVal.slice(0, 38) === state.secure.secureTag) {
 			const arg = dVal.slice(38)
@@ -130,7 +130,7 @@ export const verifyPassword =
 				valid = true
 			}
 		}
-		return { valid: valid, hsVal: hsPwd }
+		return { valid: valid, key: key }
 	}
 
 export const unlock =
@@ -139,9 +139,9 @@ export const unlock =
 		const state = getState()
 		let success = false
 
-		const { valid, hsVal } = await dispatch(verifyPassword(val))
+		const { valid, key } = await dispatch(verifyPassword(val))
 		if (valid) {
-			dispatch(setMK(hsVal))
+			dispatch(setMK(key))
 			const ts = await Device.getUptimeAsync()
 			dispatch(setLts(ts))
 			if (!state.main.auth.isAuthenticated) {

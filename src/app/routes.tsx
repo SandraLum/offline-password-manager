@@ -3,7 +3,8 @@ import {
 	NavigationContainer,
 	NavigatorScreenParams,
 	DefaultTheme,
-	useNavigationContainerRef
+	useNavigationContainerRef,
+	ParamListBase
 } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -32,8 +33,12 @@ import AppInitializer from '@src/features/AppInitializer'
 import { checkIsAuthenticated } from '@src/store/slices/authSlice'
 import { useSelector } from 'react-redux'
 import AppWrapper from './AppWrapper'
-import Export from '@src/features/Settings/Export'
+import ExportCSV from '@src/features/Settings/ExportCSV'
+import ExportCSVPassword from '@src/features/Settings/ExportCSV/VerifyPassword'
+import ExportCSVGenerated from '@src/features/Settings/ExportCSV/CSVGeneration'
+
 import ExportGenerated from '@src/features/Settings/ExportGenerated'
+
 import { OPMTypes } from '@src/common/types'
 import ExportGeneration from '@src/features/Settings/ExportGeneration'
 
@@ -69,8 +74,12 @@ export type RootStackParamList = {
 	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
-	'Settings:Export': {}
-	'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { hsPwd: string; profileIds: string[] } }
+	'Settings:ExportCSV': {}
+	'Settings:ExportCSV:VerifyPassword': {
+		navigateToOptions?: OPMTypes.NavigationOptions
+	}
+	'Settings:ExportCSV:CSVGeneration': { type: 'csv' | 'opm'; data: { key: string; profileIds: string[] } }
+	'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { key: string; profileIds: string[] } }
 	'Settings:ExportGenerated': OPMTypes.ExportedFiles
 	'PasswordRecovery:Form': {}
 	'PasswordRecovery:PDF': { uri: string; filename: string }
@@ -119,7 +128,8 @@ function DrawerStack() {
 				options={{
 					// headerShown: false,
 					title: i18n.t('routes:settings'),
-					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />
+					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />,
+					unmountOnBlur: true
 				}}
 			/>
 		</Drawer.Navigator>
@@ -143,11 +153,9 @@ export default function Routes() {
 							</>
 						) : (
 							<>
-								<Stack.Group>
-									<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
-									<Stack.Screen name="AddEntry" component={AddEntry} />
-									<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
-								</Stack.Group>
+								<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
+								<Stack.Screen name="AddEntry" component={AddEntry} />
+								<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
 
 								<Stack.Group>
 									<Stack.Screen
@@ -189,7 +197,13 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
-								<Stack.Screen name="Settings:Export" component={Export} options={{ title: 'Export' }} />
+
+								<Stack.Group screenOptions={{ title: 'Export to CSV' }}>
+									<Stack.Screen name="Settings:ExportCSV" component={ExportCSV} />
+									<Stack.Screen name="Settings:ExportCSV:VerifyPassword" component={ExportCSVPassword} />
+									<Stack.Screen name="Settings:ExportCSV:CSVGeneration" component={ExportCSVGenerated} />
+								</Stack.Group>
+
 								<Stack.Screen
 									name="Settings:ExportGenerated"
 									component={ExportGenerated}

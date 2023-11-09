@@ -44,7 +44,8 @@ const entriesSlice = createSlice({
 		entriesAddMany: entriesAdapter.addMany,
 		entriesSetAll: entriesAdapter.setAll,
 		entryUpdate: entriesAdapter.updateOne,
-		entryRemove: entriesAdapter.removeOne
+		entryRemove: entriesAdapter.removeOne,
+		entryRemoveAll: entriesAdapter.removeAll
 	}
 })
 
@@ -57,9 +58,8 @@ export const { selectAll: selectAllEntries, selectById: selectEntryById } = entr
 	(state: RootState) => state.main.entries
 )
 
-export const clearEntries: OPMTypes.AppThunk = (dispatch, getState) => {
-	const state = getState()
-	entriesAdapter.removeAll(state)
+export const clearEntries: OPMTypes.AppThunk = dispatch => {
+	dispatch(entryRemoveAll())
 }
 
 export const entriesAddOneToCurrentProfile =
@@ -202,5 +202,6 @@ export const selectAllGroupedEntries = createSelector(
 	}
 )
 
-export const { entriesAddOne, entriesAddMany, entriesSetAll, entryUpdate, entryRemove } = entriesSlice.actions
+export const { entriesAddOne, entriesAddMany, entriesSetAll, entryUpdate, entryRemove, entryRemoveAll } =
+	entriesSlice.actions
 export default entriesSlice

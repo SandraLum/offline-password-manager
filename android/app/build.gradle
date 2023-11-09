@@ -80,7 +80,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
 // @generated begin react-native-pdf-packaging-options - expo prebuild (DO NOT MODIFY) sync-e288c3c5efbb1ef5e1a1959a848260c36558a381
-    namespace "io.slamcode.bondpass"
+    namespace 'io.slamcode.bondpass'
     packagingOptions {
         pickFirst 'lib/x86/libc++_shared.so'
         pickFirst 'lib/x86_64/libjsc.so'

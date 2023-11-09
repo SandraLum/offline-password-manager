@@ -41,7 +41,7 @@ export const redirectScreen = (state: RootState) => {
 }
 
 type SaltOptions = { generateNewSalt?: boolean; salt?: string } | undefined
-export const encryptPassword = async (pwd: string, saltOptions: SaltOptions) => {
+export const encryptPassword = async (pwd: string, saltOptions?: SaltOptions) => {
 	let encrypted, salt
 
 	//Store the salt into the secure store, create a PDF out of it

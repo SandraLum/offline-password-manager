@@ -1,9 +1,16 @@
 /* eslint-disable indent */
 import { createSlice } from '@reduxjs/toolkit'
 import { OPMTypes } from '@src/common/types'
-import { resetProfiles, selectAllProfiles, selectProfileById } from '@src/store/slices/profilesSlice'
+import {
+	clearProfiles,
+	profilesAddMany,
+	resetProfiles,
+	selectAllProfiles,
+	selectProfileById
+} from '@src/store/slices/profilesSlice'
 
 import { RootState } from '..'
+import * as migrations from '../schema/migrations'
 import { clearSecureData } from './secureSlice'
 
 type App = {
@@ -78,9 +85,8 @@ export const factoryReset = (): OPMTypes.AppThunk => async dispatch => {
 }
 
 export const restoreState =
-	(retrieveState: any): OPMTypes.AppThunk =>
-	async dispatch => {
-		console.log('RESTORE STATE.............', retrieveState)
+	(backupState: any): OPMTypes.AppThunk =>
+	async (dispatch, getState) => {
 		// - decrypt the data
 		// - Check the version of the data
 		// - Check if migration scripts needs to be run
@@ -92,6 +98,8 @@ export const restoreState =
 		//		- appSlice => currentProfile: { id?: OPMTypes.Profile['id'] }
 		// - Insert profile first
 		// - Insert entries
+
+		console.log('RESTORE STATE.............', JSON.stringify(backupState))
 
 		// dispatch({ type: 'RESET_APP' })
 		// await clearSecureData()
