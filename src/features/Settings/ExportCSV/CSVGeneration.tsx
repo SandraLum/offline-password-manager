@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from 'react'
 // eslint-disable-next-line react-native/split-platform-components
-import { Image, Platform, StyleSheet, ToastAndroid, View } from 'react-native'
-import { Text, TouchableRipple, ActivityIndicator } from 'react-native-paper'
+import { Image, Platform, ToastAndroid, View } from 'react-native'
+import { Text, TouchableRipple } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
 import * as FileSystem from 'expo-file-system'
 import tw from 'twrnc'
@@ -22,16 +22,7 @@ import { selectAllCategories } from '@store/slices/categoriesSlice'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
-import Animated, {
-	Easing,
-	FadeOutDown,
-	SlideInDown,
-	SlideInUp,
-	useAnimatedStyle,
-	useSharedValue,
-	withRepeat,
-	withTiming
-} from 'react-native-reanimated'
+import Animated, { SlideInDown } from 'react-native-reanimated'
 import LoadingAnimation from '@src/components/LoadingAnimation'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings:ExportCSV:CSVGeneration'>
@@ -223,9 +214,7 @@ export default function CSVGeneration({ route }: Props) {
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
 			{isLoading ? (
-				// <View style={tw`justify-center self-center p-2`}>
 				<View style={tw`flex-1 flex-col items-center top-[20%] px-8`}>
-					{/* <ActivityIndicator animating={true} size="large" /> */}
 					<LoadingAnimation style={tw`mb-8`} />
 					<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10 px-4`}>
 						{i18n.t('settings:export:generated:label:generating')}
@@ -250,8 +239,9 @@ export default function CSVGeneration({ route }: Props) {
 						{i18n.t('settings:export:generated:label:generated', { type: type.toUpperCase() })}
 					</Text>
 
+					<Text style={tw`text-sm text-gray-500 px-1`}>Note: Store this in at a secure location</Text>
+
 					<View style={tw`rounded-lg p-1`}>
-						{/* <RadioButton.Group onValueChange={newValue => setFileFormat(newValue)} value={fileFormat}> */}
 						{generatedRecords.map((record: OPMTypes.ExportedCSVFile) => {
 							return (
 								<View

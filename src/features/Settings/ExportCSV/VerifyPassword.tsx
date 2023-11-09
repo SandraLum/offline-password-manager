@@ -64,10 +64,6 @@ export default function ExportCSVPassword({ route }: Props) {
 		const { navigateToOptions } = route.params
 		if (valid && key && navigateToOptions) {
 			navigation.navigate({ ...(navigateToOptions as OPMTypes.NavigationOptions), key })
-			// navigation.navigate({
-			// 	name: 'Settings:ExportGeneration',
-			// 	params: { type: 'csv', data: { ...data, key: key } }
-			// })
 		}
 		setIsLoading(false)
 	}
