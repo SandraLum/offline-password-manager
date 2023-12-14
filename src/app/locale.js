@@ -5,6 +5,8 @@ import { I18n } from 'i18n-js'
 // Set the key-value pairs for the different languages you want to support.
 const i18n = new I18n({
 	en: {
+		'developer:nope:not:priority':
+			'Developer decided that this feature is not a priority at the moment...so are 50 other features',
 		'app:name:title': 'Bondpass',
 		'set-master-password:text:password': 'Password',
 		'set-master-password:text:confirm-password': 'Confirm Password',
@@ -58,6 +60,9 @@ const i18n = new I18n({
 		'password:recovery:warning:prompt:title': 'Have you saved and printed your password recovery sheet?',
 		'password:recovery:warning:prompt:text':
 			'It is important for you to keep a copy of your recovery sheet to unlock your records in the future.',
+		'settings:subheader:general': 'General',
+		'settings:subheader:backup:export': 'Backup and Export',
+		'settings:subheader:security': 'Security',
 		'settings:change-password:label:current-password': 'Current password',
 		'settings:change-password:label:new-password': 'New password',
 		'settings:change-password:text:current-password': 'Enter your current password',

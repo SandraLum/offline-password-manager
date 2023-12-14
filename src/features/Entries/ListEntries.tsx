@@ -133,7 +133,7 @@ export default function ListEntries(props: Props) {
 	return (
 		<>
 			{/* List */}
-			<Content horizontal={false} contentContainerStyle={tw`flex flex-col p-1 pb-4 rounded-lg`} fadingEdgeLength={200}>
+			<Content horizontal={false} contentContainerStyle={tw`p-3`} fadingEdgeLength={50}>
 				{noMatches ? (
 					<View style={tw`p-1`}>
 						<Text style={tw`text-neutral-600`}>{i18n.t('entries:label:no:search:matches')}</Text>
@@ -240,8 +240,9 @@ export default function ListEntries(props: Props) {
 					})
 				)}
 			</Content>
+			{/* </View> */}
 
-			<Animated.View entering={FlipInXDown.delay(300)} style={tw`flex items-center`}>
+			<Animated.View entering={FlipInXDown.delay(300)} style={tw`items-center`}>
 				<IconButton
 					icon={'chevron-left'}
 					size={34}

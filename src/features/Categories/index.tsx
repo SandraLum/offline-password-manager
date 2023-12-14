@@ -43,7 +43,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 		navigation.navigate({
 			name: 'AddEntry',
 			params: {
-				data: { category: { type: category.id } }
+				data: { category: { id: category.id } }
 			}
 		})
 	}
@@ -101,10 +101,11 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	}
 
 	return (
-		<Content contentContainerStyle={tw.style(`flex p-1`)}>
+		// <Content contentContainerStyle={tw.style(`flex p-1`)}>
+		<Content contentContainerStyle={tw`p-3`} fadingEdgeLength={50}>
 			{/* All Items Card */}
 			{allCategory ? (
-				<View>
+				<View style={tw`flex-1`}>
 					<Card mode="contained" style={tw.style(`m-1 bg-white`)} onPress={() => onViewEntries(allCategory)}>
 						<Card.Title
 							titleNumberOfLines={2}

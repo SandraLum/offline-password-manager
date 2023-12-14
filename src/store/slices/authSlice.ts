@@ -14,7 +14,7 @@ import { syncEntriesWithNewKey } from '@src/store/slices/entriesSlice'
 
 // TODO: Testing for 1min, to change to something longer
 //60000 = 1min | 120000 = 2min | 900000 = 15min
-export const TimeoutInterval = 900000
+export const TimeoutInterval = 60000 //900000
 
 const initialState = {
 	mk: null,

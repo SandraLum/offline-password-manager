@@ -9,11 +9,15 @@ import { selectAllProfiles, selectProfileById } from './profilesSlice'
 type Setting = {
 	allowCopy: boolean
 	allowScreenCapture: boolean
+	allowAutoLock: boolean
+	defaultHidePassword: boolean
 }
 
 const initialState: Setting = {
 	allowCopy: true,
-	allowScreenCapture: false
+	allowScreenCapture: false,
+	allowAutoLock: true,
+	defaultHidePassword: true
 }
 
 const settingSlice = createSlice({
@@ -26,9 +30,17 @@ const settingSlice = createSlice({
 		setAllowScreenCapture: (state, action) => {
 			state.allowScreenCapture = action.payload
 		},
+		setAllowAutoLock: (state, action) => {
+			state.allowAutoLock = action.payload
+		},
+		setHidePassword: (state, action) => {
+			state.defaultHidePassword = action.payload
+		},
 		clearSettings: state => {
 			state.allowCopy = initialState.allowCopy
 			state.allowScreenCapture = initialState.allowScreenCapture
+			state.allowAutoLock = initialState.allowAutoLock
+			state.defaultHidePassword = initialState.defaultHidePassword
 		}
 	}
 })
@@ -70,5 +82,11 @@ export const getBackupState: OPMTypes.AppThunk<RootState> = (dispatch, getState)
 	return getState()
 }
 
-export const { setAllowCopy, setAllowScreenCapture, clearSettings } = settingSlice.actions
+export const getAllowAutoLock: OPMTypes.AppThunk<boolean> = (dispatch, getState) => {
+	const state = getState()
+	return state.main.setting.allowAutoLock
+}
+
+export const { setAllowCopy, setAllowScreenCapture, setAllowAutoLock, setHidePassword, clearSettings } =
+	settingSlice.actions
 export default settingSlice

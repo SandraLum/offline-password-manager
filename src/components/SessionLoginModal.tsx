@@ -16,6 +16,7 @@ import {
 } from '@src/store/slices/authSlice'
 import { i18n } from '@src/app/locale'
 import { NavigationContainerRefWithCurrent } from '@react-navigation/core/lib/typescript/src/types'
+import { getAllowAutoLock } from '@src/store/slices/settingSlice'
 
 type Props = {
 	isAuthenticated: boolean
@@ -48,8 +49,9 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 	useEffect(() => {
 		const subscribeAppState = AppState.addEventListener('change', async nextAppState => {
 			if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-				if (isAuthenticated) {
-					setSessionTimeout()
+				const allowAutoLock = dispatch(getAllowAutoLock)
+				if (isAuthenticated && allowAutoLock) {
+					await setSessionTimeout()
 				}
 			}
 			appState.current = nextAppState
@@ -57,7 +59,8 @@ export default function SessionLoginModal({ isAuthenticated, rootNavigation }: P
 
 		const unsubscribeNavigation = rootNavigation?.addListener('state', async (e: any) => {
 			// You can get the raw navigation state (partial state object of the root navigator)
-			if (isAuthenticated) {
+			const allowAutoLock = dispatch(getAllowAutoLock)
+			if (isAuthenticated && allowAutoLock) {
 				await setSessionTimeout(TimeoutInterval) //1min or 900000 = 15min //SLTODO
 			}
 		})

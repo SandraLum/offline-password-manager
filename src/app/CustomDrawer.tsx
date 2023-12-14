@@ -5,7 +5,6 @@ import {
 	DrawerItemList
 } from '@react-navigation/drawer'
 import { Text, View, ViewStyle } from 'react-native'
-import { StackActions } from '@react-navigation/native'
 import { Divider } from 'react-native-paper'
 import { i18n } from './locale'
 import tw from 'twrnc'
@@ -60,16 +59,13 @@ const Header = () => {
 const Content = (props: DrawerContentComponentProps) => {
 	const dispatch = useDispatch<AppDispatch>()
 
-	// SL TODO: Credit icons8 for icons https://icons8.com/
-
 	function onLogout() {
 		dispatch(invalidateSession(true))
-
 		// props.navigation.dispatch(StackActions.popToTop())
 	}
 
 	return (
-		<DrawerContentScrollView {...props}>
+		<DrawerContentScrollView {...props} contentContainerStyle={tw`flex-1`}>
 			<Header />
 			<Divider bold style={tw`border-slate-500`} />
 			<View style={tw`py-2`}>
@@ -81,7 +77,10 @@ const Content = (props: DrawerContentComponentProps) => {
 				label={i18n.t('navigation:drawer:label:logout')}
 				onPress={onLogout}
 			/>
-			<Text>Icons by Icons8</Text>
+
+			<View style={tw`mt-auto mx-auto`}>
+				<Text style={tw`text-slate-500 text-xs p-1`}>Icons by Icons8</Text>
+			</View>
 		</DrawerContentScrollView>
 	)
 }
