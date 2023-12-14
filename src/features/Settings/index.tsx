@@ -12,6 +12,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserSettings, setAllowCopy, setAllowScreenCapture } from '@store/slices/settingSlice'
+import { OPMTypes } from '@src/common/types'
+import { RootStackParamList } from '@src/app/routes'
 
 export default function Settings() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
@@ -92,11 +94,26 @@ export default function Settings() {
 							onPress={() => navigateTo({ screen: 'Settings:ExportCSV' })}
 						/>
 						<List.Item
-							title="Import"
-							description={
-								'Imports and restores a valid backup file into the app. The current entries will be overwritten.'
-							}
+							title="Backup data"
+							description={'Backup your data into an encrypted file'}
+							left={props => <List.Icon {...props} icon="content-save" />}
+							onPress={() => {
+								navigation.navigate({
+									name: 'Settings:Backup',
+									params: {}
+								})
+							}}
+						/>
+						<List.Item
+							title="Restore data"
+							description={'Restores a valid backup file into the app. The current entries will be overwritten.'}
 							left={props => <List.Icon {...props} icon="import" />}
+							onPress={() => {
+								navigation.navigate({
+									name: 'Settings:Restore',
+									params: {}
+								})
+							}}
 						/>
 					</List.Section>
 

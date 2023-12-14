@@ -60,6 +60,8 @@ const Header = () => {
 const Content = (props: DrawerContentComponentProps) => {
 	const dispatch = useDispatch<AppDispatch>()
 
+	// SL TODO: Credit icons8 for icons https://icons8.com/
+
 	function onLogout() {
 		dispatch(invalidateSession(true))
 
@@ -79,6 +81,7 @@ const Content = (props: DrawerContentComponentProps) => {
 				label={i18n.t('navigation:drawer:label:logout')}
 				onPress={onLogout}
 			/>
+			<Text>Icons by Icons8</Text>
 		</DrawerContentScrollView>
 	)
 }

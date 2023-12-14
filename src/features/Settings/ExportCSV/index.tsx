@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { View, Dimensions } from 'react-native'
-import { Button, Text, TouchableRipple, Modal } from 'react-native-paper'
+import { Button, Text, TouchableRipple } from 'react-native-paper'
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated'
 import tw from 'twrnc'
 
@@ -15,6 +15,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { MaterialIcons } from '@expo/vector-icons'
 import { OPMTypes } from '@src/common/types'
+import { RootStackParamList } from '@src/app/routes'
 
 const AnimatedSelectView = ({ children, style, selected }: any) => {
 	const borderWidth = useSharedValue(1)
@@ -53,10 +54,10 @@ export default function ExportCSV() {
 		const navigateToOptions = {
 			name: 'Settings:ExportCSV:CSVGeneration',
 			params: { type: 'csv', data: { key: '', profileIds: profilesSelected } }
-		} as unknown as OPMTypes.NavigationOptions
+		} as OPMTypes.NavigationOptions<RootStackParamList, 'Settings:ExportCSV:CSVGeneration'>
 
 		navigation.navigate({
-			name: 'Settings:ExportCSV:VerifyPassword',
+			name: 'Settings:VerifyPassword',
 			params: { navigateToOptions }
 		})
 

@@ -17,9 +17,9 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { RootStackParamList } from '@src/app/routes'
 import { OPMTypes } from '@src/common/types'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Settings:ExportCSV:VerifyPassword'>
+type Props = NativeStackScreenProps<RootStackParamList, 'Settings:VerifyPassword'>
 
-export default function ExportCSVPassword({ route }: Props) {
+export default function VerifyPassword({ route }: Props) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dispatch = useDispatch<AppDispatch>()
 	const { invokeToast } = useContext(ToastContext)
@@ -58,12 +58,18 @@ export default function ExportCSVPassword({ route }: Props) {
 		return result
 	}
 
-	async function onExport() {
+	async function onNext() {
 		setIsLoading(true)
 		const { valid, key } = await verifyCurrentPassword()
-		const { navigateToOptions } = route.params
+		const navigateToOptions = route.params.navigateToOptions as OPMTypes.NavigationOptions<
+			RootStackParamList,
+			'Settings:Backup:BackupGeneration' | 'Settings:ExportCSV:CSVGeneration'
+		>
 		if (valid && key && navigateToOptions) {
-			navigation.navigate({ ...(navigateToOptions as OPMTypes.NavigationOptions), key })
+			if (navigateToOptions?.params?.data) {
+				navigateToOptions.params.data.key = key
+			}
+			navigation.navigate(navigateToOptions)
 		}
 		setIsLoading(false)
 	}
@@ -79,18 +85,18 @@ export default function ExportCSVPassword({ route }: Props) {
 					/>
 				</View>
 
-				<Text style={tw`text-2xl font-bold text-gray-900 pt-5 pt-10 text-center`}>
-					{i18n.t('settings:export:label:enter-password')}
+				<Text style={tw`text-2xl font-bold text-gray-900 pt-10 text-center`}>
+					{i18n.t('settings:verify:label:enter-password')}
 				</Text>
 
 				<Text style={tw.style(`text-base font-bold text-gray-400 pb-10 text-center`)}>
-					{i18n.t('settings:export:note:verify-password')}
+					{i18n.t('settings:verify:note:verify-password')}
 				</Text>
 
 				<View style={tw`w-full`}>
 					<PaperTextInput
 						mode="flat"
-						label={i18n.t('settings:export:text:password')}
+						label={i18n.t('settings:verify:text:password')}
 						value={currentPassword}
 						onChangeText={onChangeCurrentPassword}
 						secureTextEntry={hidecurrentPassword}
@@ -108,8 +114,8 @@ export default function ExportCSVPassword({ route }: Props) {
 				</View>
 			</View>
 
-			<Button mode="contained" style={tw`m-10`} onPress={onExport} loading={isLoading}>
-				{i18n.t('settings:export:button:export')}
+			<Button mode="contained" style={tw`m-10`} onPress={onNext} loading={isLoading}>
+				{i18n.t('button:label:next')}
 			</Button>
 		</AuthScreen>
 	)

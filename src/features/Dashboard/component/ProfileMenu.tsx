@@ -69,7 +69,7 @@ export default function ProfileMenu() {
 			style={tw`w-3/4`}
 			anchor={
 				<TouchableOpacity
-					containerStyle={tw`pl-2 rounded-full`}
+					// containerStyle={tw`pl-2 rounded-full`}
 					style={tw.style(`flex-row items-center justify-center`)}
 					activeOpacity={1}
 					onPress={() => setMenuVisibility(true)}

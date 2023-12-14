@@ -1,7 +1,7 @@
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 // eslint-disable-next-line react-native/split-platform-components
 import { Image, Platform, ToastAndroid, View } from 'react-native'
-import { Text, TouchableRipple } from 'react-native-paper'
+import { Button, Text, TouchableRipple } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
 import * as FileSystem from 'expo-file-system'
 import tw from 'twrnc'
@@ -19,17 +19,22 @@ import { selectAllProfiles } from '@store/slices/profilesSlice'
 import { ToastContext } from '@src/common/contexts/ToastContext'
 import { FieldType, FieldTypes } from '@src/common/templates/entries'
 import { selectAllCategories } from '@store/slices/categoriesSlice'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
-import Animated, { SlideInDown } from 'react-native-reanimated'
 import LoadingAnimation from '@src/components/LoadingAnimation'
+import { ParamListBase, useNavigation } from '@react-navigation/native'
+import Animated, { useSharedValue, withRepeat, FadeIn, withSpring } from 'react-native-reanimated'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings:ExportCSV:CSVGeneration'>
 
 export default function CSVGeneration({ route }: Props) {
-	const { type, data } = route.params
+	const { data } = route.params
+	console.log('data', data)
 
+	const sv = useSharedValue(0)
+
+	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const { invokeToast } = useContext(ToastContext)
 
 	const allEntries = useSelector(selectAllEntries)
@@ -48,12 +53,15 @@ export default function CSVGeneration({ route }: Props) {
 		let timeoutId: string | number | NodeJS.Timeout | undefined
 		async function onExport() {
 			setIsLoading(true)
+
+			sv.value = withRepeat(withSpring(0), 5)
+
 			const files = await buildCSVExport()
 			setGeneratedRecords(files)
 
 			timeoutId = setTimeout(() => {
 				setIsLoading(false)
-			}, 500)
+			}, 1000)
 		}
 
 		async function buildCSVExport() {
@@ -168,7 +176,7 @@ export default function CSVGeneration({ route }: Props) {
 				clearTimeout(timeoutId)
 			}
 		}
-	}, [allCategories, allEntries, allProfiles, data, invokeToast, type])
+	}, [allCategories, allEntries, allProfiles, data, invokeToast])
 
 	async function onShare(record: OPMTypes.ExportedCSVFile) {
 		if (record.success && record.fileUri) {
@@ -211,6 +219,10 @@ export default function CSVGeneration({ route }: Props) {
 		}
 	}
 
+	function onDone() {
+		navigation.popToTop()
+	}
+
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
 			{isLoading ? (
@@ -234,69 +246,74 @@ export default function CSVGeneration({ route }: Props) {
 					</Text>
 				</View>
 			) : (
-				<Animated.View entering={SlideInDown} style={tw`flex-1 flex-col p-5`}>
-					<Text style={tw`text-xl font-bold text-teal-800 p-1`}>
-						{i18n.t('settings:export:generated:label:generated', { type: type.toUpperCase() })}
-					</Text>
+				<>
+					<Animated.View entering={FadeIn} style={tw`flex-1 flex-col p-5`}>
+						<Text style={tw`text-xl font-bold text-teal-800 p-1`}>
+							{i18n.t('settings:export:generated:label:generated', { type: 'CSV' })}
+						</Text>
 
-					<Text style={tw`text-sm text-gray-500 px-1`}>Note: Store this in at a secure location</Text>
+						<Text style={tw`text-sm text-gray-500 px-1`}>Note: Store this in at a secure location</Text>
 
-					<View style={tw`rounded-lg p-1`}>
-						{generatedRecords.map((record: OPMTypes.ExportedCSVFile) => {
-							return (
-								<View
-									key={`gen-file-${record.id}`}
-									style={tw.style('bg-white mt-3 border-2 rounded-2xl border-gray-300')}
-								>
-									<View style={tw`flex-row items-center justify-between p-2`}>
-										{record.success && (
-											<Text style={tw`font-bold text-gray-600 text-lg shrink-1 px-2`} numberOfLines={2}>
-												{record.profile.name}
-											</Text>
-										)}
+						<View style={tw`p-1`}>
+							{generatedRecords.map((record: OPMTypes.ExportedCSVFile) => {
+								return (
+									<View
+										key={`gen-file-${record.id}`}
+										style={tw.style('bg-white mt-3 border-2 rounded-2xl border-gray-300')}
+									>
+										<View style={tw`flex-row items-center justify-between p-2`}>
+											{record.success && (
+												<Text style={tw`font-bold text-gray-600 text-lg shrink-1 px-2`} numberOfLines={2}>
+													{record.profile.name}
+												</Text>
+											)}
 
-										{record.success && record.fileInfo.exists && (
-											<View style={tw.style(`flex-row shrink-0`)}>
-												<TouchableRipple
-													style={tw`p-2 items-center justify-between rounded-xl mx-2`}
-													rippleColor="rgba(0, 0, 0, .32)"
-													onPress={() => onDownload(record)}
-													borderless={true}
-												>
-													<>
-														<MaterialCommunityIcons
-															name="download"
-															size={32}
-															color={tw.color('white')}
-															style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
-														/>
-														<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:download')}</Text>
-													</>
-												</TouchableRipple>
-												<TouchableRipple
-													style={tw`p-2 items-center justify-between rounded-xl`}
-													rippleColor="rgba(0, 0, 0, .32)"
-													onPress={() => onShare(record)}
-													borderless={true}
-												>
-													<>
-														<MaterialCommunityIcons
-															name="share-variant"
-															size={32}
-															color={tw.color('white')}
-															style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
-														/>
-														<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:share')}</Text>
-													</>
-												</TouchableRipple>
-											</View>
-										)}
+											{record.success && record.fileInfo.exists && (
+												<View style={tw.style(`flex-row shrink-0`)}>
+													<TouchableRipple
+														style={tw`p-2 items-center justify-between rounded-xl mx-2`}
+														rippleColor="rgba(0, 0, 0, .32)"
+														onPress={() => onDownload(record)}
+														borderless={true}
+													>
+														<>
+															<MaterialCommunityIcons
+																name="download"
+																size={32}
+																color={tw.color('white')}
+																style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
+															/>
+															<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:download')}</Text>
+														</>
+													</TouchableRipple>
+													<TouchableRipple
+														style={tw`p-2 items-center justify-between rounded-xl`}
+														rippleColor="rgba(0, 0, 0, .32)"
+														onPress={() => onShare(record)}
+														borderless={true}
+													>
+														<>
+															<MaterialCommunityIcons
+																name="share-variant"
+																size={32}
+																color={tw.color('white')}
+																style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
+															/>
+															<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:share')}</Text>
+														</>
+													</TouchableRipple>
+												</View>
+											)}
+										</View>
 									</View>
-								</View>
-							)
-						})}
-					</View>
-				</Animated.View>
+								)
+							})}
+						</View>
+					</Animated.View>
+					<Button mode="contained" style={tw`m-10`} onPress={onDone}>
+						{i18n.t('button:label:done')}
+					</Button>
+				</>
 			)}
 		</AuthScreen>
 	)

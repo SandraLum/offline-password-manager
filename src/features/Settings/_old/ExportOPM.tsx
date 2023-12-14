@@ -6,7 +6,7 @@ import * as FileSystem from 'expo-file-system'
 import { AppDispatch, persistor, RootState, store } from '@src/store'
 import { OPMTypes } from '@src/common/types'
 import { clone, decrypt, encrypt, formatDate, intArrayShift } from '@src/common/utils'
-import { getBackupState } from '../../store/slices/settingSlice'
+import { getBackupState } from '../../../store/slices/settingSlice'
 import { i18n } from '@src/app/locale'
 
 import * as DocumentPicker from 'expo-document-picker'
