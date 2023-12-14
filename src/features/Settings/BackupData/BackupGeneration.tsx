@@ -18,6 +18,7 @@ import { schemaMigrationVersion } from '@src/store/schema/migrations'
 import AuthScreen from '@src/components/AuthScreen'
 import LoadingAnimation from '@src/components/LoadingAnimation'
 import { RootStackParamList } from '@src/app/routes'
+import Content from '@src/components/Content'
 
 const Buffer = require('buffer/').Buffer
 
@@ -30,16 +31,15 @@ export default function BackupGeneration({ route }: Props) {
 		LOADING: 2,
 		GENERATED: 3,
 		GENERATED_CALLBACK: 4,
-		SAVED: 5,
-		COMPLETED: 6,
-		ERROR: 7
+		COMPLETED: 5,
+		ERROR: 6
 	})
 	const dispatch = useDispatch<AppDispatch>()
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const isAndroid = Platform.OS === 'android'
 
 	const [loadingStatus, setLoadingStatus] = useState<(typeof LoadingStatus)[keyof typeof LoadingStatus]>(
-		LoadingStatus.INIT
+		LoadingStatus.COMPLETED
 	)
 	const [isSaving, setIsSaving] = useState(false)
 	const [generatedData, setGeneratedData] = useState<string | undefined>()
@@ -61,6 +61,12 @@ export default function BackupGeneration({ route }: Props) {
 		}
 
 		init()
+
+		return () => {
+			if (timeoutId) {
+				clearTimeout(timeoutId)
+			}
+		}
 	}, [])
 
 	async function onBackup() {
@@ -200,84 +206,94 @@ export default function BackupGeneration({ route }: Props) {
 
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
-			{(loadingStatus === LoadingStatus.LOADING ||
-				loadingStatus === LoadingStatus.GENERATED ||
-				loadingStatus === LoadingStatus.GENERATED_CALLBACK) && (
-				<View style={tw`flex-col items-center top-[15%] px-8`}>
-					<View style={tw`min-h-200px`}>
-						<LoadingAnimation
-							style={tw`mb-8`}
-							backgroundColor={tw.color('yellow-200')}
-							borderRadius={20}
-							bounce={loadingStatus === LoadingStatus.GENERATED || loadingStatus === LoadingStatus.GENERATED_CALLBACK}
-							startMorph={
-								loadingStatus === LoadingStatus.GENERATED || loadingStatus === LoadingStatus.GENERATED_CALLBACK
-							}
-							morphOptions={{
-								backgroundColor: tw.color('green-200'),
-								borderRadius: 100,
-								callBack: () => {
-									setLoadingStatus(LoadingStatus.GENERATED_CALLBACK)
-								}
-							}}
-						/>
-					</View>
-					{loadingStatus === LoadingStatus.LOADING && (
-						<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10 px-4`}>
-							{i18n.t('settings:backup:label:generating')}
-						</Text>
+			<Content>
+				<View style={tw`flex-col p-10 items-center`}>
+					{(loadingStatus === LoadingStatus.LOADING ||
+						loadingStatus === LoadingStatus.GENERATED ||
+						loadingStatus === LoadingStatus.GENERATED_CALLBACK) && (
+						// <View style={tw`flex-col items-center top-[2%] p-10`}>
+						<>
+							<View style={tw`min-h-160px`}>
+								<LoadingAnimation
+									backgroundColor={tw.color('yellow-200')}
+									borderRadius={20}
+									bounce={
+										loadingStatus === LoadingStatus.GENERATED || loadingStatus === LoadingStatus.GENERATED_CALLBACK
+									}
+									startMorph={
+										loadingStatus === LoadingStatus.GENERATED || loadingStatus === LoadingStatus.GENERATED_CALLBACK
+									}
+									morphOptions={{
+										backgroundColor: tw.color('green-200'),
+										borderRadius: 100,
+										callBack: () => {
+											setLoadingStatus(LoadingStatus.GENERATED_CALLBACK)
+										}
+									}}
+								/>
+							</View>
+							{loadingStatus === LoadingStatus.LOADING && (
+								<>
+									<Text style={tw`text-lg text-neutral-500 font-bold text-center p-4`}>
+										{i18n.t('settings:backup:label:generating')}
+									</Text>
+									<Text style={tw`text-sm`}>{i18n.t('label:please:wait')} ...</Text>
+								</>
+							)}
+
+							{loadingStatus === LoadingStatus.GENERATED_CALLBACK && (
+								<>
+									<Text style={tw`text-base text-center p-5`}>
+										{i18n.t('settings:backup:label:generating:complete')}
+									</Text>
+									<Button mode="contained" style={tw`m-10`} onPress={onSave} loading={isSaving}>
+										{i18n.t('settings:backup:button:save')}
+									</Button>
+								</>
+							)}
+							{/* </View> */}
+						</>
+					)}
+					{loadingStatus === LoadingStatus.ERROR && (
+						// <View style={tw`flex-1 flex-col items-center top-[5%] px-12`}>
+						<>
+							<View style={tw`rounded-full bg-red-100 p-14`}>
+								<Image
+									resizeMode="contain"
+									style={tw`w-[100px] h-[100px]`}
+									source={require('../../../../assets/images/icons/app/error-doc-64x64.png')}
+								/>
+							</View>
+							<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10`}>
+								{i18n.t('settings:backup:processing:error')}
+							</Text>
+						</>
+						// </View>
 					)}
 
-					{loadingStatus === LoadingStatus.GENERATED_CALLBACK && (
+					{loadingStatus === LoadingStatus.COMPLETED && (
 						<>
-							<Text style={tw`text-base text-neutral-500 text-center py-10 px-4`}>
-								{i18n.t('settings:backup:label:generating:complete')}
+							<View style={tw`rounded-full bg-green-100 p-1`}>
+								<Image
+									resizeMode="contain"
+									style={tw`w-[200px] h-[200px]`}
+									source={require('../../../../assets/images/icons/app/done-200x200.png')}
+								/>
+							</View>
+							<Text style={tw`text-base text-neutral-500 font-bold text-center py-10`}>
+								{i18n.t('settings:backup:processing:success')}
 							</Text>
-							<Button mode="elevated" labelStyle={tw`text-xl`} onPress={onSave} loading={isSaving}>
-								{i18n.t('settings:backup:button:save')}
+
+							<Button mode="contained" style={tw`w-full mt-10 mb-2`} onPress={onDone}>
+								{i18n.t('button:label:done')}
+							</Button>
+							<Button mode="text" onPress={onSave}>
+								{i18n.t('settings:backup:button:save:again')}
 							</Button>
 						</>
 					)}
 				</View>
-			)}
-			{loadingStatus === LoadingStatus.ERROR && (
-				<View style={tw`flex-1 flex-col items-center top-[5%] px-12`}>
-					<View style={tw`rounded-full bg-red-100 p-14`}>
-						<Image
-							resizeMode="contain"
-							style={tw`w-[100px] h-[100px]`}
-							source={require('../../../../assets/images/icons/app/error-doc-64x64.png')}
-						/>
-					</View>
-					<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10`}>
-						{i18n.t('settings:backup:processing:error')}
-					</Text>
-				</View>
-			)}
-
-			{loadingStatus === LoadingStatus.COMPLETED && (
-				<View style={tw`flex-1 bg-white`}>
-					<View style={tw`flex-1 flex-col items-center top-[5%] px-12`}>
-						<View style={tw`rounded-full bg-green-100 p-8`}>
-							<Image
-								resizeMode="contain"
-								style={tw`w-[250px] h-[250px]`}
-								source={require('../../../../assets/images/icons/app/done-200x200.png')}
-							/>
-						</View>
-						<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10`}>
-							{i18n.t('settings:backup:processing:success')}
-						</Text>
-
-						<Button mode="contained" style={tw`px-10 m-2`} labelStyle={tw`text-xl`} onPress={onDone}>
-							{i18n.t('button:label:done')}
-						</Button>
-						<Button mode="text" onPress={onSave}>
-							{i18n.t('settings:backup:button:save:again')}
-						</Button>
-					</View>
-				</View>
-			)}
+			</Content>
 		</AuthScreen>
 	)
 }

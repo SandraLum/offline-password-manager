@@ -83,64 +83,62 @@ export default function ExportCSV() {
 
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
-			<View style={tw`bg-teal-500 p-3 border-slate-400 border`}>
-				<Text style={tw`text-white text-base`}>{i18n.t('settings:export:opm:label:note')}</Text>
+			<View style={tw`bg-teal-500 p-2 border-slate-400 border`}>
+				<Text style={tw`text-white text-base`}>{i18n.t('settings:export:csv:label:note')}</Text>
 			</View>
 
-			<View style={tw`flex p-3`}>
-				<View style={tw`py-1`}>
-					<View style={tw`p-2 flex-row justify-between items-center`}>
-						<Text style={tw`text-slate-700 text-lg font-bold`}>
-							{i18n.t('settings:export:generated:label:all:profiles:note')}
-						</Text>
+			<View style={tw`flex p-2`}>
+				<View style={tw`p-1 flex-row justify-between items-center`}>
+					<Text style={tw`text-slate-700 text-lg font-bold`}>
+						{i18n.t('settings:export:generated:label:all:profiles:note')}
+					</Text>
 
-						<MaterialIcons
-							name={allSelected ? 'check-circle' : 'check-circle-outline'}
-							size={30}
-							color={allSelected ? 'rgb(15, 168, 214)' : 'rgba(25, 28, 29, 0.3)'}
-							onPress={onToggleAll}
-						/>
-					</View>
+					<MaterialIcons
+						name={allSelected ? 'check-circle' : 'check-circle-outline'}
+						size={30}
+						color={allSelected ? tw.color('blue-400') : 'rgba(25, 28, 29, 0.3)'}
+						onPress={onToggleAll}
+					/>
+				</View>
 
-					<View style={tw`items-center justify-center flex-row flex-wrap`}>
-						{allProfiles.map((profile, idx) => {
-							const checked = profilesSelected.includes(profile.id)
+				<View style={tw`items-center justify-center flex-row flex-wrap pt-2`}>
+					{allProfiles.map((profile, idx) => {
+						const checked = profilesSelected.includes(profile.id)
 
-							return (
-								<TouchableRipple
-									key={`csv-profile-${profile.id}-${idx}`}
-									style={tw`w-[${itemWidth}px] h-[${itemHeight}px] m-1 rounded-2xl `}
-									rippleColor="rgba(0, 0, 0, .32)"
-									borderless={true}
-									onPress={() => onToggleItem(profile.id)}
+						return (
+							<TouchableRipple
+								key={`csv-profile-${profile.id}-${idx}`}
+								style={tw`w-[${itemWidth}px] h-[${itemHeight}px] m-1 rounded-2xl `}
+								rippleColor="rgba(0, 0, 0, .32)"
+								borderless={true}
+								onPress={() => onToggleItem(profile.id)}
+							>
+								<AnimatedSelectView
+									style={tw.style(`flex-1 flex-col items-center justify-center p-3 bg-white rounded-2xl border`)}
+									selected={checked}
 								>
-									<AnimatedSelectView
-										style={tw.style(`flex-1 flex-col items-center justify-center p-3 bg-white rounded-2xl border`)}
-										selected={checked}
-									>
-										<MaterialIcons
-											name={checked ? 'check-circle' : 'check-circle-outline'}
-											size={26}
-											color={checked ? tw.color('blue-400') : tw.color('neutral-400')}
-											style={tw.style(`absolute left-1 top-1`)}
-										/>
-										<Avatar
-											icon={profile.avatar}
-											size={32}
-											style={tw.style(`border-gray-300 mb-1`, { borderWidth: 1 })}
-										/>
-										<Text style={tw`text-slate-600 text-base font-bold text-center `} numberOfLines={2}>
-											{profile.name}
-										</Text>
-									</AnimatedSelectView>
-								</TouchableRipple>
-							)
-						})}
-						{emptyItems &&
-							[...Array(emptyItems)].map((_, i) => (
-								<View style={tw`w-[${itemWidth}px] h-[${itemHeight}px] m-1`} key={`dummy-${i}`} />
-							))}
-					</View>
+									<MaterialIcons
+										name={checked ? 'check-circle' : 'check-circle-outline'}
+										size={26}
+										color={checked ? tw.color('blue-400') : tw.color('neutral-400')}
+										style={tw.style(`absolute left-1 top-1`)}
+									/>
+									<Avatar
+										icon={profile.avatar}
+										size={32}
+										style={tw.style(`border-neutral-300 mb-1`, { borderWidth: 1 })}
+									/>
+									<Text style={tw`text-slate-600 text-base font-bold text-center `} numberOfLines={2}>
+										{profile.name}
+									</Text>
+								</AnimatedSelectView>
+							</TouchableRipple>
+						)
+					})}
+					{emptyItems &&
+						[...Array(emptyItems)].map((_, i) => (
+							<View style={tw`w-[${itemWidth}px] h-[${itemHeight}px] m-1`} key={`dummy-${i}`} />
+						))}
 				</View>
 			</View>
 

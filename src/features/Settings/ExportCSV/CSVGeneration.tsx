@@ -25,17 +25,23 @@ import { RootStackParamList } from '@src/app/routes'
 import LoadingAnimation from '@src/components/LoadingAnimation'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import Animated, { useSharedValue, withRepeat, FadeIn, withSpring } from 'react-native-reanimated'
+import Content from '@src/components/Content'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings:ExportCSV:CSVGeneration'>
 
 export default function CSVGeneration({ route }: Props) {
 	const { data } = route.params
-	console.log('data', data)
-
 	const sv = useSharedValue(0)
 
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const { invokeToast } = useContext(ToastContext)
+
+	const LoadingStatus = Object.freeze({
+		INIT: 1,
+		GENERATED: 2,
+		COMPLETED: 3,
+		ERROR: 4
+	})
 
 	const allEntries = useSelector(selectAllEntries)
 	const allProfiles = useSelector(selectAllProfiles)
@@ -43,7 +49,9 @@ export default function CSVGeneration({ route }: Props) {
 
 	const isAndroid = Platform.OS === 'android'
 
-	const [isLoading, setIsLoading] = useState(true)
+	const [loadingStatus, setLoadingStatus] = useState<(typeof LoadingStatus)[keyof typeof LoadingStatus]>(
+		LoadingStatus.INIT
+	)
 	const [generatedRecords, setGeneratedRecords] = useState<OPMTypes.ExportedCSVFile[] | undefined>()
 
 	type CSVData = { profile: OPMTypes.Profile; data: CSVPerCategory }[]
@@ -52,16 +60,18 @@ export default function CSVGeneration({ route }: Props) {
 	useEffect(() => {
 		let timeoutId: string | number | NodeJS.Timeout | undefined
 		async function onExport() {
-			setIsLoading(true)
-
 			sv.value = withRepeat(withSpring(0), 5)
 
 			const files = await buildCSVExport()
 			setGeneratedRecords(files)
 
 			timeoutId = setTimeout(() => {
-				setIsLoading(false)
-			}, 1000)
+				if (files?.length && files.length > 0) {
+					setLoadingStatus(LoadingStatus.GENERATED)
+				} else {
+					setLoadingStatus(LoadingStatus.ERROR)
+				}
+			}, 13000)
 		}
 
 		async function buildCSVExport() {
@@ -185,8 +195,6 @@ export default function CSVGeneration({ route }: Props) {
 	}
 
 	async function onDownload(record: OPMTypes.ExportedCSVFile) {
-		console.log('ondownload', record)
-
 		if (record.success) {
 			if (isAndroid) {
 				const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync(
@@ -225,96 +233,102 @@ export default function CSVGeneration({ route }: Props) {
 
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
-			{isLoading ? (
-				<View style={tw`flex-1 flex-col items-center top-[20%] px-8`}>
-					<LoadingAnimation style={tw`mb-8`} />
-					<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10 px-4`}>
-						{i18n.t('settings:export:generated:label:generating')}
-					</Text>
-				</View>
-			) : !generatedRecords ? (
-				<View style={tw`flex-1 flex-col items-center top-[5%] px-12`}>
-					<View style={tw`rounded-full bg-red-100 p-14`}>
-						<Image
-							resizeMode="contain"
-							style={tw`w-[80px] h-[80px]`}
-							source={require('../../../../assets/images/icons/app/error-doc-64x64.png')}
-						/>
-					</View>
-					<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10`}>
-						{i18n.t('settings:export:generated:error:generation')}
-					</Text>
-				</View>
-			) : (
-				<>
-					<Animated.View entering={FadeIn} style={tw`flex-1 flex-col p-5`}>
-						<Text style={tw`text-xl font-bold text-teal-800 p-1`}>
-							{i18n.t('settings:export:generated:label:generated', { type: 'CSV' })}
+			<Content>
+				{loadingStatus === LoadingStatus.INIT && (
+					<View style={tw`flex-col p-14 items-center`}>
+						<LoadingAnimation />
+						<Text style={tw`text-lg text-neutral-600 font-bold text-center py-14`}>
+							{i18n.t('settings:export:generated:label:generating')} ...
 						</Text>
+					</View>
+				)}
 
-						<Text style={tw`text-sm text-gray-500 px-1`}>Note: Store this in at a secure location</Text>
+				{loadingStatus === LoadingStatus.GENERATED && (
+					<>
+						<Animated.View entering={FadeIn} style={tw`flex-1 flex-col p-4`}>
+							<Text style={tw`text-lg font-bold text-teal-800 p-1`}>
+								{i18n.t('settings:export:generated:label:generated', { type: 'CSV' })}
+							</Text>
 
-						<View style={tw`p-1`}>
-							{generatedRecords.map((record: OPMTypes.ExportedCSVFile) => {
-								return (
-									<View
-										key={`gen-file-${record.id}`}
-										style={tw.style('bg-white mt-3 border-2 rounded-2xl border-gray-300')}
-									>
-										<View style={tw`flex-row items-center justify-between p-2`}>
-											{record.success && (
-												<Text style={tw`font-bold text-gray-600 text-lg shrink-1 px-2`} numberOfLines={2}>
-													{record.profile.name}
-												</Text>
-											)}
+							<Text style={tw`text-sm text-gray-500 px-1`}>Note: Store this in at a secure location</Text>
 
-											{record.success && record.fileInfo.exists && (
-												<View style={tw.style(`flex-row shrink-0`)}>
-													<TouchableRipple
-														style={tw`p-2 items-center justify-between rounded-xl mx-2`}
-														rippleColor="rgba(0, 0, 0, .32)"
-														onPress={() => onDownload(record)}
-														borderless={true}
-													>
-														<>
-															<MaterialCommunityIcons
-																name="download"
-																size={32}
-																color={tw.color('white')}
-																style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
-															/>
-															<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:download')}</Text>
-														</>
-													</TouchableRipple>
-													<TouchableRipple
-														style={tw`p-2 items-center justify-between rounded-xl`}
-														rippleColor="rgba(0, 0, 0, .32)"
-														onPress={() => onShare(record)}
-														borderless={true}
-													>
-														<>
-															<MaterialCommunityIcons
-																name="share-variant"
-																size={32}
-																color={tw.color('white')}
-																style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
-															/>
-															<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:share')}</Text>
-														</>
-													</TouchableRipple>
-												</View>
-											)}
+							<View style={tw`p-1`}>
+								{generatedRecords?.map((record: OPMTypes.ExportedCSVFile) => {
+									return (
+										<View
+											key={`gen-file-${record.id}`}
+											style={tw.style('bg-white mt-3 border-2 rounded-2xl border-gray-300')}
+										>
+											<View style={tw`flex-row items-center justify-between p-1`}>
+												{record.success && (
+													<Text style={tw`font-bold text-gray-600 shrink-1 px-2`} numberOfLines={2}>
+														{record.profile.name}
+													</Text>
+												)}
+
+												{record.success && record.fileInfo.exists && (
+													<View style={tw.style(`flex-row shrink-0`)}>
+														<TouchableRipple
+															style={tw`p-2 items-center justify-between rounded-xl mx-2`}
+															rippleColor="rgba(0, 0, 0, .32)"
+															onPress={() => onDownload(record)}
+															borderless={true}
+														>
+															<>
+																<MaterialCommunityIcons
+																	name="download"
+																	size={32}
+																	color={tw.color('white')}
+																	style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
+																/>
+																<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:download')}</Text>
+															</>
+														</TouchableRipple>
+														<TouchableRipple
+															style={tw`p-2 items-center justify-between rounded-xl`}
+															rippleColor="rgba(0, 0, 0, .32)"
+															onPress={() => onShare(record)}
+															borderless={true}
+														>
+															<>
+																<MaterialCommunityIcons
+																	name="share-variant"
+																	size={32}
+																	color={tw.color('white')}
+																	style={tw`p-2 rounded-lg bg-teal-500 mb-1`}
+																/>
+																<Text style={tw`text-xs font-bold text-gray-400`}>{i18n.t('label:share')}</Text>
+															</>
+														</TouchableRipple>
+													</View>
+												)}
+											</View>
 										</View>
-									</View>
-								)
-							})}
+									)
+								})}
+							</View>
+						</Animated.View>
+						<Button mode="contained" style={tw`m-10`} onPress={onDone}>
+							{i18n.t('button:label:done')}
+						</Button>
+					</>
+				)}
+
+				{loadingStatus === LoadingStatus.ERROR && (
+					<View style={tw`flex-1 flex-col items-center top-[5%] px-12`}>
+						<View style={tw`rounded-full bg-red-100 p-14`}>
+							<Image
+								resizeMode="contain"
+								style={tw`w-[80px] h-[80px]`}
+								source={require('../../../../assets/images/icons/app/error-doc-64x64.png')}
+							/>
 						</View>
-					</Animated.View>
-					<Button mode="contained" style={tw`m-10`} onPress={onDone}>
-						{i18n.t('button:label:done')}
-					</Button>
-				</>
-			)}
+						<Text style={tw`text-xl text-neutral-500 font-bold text-center py-10`}>
+							{i18n.t('settings:export:generated:error:generation')}
+						</Text>
+					</View>
+				)}
+			</Content>
 		</AuthScreen>
 	)
 }

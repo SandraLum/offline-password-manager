@@ -41,7 +41,7 @@ import ExportCSVGeneration from '@src/features/Settings/ExportCSV/CSVGeneration'
 import Backup from '@src/features/Settings/BackupData'
 import ExportBackupGeneration from '@src/features/Settings/BackupData/BackupGeneration'
 import Restore from '@src/features/Settings/RestoreData'
-import RestoreRestoration from '@src/features/Settings/RestoreData/Restoration'
+import RestoreProcess from '@src/features/Settings/RestoreData/RestoreProcess'
 
 import { OPMTypes } from '@src/common/types'
 // import ExportGeneration from '@src/features/Settings/ExportGeneration'
@@ -92,7 +92,7 @@ export type RootStackParamList = {
 	'Settings:Backup:BackupGeneration': { data: { key: string } }
 
 	'Settings:Restore': {}
-	'Settings:Restore:Restoration': {}
+	'Settings:Restore:RestoreProcess': {}
 	'PasswordRecovery:Form': {}
 	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
@@ -229,7 +229,7 @@ export default function Routes() {
 
 								<Stack.Group screenOptions={{ title: 'Restore Data' }}>
 									<Stack.Screen name="Settings:Restore" component={Restore} />
-									<Stack.Screen name="Settings:Restore:Restoration" component={RestoreRestoration} />
+									<Stack.Screen name="Settings:Restore:RestoreProcess" component={RestoreProcess} />
 								</Stack.Group>
 
 								{/* <Stack.Screen

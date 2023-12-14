@@ -16,6 +16,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 import { OPMTypes } from '@src/common/types'
+import Content from '@src/components/Content'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings:VerifyPassword'>
 
@@ -76,47 +77,49 @@ export default function VerifyPassword({ route }: Props) {
 
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
-			<View style={tw`flex-col px-10 py-6 top-[2%] items-center`}>
-				<View style={tw`rounded-full bg-teal-100 p-14`}>
-					<Image
-						resizeMode="contain"
-						style={tw`w-[80px] h-[80px]`}
-						source={require('../../../../assets/images/icons/app/lock-64x64.png')}
-					/>
+			<Content>
+				<View style={tw`flex-col p-10 top-[2%] items-center`}>
+					<View style={tw`rounded-full bg-teal-100 p-10`}>
+						<Image
+							resizeMode="contain"
+							style={tw`w-[80px] h-[80px]`}
+							source={require('../../../../assets/images/icons/app/lock-64x64.png')}
+						/>
+					</View>
+
+					<Text style={tw`text-xl font-bold text-gray-900 pt-10 text-center`}>
+						{i18n.t('settings:verify:label:enter-password')}
+					</Text>
+
+					<Text style={tw.style(`text-sm text-gray-500 pb-4 text-center`)}>
+						{i18n.t('settings:verify:note:verify-password')}
+					</Text>
+
+					<View style={tw`w-full`}>
+						<PaperTextInput
+							mode="outlined"
+							label={i18n.t('settings:verify:text:password')}
+							value={currentPassword}
+							onChangeText={onChangeCurrentPassword}
+							secureTextEntry={hidecurrentPassword}
+							right={
+								<PaperTextInput.Icon
+									icon={hidecurrentPassword ? 'eye-off' : 'eye'}
+									style={tw`p-0 m-0`}
+									onPress={() => setHidecurrentPassword(!hidecurrentPassword)}
+								/>
+							}
+							error={currentPasswordErrors.length > 0}
+						/>
+
+						<FormValidationErrors validationErrors={currentPasswordErrors} />
+					</View>
 				</View>
 
-				<Text style={tw`text-2xl font-bold text-gray-900 pt-10 text-center`}>
-					{i18n.t('settings:verify:label:enter-password')}
-				</Text>
-
-				<Text style={tw.style(`text-base font-bold text-gray-400 pb-10 text-center`)}>
-					{i18n.t('settings:verify:note:verify-password')}
-				</Text>
-
-				<View style={tw`w-full`}>
-					<PaperTextInput
-						mode="flat"
-						label={i18n.t('settings:verify:text:password')}
-						value={currentPassword}
-						onChangeText={onChangeCurrentPassword}
-						secureTextEntry={hidecurrentPassword}
-						right={
-							<PaperTextInput.Icon
-								icon={hidecurrentPassword ? 'eye-off' : 'eye'}
-								style={tw`p-0 m-0`}
-								onPress={() => setHidecurrentPassword(!hidecurrentPassword)}
-							/>
-						}
-						error={currentPasswordErrors.length > 0}
-					/>
-
-					<FormValidationErrors validationErrors={currentPasswordErrors} />
-				</View>
-			</View>
-
-			<Button mode="contained" style={tw`m-10`} onPress={onNext} loading={isLoading}>
-				{i18n.t('button:label:next')}
-			</Button>
+				<Button mode="contained" style={tw`m-10`} onPress={onNext} loading={isLoading}>
+					{i18n.t('button:label:next')}
+				</Button>
+			</Content>
 		</AuthScreen>
 	)
 }

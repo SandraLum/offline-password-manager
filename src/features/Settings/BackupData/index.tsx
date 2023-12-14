@@ -10,6 +10,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import AuthScreen from '@src/components/AuthScreen'
 import { RootStackParamList } from '@src/app/routes'
+import Content from '@src/components/Content'
 
 export default function Backup() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
@@ -28,22 +29,24 @@ export default function Backup() {
 
 	return (
 		<AuthScreen style={tw`flex-1 bg-white`}>
-			<View style={tw`p-2 flex-col justify-center items-center p-12`}>
-				<View style={tw`rounded-full bg-purple-200 p-12 mb-12`}>
-					<Image
-						resizeMode="contain"
-						style={tw`w-[100px] h-[100px]`}
-						source={require('../../../../assets/images/icons/app/backup.png')}
-					/>
+			<Content>
+				<View style={tw`flex-col p-10 items-center`}>
+					<View style={tw`rounded-full bg-purple-200 p-10 mb-10`}>
+						<Image
+							resizeMode="contain"
+							style={tw`w-[80px] h-[80px]`}
+							source={require('../../../../assets/images/icons/app/backup.png')}
+						/>
+					</View>
+
+					<Text style={tw`text-neutral-700 text-xl font-bold`}>{i18n.t('settings:backup:generated:label')}</Text>
+					<Text style={tw`text-neutral-500 text-sm mt-3`}>{i18n.t('settings:backup:generated:label:note')}</Text>
 				</View>
 
-				<Text style={tw`text-neutral-700 text-2xl font-bold`}>{i18n.t('settings:backup:generated:label')}</Text>
-				<Text style={tw`text-neutral-500 text-base mt-2`}>{i18n.t('settings:backup:generated:label:note')}</Text>
-			</View>
-
-			<Button mode="contained" style={tw.style(`m-10`)} onPress={onNext}>
-				{i18n.t('button:label:continue')}
-			</Button>
+				<Button mode="contained" style={tw.style(`m-10`)} onPress={onNext}>
+					{i18n.t('button:label:continue')}
+				</Button>
+			</Content>
 		</AuthScreen>
 	)
 }
