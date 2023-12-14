@@ -78,7 +78,7 @@ export default function EntryForm({
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Props) {
 	const { invokeToast } = useContext(ToastContext)
-	const s = useSelector(getMK)
+	const mk = useSelector(getMK)
 	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
 
 	useEffect(() => {
@@ -95,7 +95,7 @@ Props) {
 		const value = fieldsValues[f.id] || ''
 
 		// Decrypt value
-		const decrypted = !isEmpty(value) ? decrypt(value, s) : ''
+		const decrypted = !isEmpty(value) ? decrypt(value, mk) : ''
 
 		switch (f.fieldType) {
 			case FieldType.TextInput:
@@ -166,7 +166,7 @@ Props) {
 	}
 
 	function onChangeValue(field: OPM.Field, value: string) {
-		const encrypted = encrypt(value || '', s)
+		const encrypted = encrypt(value || '', mk)
 		setFieldsValues(o => ({ ...o, [field.id]: encrypted }))
 	}
 

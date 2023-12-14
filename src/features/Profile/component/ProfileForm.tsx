@@ -37,11 +37,11 @@ export default function ProfileForm(props: Props) {
 			nestedScrollEnabled={true}
 			showsVerticalScrollIndicator={true}
 			style={tw`bg-white`}
-			contentContainerStyle={tw.style(`flex h-full`)}
+			contentContainerStyle={tw.style(`flex-1`)}
 		>
-			<View style={tw.style(`w-full py-0 h-full`, { overflow: 'hidden' })}>
+			<View>
 				<View
-					style={tw.style(`h-1/4 flex-col items-center justify-center`, { backgroundColor: color, overflow: 'hidden' })}
+					style={tw.style(`py-6 flex-col items-center justify-center`, { backgroundColor: color, overflow: 'hidden' })}
 				>
 					{/* Design */}
 					<View

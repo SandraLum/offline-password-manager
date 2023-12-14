@@ -50,7 +50,8 @@ const profilesSlice = createSlice({
 		profilesAddOne: profilesAdapter.addOne,
 		profilesAddMany: profilesAdapter.addMany,
 		profileUpdate: profilesAdapter.updateOne,
-		profileRemove: profilesAdapter.removeOne
+		profileRemove: profilesAdapter.removeOne,
+		profileRemoveAll: profilesAdapter.removeAll
 	}
 })
 
@@ -62,12 +63,11 @@ export const resetProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
 }
 
 export const clearProfiles: OPMTypes.AppThunk = (dispatch, getState) => {
-	const state = getState()
-	profilesAdapter.removeAll(state)
+	dispatch(profileRemoveAll())
 }
 
 export const { selectAll: selectAllProfiles, selectById: selectProfileById } = profilesAdapter.getSelectors(
 	(state: RootState) => state.main.profiles
 )
-export const { profilesAddOne, profilesAddMany, profileUpdate, profileRemove } = profilesSlice.actions
+export const { profilesAddOne, profilesAddMany, profileUpdate, profileRemove, profileRemoveAll } = profilesSlice.actions
 export default profilesSlice

@@ -13,7 +13,7 @@ import { usePreventScreenCapture } from 'expo-screen-capture'
 import { ToastProvider } from '@src/common/contexts/ToastContext'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function AuthScreen({ children, personalizeHeader = false, ...props }: any) {
+export default function AuthScreen({ children, personalizeHeader = false, style, ...props }: any) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const currentProfile = useSelector(selectCurrentProfile)
 	const { allowScreenCapture } = useSelector(selectUserSettings)
@@ -61,5 +61,9 @@ export default function AuthScreen({ children, personalizeHeader = false, ...pro
 		}
 	}, [personalizeHeader, currentProfile?.avatar?.color, currentProfile?.avatar?.style, navigation])
 
-	return <View {...props}>{children}</View>
+	return (
+		<View style={tw.style({ backgroundColor: 'rgb(240, 240, 240)' }, style)} {...props}>
+			{children}
+		</View>
+	)
 }

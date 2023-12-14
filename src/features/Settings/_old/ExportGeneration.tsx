@@ -53,7 +53,7 @@ export default function ExportGeneration({ route }: Props) {
 		}
 
 		async function buildCSVExport() {
-			const { profileIds, hsPwd } = data
+			const { profileIds, key } = data
 			const arrCSVData: CSVData = []
 			try {
 				for (const profile of allProfiles) {
@@ -86,7 +86,7 @@ export default function ExportGeneration({ route }: Props) {
 										}
 
 										if (entry.fieldsValues?.[f.id]) {
-											const dVal = decrypt(entry.fieldsValues[f.id], hsPwd)
+											const dVal = decrypt(entry.fieldsValues[f.id], key)
 											group.rows[rowIdx][colIdx] = dVal
 										}
 									}

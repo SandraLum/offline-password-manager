@@ -6,7 +6,7 @@ import * as FileSystem from 'expo-file-system'
 import { AppDispatch, persistor, RootState, store } from '@src/store'
 import { OPMTypes } from '@src/common/types'
 import { clone, decrypt, encrypt, formatDate, intArrayShift } from '@src/common/utils'
-import { getBackupState } from '../../store/slices/settingSlice'
+import { getBackupState } from '../../../store/slices/settingSlice'
 import { i18n } from '@src/app/locale'
 
 import * as DocumentPicker from 'expo-document-picker'
@@ -16,6 +16,9 @@ import { getMK, verifyPassword } from '@src/store/slices/authSlice'
 import { restoreState } from '@src/store/slices/appSlice'
 import tw from 'twrnc'
 import { ToastContext } from '@src/common/contexts/ToastContext'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { ParamListBase, useNavigation } from '@react-navigation/native'
+import { schemaMigrationVersion } from '@src/store/schema/migrations'
 
 const Buffer = require('buffer/').Buffer
 
@@ -24,10 +27,12 @@ const Buffer = require('buffer/').Buffer
 export default function ExportOPM() {
 	const dispatch = useDispatch<AppDispatch>()
 	const isAndroid = Platform.OS === 'android'
+
+	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
 	const { invokeToast } = useContext(ToastContext)
 
 	const [currentPassword, setCurrentPassword] = useState('')
-	const [pin, setPin] = useState('')
 
 	// SL: TODO replace with password entering ui (think of changing the modal to prompt for password)
 	const mk = useSelector(getMK)
@@ -39,9 +44,7 @@ export default function ExportOPM() {
 		const { valid } = await dispatch(verifyPassword(currentPassword))
 		console.log('valid', valid)
 		if (valid) {
-			const clonedState = clone(dispatch(getBackupState))
-			delete clonedState['main']?.['_persist']
-			delete clonedState['secure']?.['_persist']
+			const convertedState = convertStateForExport(clone(dispatch(getBackupState)))
 			// console.log('backupState', clonedState)
 			// const encoded = await encode(clonedState)
 			// if (encoded) {
@@ -49,17 +52,63 @@ export default function ExportOPM() {
 			// }
 
 			// Testing()
-			await saveToDisk(await encode(clonedState))
+			await saveToDisk(await encode(convertedState))
+			// navigation.navigate({ name: 'PasswordRecovery:Form', params: {} })
 		} else {
 			invokeToast('Invalid password, please enter your valid password', { dismissDuration: 4000 })
 		}
 	}
 
-	async function encode(content: any) {
-		try {
-			content['[OPM_BKUP]'] = { isBackup: true, version: appVersion }
+	function convertStateForExport(clonedState: any) {
+		const converted: any = {
+			'[OPM_BKUP]': { isBackup: true, version: schemaMigrationVersion },
+			data: {
+				main: {
+					app: {},
+					auth: {},
+					setting: {},
+					profiles: [],
+					entries: [],
+					categories: []
+				}
+			}
+		}
 
-			const strContent = JSON.stringify(content)
+		delete clonedState['main']?.['_persist']
+		delete clonedState['secure']?.['_persist']
+
+		console.log('clonedState', JSON.stringify(clonedState))
+
+		const { app, auth, categories, profiles, entries, setting } = clonedState.main
+		console.log('profiles', Object.entries(profiles.entities))
+
+		converted.data.main.app = app
+		converted.data.main.setting = setting
+
+		if (profiles.entities) {
+			for (const [k, v] of Object.entries(profiles.entities)) {
+				converted.data.main.profiles.push(v)
+			}
+		}
+
+		if (entries.entities) {
+			for (const [k, v] of Object.entries(entries.entities)) {
+				converted.data.main.entries.push(v)
+			}
+		}
+
+		if (categories.entities) {
+			for (const [k, v] of Object.entries(categories.entities)) {
+				converted.data.main.entries.push(v)
+			}
+		}
+		console.log('transformedState', converted)
+		return converted
+	}
+
+	async function encode(exportState: any) {
+		try {
+			const strContent = JSON.stringify(exportState)
 			const encrypted = encrypt(strContent, mk)
 			const bufB64 = new Buffer(encrypted).toString('base64')
 			const buff = new Uint8Array(Buffer.from(bufB64))
@@ -142,7 +191,7 @@ export default function ExportOPM() {
 				label="Enter your master password"
 			/>
 
-			<TextInput value={pin} onChangeText={val => setPin(val)} label="Set a PIN to export your data" />
+			{/* <TextInput value={pin} onChangeText={val => setPin(val)} label="Set a PIN to export your data" /> */}
 			<Button mode="outlined" onPress={onExportOPM}>{`Export OPM`}</Button>
 		</>
 	)

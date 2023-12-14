@@ -14,7 +14,7 @@ type Props = {
 
 export default function EnterPasswordForm(props: Props) {
 	const { mode = 'login' } = props
-	const [password, setPassword] = useState('asd123') //SL: TODO remove default password
+	const [password, setPassword] = useState('qwe123') //SL: TODO remove default password
 	const [hidePassword, setHidePassword] = useState(true)
 
 	const [isLoading, setIsLoading] = useState(false)

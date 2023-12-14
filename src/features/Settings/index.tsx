@@ -11,12 +11,16 @@ import Content from '@src/components/Content'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUserSettings, setAllowCopy, setAllowScreenCapture } from '../../store/slices/settingSlice'
+import { selectUserSettings, setAllowCopy, setAllowScreenCapture } from '@store/slices/settingSlice'
+import { OPMTypes } from '@src/common/types'
+import { RootStackParamList } from '@src/app/routes'
 
 export default function Settings() {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const dispatch = useDispatch()
 	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
+
+	console.log('Settings: allowCopy', allowCopy)
 
 	function navigateTo({ screen, params = {} }: { screen: string; params?: object }) {
 		// navigation.navigate('App', { screen: 'SettingsStack', params: { screen: screen, params: params } })
@@ -28,13 +32,19 @@ export default function Settings() {
 	const [isAllowScreenCapture, setIsAllowScreenCapture] = useState(allowScreenCapture)
 
 	useEffect(() => {
+		console.log('settings:init............')
 		const init = async () => {
 			const avail = await ScreenCapture.isAvailableAsync()
 			console.log('avail', avail)
 			setShowOptions(o => ({ ...o, screenCapture: avail }))
+			setIsAllowCopy(allowCopy)
 		}
 		init()
 	}, [])
+
+	// useEffect(() => {
+	// 	setIsAllowCopy(allowCopy)
+	// }, [allowCopy])
 
 	const onToggleAllowCopy = () => {
 		const allow = !isAllowCopy
@@ -68,27 +78,42 @@ export default function Settings() {
 							left={props => <List.Icon {...props} icon="eye-off" />}
 						/>
 						<List.Item
-							title="Show copy buttons"
+							title={`Show copy buttons : ${isAllowCopy}`}
 							left={props => <List.Icon {...props} icon="content-copy" />}
 							right={() => <Switch value={isAllowCopy} onValueChange={onToggleAllowCopy} />}
 						/>
 					</List.Section>
 
 					<List.Section>
-						<List.Subheader>Import and Export</List.Subheader>
+						<List.Subheader>Backup and Export</List.Subheader>
 
 						<List.Item
-							title="Export"
-							description={'Backup and exports the current entries into a backup file.'}
-							left={props => <List.Icon {...props} icon="export" />}
-							onPress={() => navigateTo({ screen: 'Settings:Export' })}
+							title="Export to CSV"
+							description={'Exports your entries to csv file'}
+							left={props => <List.Icon {...props} icon="microsoft-excel" />}
+							onPress={() => navigateTo({ screen: 'Settings:ExportCSV' })}
 						/>
 						<List.Item
-							title="Import"
-							description={
-								'Imports and restores a valid backup file into the app. The current entries will be overwritten.'
-							}
+							title="Backup data"
+							description={'Backup your data into an encrypted file'}
+							left={props => <List.Icon {...props} icon="content-save" />}
+							onPress={() => {
+								navigation.navigate({
+									name: 'Settings:Backup',
+									params: {}
+								})
+							}}
+						/>
+						<List.Item
+							title="Restore data"
+							description={'Restores a valid backup file into the app. The current entries will be overwritten.'}
 							left={props => <List.Icon {...props} icon="import" />}
+							onPress={() => {
+								navigation.navigate({
+									name: 'Settings:Restore',
+									params: {}
+								})
+							}}
 						/>
 					</List.Section>
 

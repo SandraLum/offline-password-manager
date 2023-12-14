@@ -3,7 +3,8 @@ import {
 	NavigationContainer,
 	NavigatorScreenParams,
 	DefaultTheme,
-	useNavigationContainerRef
+	useNavigationContainerRef,
+	ParamListBase
 } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -32,10 +33,18 @@ import AppInitializer from '@src/features/AppInitializer'
 import { checkIsAuthenticated } from '@src/store/slices/authSlice'
 import { useSelector } from 'react-redux'
 import AppWrapper from './AppWrapper'
-import Export from '@src/features/Settings/Export'
-import ExportGenerated from '@src/features/Settings/ExportGenerated'
+
+/** Settings */
+import SettingsVerifyPassword from '@src/features/Settings/components/VerifyPassword'
+import ExportCSV from '@src/features/Settings/ExportCSV'
+import ExportCSVGeneration from '@src/features/Settings/ExportCSV/CSVGeneration'
+import Backup from '@src/features/Settings/BackupData'
+import ExportBackupGeneration from '@src/features/Settings/BackupData/BackupGeneration'
+import Restore from '@src/features/Settings/RestoreData'
+import RestoreProcess from '@src/features/Settings/RestoreData/RestoreProcess'
+
 import { OPMTypes } from '@src/common/types'
-import ExportGeneration from '@src/features/Settings/ExportGeneration'
+// import ExportGeneration from '@src/features/Settings/ExportGeneration'
 
 const routeTheme = {
 	...DefaultTheme,
@@ -69,9 +78,21 @@ export type RootStackParamList = {
 	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
-	'Settings:Export': {}
-	'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { hsPwd: string; profileIds: string[] } }
-	'Settings:ExportGenerated': OPMTypes.ExportedFiles
+	'Settings:VerifyPassword': {
+		navigateToOptions?: OPMTypes.NavigationOptions<
+			RootStackParamList,
+			'Settings:Backup' | 'Settings:ExportCSV:CSVGeneration'
+		>
+	}
+	'Settings:ExportCSV': {}
+	'Settings:ExportCSV:CSVGeneration': { data: { key: string; profileIds: string[] } }
+	// 'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { key: string; profileIds: string[] } }
+	// 'Settings:ExportGenerated': OPMTypes.ExportedFiles
+	'Settings:Backup': {}
+	'Settings:Backup:BackupGeneration': { data: { key: string } }
+
+	'Settings:Restore': {}
+	'Settings:Restore:RestoreProcess': {}
 	'PasswordRecovery:Form': {}
 	'PasswordRecovery:PDF': { uri: string; filename: string }
 }
@@ -119,7 +140,8 @@ function DrawerStack() {
 				options={{
 					// headerShown: false,
 					title: i18n.t('routes:settings'),
-					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />
+					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />,
+					unmountOnBlur: true
 				}}
 			/>
 		</Drawer.Navigator>
@@ -143,11 +165,9 @@ export default function Routes() {
 							</>
 						) : (
 							<>
-								<Stack.Group>
-									<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
-									<Stack.Screen name="AddEntry" component={AddEntry} />
-									<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
-								</Stack.Group>
+								<Stack.Screen name="App" component={DrawerStack} options={{ headerShown: false }} />
+								<Stack.Screen name="AddEntry" component={AddEntry} />
+								<Stack.Screen name="ViewEditEntry" component={ViewEditEntry} />
 
 								<Stack.Group>
 									<Stack.Screen
@@ -189,17 +209,39 @@ export default function Routes() {
 									component={ChangePassword}
 									options={{ title: i18n.t('routes:change:password') }}
 								/>
-								<Stack.Screen name="Settings:Export" component={Export} options={{ title: 'Export' }} />
+
 								<Stack.Screen
+									name="Settings:VerifyPassword"
+									component={SettingsVerifyPassword}
+									options={{ title: i18n.t('routes:settings:verify:password') }}
+								/>
+
+								<Stack.Group screenOptions={{ title: 'Export to CSV' }}>
+									<Stack.Screen name="Settings:ExportCSV" component={ExportCSV} />
+
+									<Stack.Screen name="Settings:ExportCSV:CSVGeneration" component={ExportCSVGeneration} />
+								</Stack.Group>
+
+								<Stack.Group screenOptions={{ title: 'Backup Data' }}>
+									<Stack.Screen name="Settings:Backup" component={Backup} />
+									<Stack.Screen name="Settings:Backup:BackupGeneration" component={ExportBackupGeneration} />
+								</Stack.Group>
+
+								<Stack.Group screenOptions={{ title: 'Restore Data' }}>
+									<Stack.Screen name="Settings:Restore" component={Restore} />
+									<Stack.Screen name="Settings:Restore:RestoreProcess" component={RestoreProcess} />
+								</Stack.Group>
+
+								{/* <Stack.Screen
 									name="Settings:ExportGenerated"
 									component={ExportGenerated}
 									options={{ title: 'Export Generated Files' }}
-								/>
-								<Stack.Screen
+								/> */}
+								{/* <Stack.Screen
 									name="Settings:ExportGeneration"
 									component={ExportGeneration}
 									options={{ title: 'Generating Export files' }}
-								/>
+								/> */}
 								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
 
 								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
