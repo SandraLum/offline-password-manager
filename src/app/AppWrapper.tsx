@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SessionLoginModal from '@src/components/SessionLoginModal'
 import { NavigationContainerRefWithCurrent } from '@react-navigation/core/lib/typescript/src/types'
 import { ToastProvider } from '@src/common/contexts/ToastContext'
+import { useSelector } from 'react-redux'
+import { selectUserSettings } from '@src/store/slices/settingSlice'
 
 type Props = {
 	children: ReactNode

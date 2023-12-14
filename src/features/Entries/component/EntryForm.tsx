@@ -79,7 +79,9 @@ export default function EntryForm({
 Props) {
 	const { invokeToast } = useContext(ToastContext)
 	const mk = useSelector(getMK)
-	const { allowCopy, allowScreenCapture } = useSelector(selectUserSettings)
+	const { allowCopy, allowScreenCapture, defaultHidePassword } = useSelector(selectUserSettings)
+
+	console.log('defaultHidePassword', defaultHidePassword)
 
 	useEffect(() => {
 		async function init() {
@@ -126,10 +128,10 @@ Props) {
 						contentStyle={tw`border-0 px-2`}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
-						secureTextEntry={fieldsOptions[f.id]?.isSecure}
+						secureTextEntry={fieldsOptions[f.id]?.isSecure || defaultHidePassword}
 						right={
 							<PaperTextInput.Icon
-								icon={fieldsOptions[f.id]?.isSecure ? 'eye-off' : 'eye'}
+								icon={fieldsOptions[f.id]?.isSecure || defaultHidePassword ? 'eye-off' : 'eye'}
 								style={tw`p-0 m-0 mt-[8]`}
 								onPress={() =>
 									setFieldsOptions({

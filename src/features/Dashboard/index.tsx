@@ -67,25 +67,22 @@ export default function Dashboard({ route }: Props) {
 	}
 
 	return (
-		<AuthScreen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.7)`, paddingTop: headerHeight })}>
-			{/* SL: TODO Delete */}
-			<Button onPress={onTesting}>{`Testing`}</Button>
-
+		<AuthScreen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0.4)`, paddingTop: headerHeight })}>
 			<Searchbar
 				placeholder={i18n.t('search:bar:placeholder:search')}
-				style={tw`m-2`}
+				style={tw`mx-2`}
 				onChangeText={onChangeSearch}
 				value={searchQuery}
 			/>
 
 			{displayView.view === DashboardContentView.Categories && (
-				<Animated.View entering={FadeInDown} exiting={FadeOutDown}>
+				<Animated.View entering={FadeInDown} exiting={FadeOutDown} style={tw`flex-1`}>
 					<Categories onToggleDisplayView={onToggleDisplayView} />
 				</Animated.View>
 			)}
 
 			{displayView.view === DashboardContentView.Entries && (
-				<Animated.View entering={SlideInRight} exiting={SlideOutRight} style={tw`flex-1 m-2`}>
+				<Animated.View entering={SlideInRight} exiting={SlideOutRight} style={tw`flex-1`}>
 					<ListEntries
 						filter={displayView.params?.filter}
 						searchQuery={searchQuery}
