@@ -23,6 +23,7 @@ __tests__/
 wip.txt
 **/_del/**
 *.old*
+**_old**
 assets/images/old/**
 
 # @generated expo-cli sync-647791c5bd841d5c91864afb91c302553d300921
