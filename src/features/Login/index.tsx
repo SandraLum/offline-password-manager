@@ -44,13 +44,6 @@ export default function Login() {
 		console.log('Login')
 	}
 
-	function Testing() {
-		console.log('Testing pressed.............')
-		const backupState = clone(dispatch(getBackupState))
-		console.log('backupState', backupState)
-		// dispatch(syncEntriesWithMKey('qqq111'))
-	}
-
 	function resetApp() {
 		dispatch(factoryReset())
 	}
@@ -58,9 +51,9 @@ export default function Login() {
 	return (
 		<ImageBackground
 			source={bgImage}
-			blurRadius={isAndroid ? 2 : 6}
+			blurRadius={isAndroid ? 3 : 6}
 			resizeMode="cover"
-			imageStyle={{ opacity: 0.6, backgroundColor: 'black' }}
+			imageStyle={{ opacity: 0.7, backgroundColor: 'black' }}
 		>
 			<Screen style={tw`w-full h-full p-2`}>
 				<Content contentContainerStyle={tw`w-full h-full flex-col py-5 px-2`}>
@@ -84,23 +77,22 @@ export default function Login() {
 					{/* {error && <Text style={tw`text-red-700 py-1`}>{error}</Text>} */}
 
 					{/* SL:TODO remove */}
-					<Button
-						onPress={() => navigation.navigate({ name: 'SetMasterPassword', params: {} })}
-						mode="contained"
-						style={tw`my-5`}
-					>
-						{'Go to Set Password'}
-					</Button>
+					{/* {__DEV__ && (
+						<Button
+							onPress={() => navigation.navigate({ name: 'SetMasterPassword', params: {} })}
+							mode="contained"
+							style={tw`my-5`}
+						>
+							{'Go to Set Password'}
+						</Button>
+					)} */}
 
-					{/* SL:TODO remove */}
-					<Button buttonColor={tw.color('blue-500')} onPress={() => Testing()} mode="contained" style={tw`my-5`}>
-						{'Testing button'}
-					</Button>
-
-					{/* SL:TODO remove */}
-					<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
-						{'Reset Data'}
-					</Button>
+					{/* SL:TODO remove, this is only for dev */}
+					{/* {__DEV__ && (
+						<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
+							{'Reset Data'}
+						</Button>
+					)} */}
 				</Content>
 			</Screen>
 		</ImageBackground>

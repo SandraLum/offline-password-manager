@@ -59,7 +59,7 @@ const OptionalActions = (props: OptionalProps) => {
 					icon="close-circle"
 					iconColor="grey"
 					size={20}
-					style={tw`font-bold p-0`}
+					style={tw`font-bold p-0 m-0`}
 					onPress={onRemovePressed}
 				/>
 			) : null}
@@ -86,7 +86,7 @@ Props) {
 	useEffect(() => {
 		async function init() {
 			if (!allowScreenCapture) {
-				await ScreenCapture.preventScreenCaptureAsync()
+				// await ScreenCapture.preventScreenCaptureAsync()
 			}
 		}
 		init()
@@ -107,7 +107,7 @@ Props) {
 						editable={editable}
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
-						placeholder={f.placeholder}
+						placeholder={editable ? f.placeholder : ''}
 						style={tw.style(`flex-1 bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-9')}
 						contentStyle={tw`border-0 px-2`}
 						underlineColor="transparent"
@@ -210,7 +210,7 @@ Props) {
 				contentContainerStyle={tw.style(`flex`)}
 			>
 				<View style={tw`w-full px-2 py-0 bg-white`}>
-					<View style={tw`flex py-2 flex-row items-center`}>
+					<View style={tw.style(`flex py-2 flex-row items-center`)}>
 						<IconSelector
 							bordered={editable}
 							editable={editable}
@@ -245,37 +245,34 @@ Props) {
 						/>
 					</View>
 					{/* eslint-disable-next-line react-native/no-inline-styles */}
-					<Divider style={{ borderBottomWidth: 1, borderColor: tw.color('teal-700') }} />
+					{/* <Divider style={{ borderBottomWidth: 2, borderColor: tw.color('teal-700') }} /> */}
 
 					{/* Render fields */}
-					{fields.map((f: OPM.Field, index: number) => {
-						const { field, value } = getFieldComponent(f)
+					<View style={tw`border-2 border-neutral-400 rounded-xl pl-2`}>
+						{fields.map((f: OPM.Field, index: number) => {
+							const { field, value } = getFieldComponent(f)
 
-						return field ? (
-							<Fragment key={`f-${index}-${f.id}`}>
-								<View style={tw`flex-col justify-center pb-2`}>
-									<Text style={tw`text-3 pl-2 py-1 font-bold`}>{f.label}</Text>
+							return field ? (
+								<Fragment key={`f-${index}-${f.id}`}>
+									<View style={tw`flex-col justify-center py-2`}>
+										<Text style={tw`text-3 pl-2 py-1 font-bold`}>{f.label}</Text>
 
-									<View style={tw`flex-row items-center`}>
-										<View style={tw`flex-1`}>{field}</View>
-										{/* {renderReadOnlyIcons(f.id)} */}
-										<OptionalActions
-											showRemove={editable}
-											showCopy={!editable && allowCopy}
-											data={{ copy: value }}
-											OnCopyPressed={message => invokeToast(message)}
-											onRemovePressed={() => onRemoveField(f)}
-										/>
+										<View style={tw`flex-row items-center`}>
+											<View style={tw`flex-1`}>{field}</View>
+											{/* {renderReadOnlyIcons(f.id)} */}
+											<OptionalActions
+												showRemove={editable}
+												showCopy={!editable && allowCopy}
+												data={{ copy: value }}
+												OnCopyPressed={message => invokeToast(message)}
+												onRemovePressed={() => onRemoveField(f)}
+											/>
+										</View>
 									</View>
-								</View>
-								<Divider
-									// eslint-disable-next-line react-native/no-inline-styles
-									style={{ borderBottomWidth: 0.8, borderColor: tw.color(editable ? 'stone-300' : 'stone-700') }}
-								/>
-							</Fragment>
-						) : null
-					})}
-
+								</Fragment>
+							) : null
+						})}
+					</View>
 					{/* Editable mode: To allow adding of fields */}
 					{editable && <AddFieldForm onAddField={onAddField} />}
 				</View>

@@ -31,7 +31,7 @@ export default function App() {
 
 	useEffect(() => {
 		const init = async () => {
-			await ScreenCapture.preventScreenCaptureAsync()
+			// await ScreenCapture.preventScreenCaptureAsync()
 
 			initLocalization()
 			await initStore()

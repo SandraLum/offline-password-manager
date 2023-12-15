@@ -164,23 +164,32 @@ export default function ListEntries(props: Props) {
 										)}
 										right={() => {
 											return (
-												<Menu
-													anchorPosition="bottom"
-													visible={!!menuVisibility[categoryType]}
-													onDismiss={() => onToggleMenu(category, false)}
-													anchor={
-														<IconButton
-															icon="dots-vertical"
-															style={tw`m-0`}
-															onPress={() => onToggleMenu(category, true)}
-														/>
-													}
-												>
-													<Menu.Item
-														onPress={() => onAddNewEntry(category)}
-														title={i18n.t('entries:menu:add:new:entry')}
-													/>
-												</Menu>
+												<IconButton
+													mode="contained"
+													icon="plus"
+													style={tw`m-1`}
+													size={15}
+													iconColor="white"
+													containerColor={tw.color('green-500')}
+													onPress={() => onAddNewEntry(category)}
+												/>
+												// <Menu
+												// 	anchorPosition="bottom"
+												// 	visible={!!menuVisibility[categoryType]}
+												// 	onDismiss={() => onToggleMenu(category, false)}
+												// 	anchor={
+												// 		<IconButton
+												// 			icon="dots-vertical"
+												// 			style={tw`m-0`}
+												// 			onPress={() => onToggleMenu(category, true)}
+												// 		/>
+												// 	}
+												// >
+												// 	<Menu.Item
+												// 		onPress={() => onAddNewEntry(category)}
+												// 		title={i18n.t('entries:menu:add:new:entry')}
+												// 	/>
+												// </Menu>
 											)
 										}}
 									/>

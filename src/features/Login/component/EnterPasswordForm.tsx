@@ -60,7 +60,7 @@ export default function EnterPasswordForm(props: Props) {
 	return (
 		<>
 			<View style={tw`flex flex-col`}>
-				<Text style={tw`py-1 text-2xl text-white`}>
+				<Text style={tw`py-1 text-xl text-white`}>
 					{mode === 'login' ? i18n.t('login:text:enter:password') : i18n.t('login:text:enter:password:unlock')}
 				</Text>
 				<PaperTextInput

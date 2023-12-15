@@ -77,9 +77,9 @@ export default function SetMasterPassword() {
 	return (
 		<ImageBackground
 			source={bgImage}
-			blurRadius={isAndroid ? 2 : 6}
+			blurRadius={isAndroid ? 3 : 6}
 			resizeMode="cover"
-			imageStyle={{ opacity: 0.7, backgroundColor: 'black' }}
+			imageStyle={{ opacity: 0.8, backgroundColor: 'black' }}
 		>
 			<Screen style={tw`w-full h-full p-2`}>
 				<Content contentContainerStyle={tw`flex-1 flex-col py-5 px-2`}>
@@ -146,14 +146,16 @@ export default function SetMasterPassword() {
 						<Text style={tw`text-white`}>{`** ${i18n.t('set-master-password:text:note:enter-password')}`}</Text>
 
 						{/* SL:TODO remove */}
-						<Button
-							loading={isLoading}
-							onPress={() => navigation.navigate({ name: 'Login', params: {} })}
-							mode="contained"
-							style={tw`my-5`}
-						>
-							{'Go to Login'}
-						</Button>
+						{__DEV__ && (
+							<Button
+								loading={isLoading}
+								onPress={() => navigation.navigate({ name: 'Login', params: {} })}
+								mode="contained"
+								style={tw`my-5`}
+							>
+								{'Go to Login'}
+							</Button>
+						)}
 					</View>
 				</Content>
 			</Screen>

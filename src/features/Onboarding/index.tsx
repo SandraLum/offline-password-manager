@@ -10,8 +10,6 @@ import AuthScreen from '@src/components/AuthScreen'
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>
 
 export default function Onboarding({ navigation }: Props) {
-	console.log('orientation')
-
 	function onNext() {
 		navigation.navigate({ name: 'PasswordRecovery:Form', params: {} })
 	}

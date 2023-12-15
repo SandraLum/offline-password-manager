@@ -35,7 +35,7 @@ export default function FormValidationErrors(props: Props) {
 					error = '. ' + error
 				}
 				return (
-					<Text key={`pwd-error-${idx}`} style={tw`text-red-700 py-1`}>
+					<Text key={`pwd-error-${idx}`} style={tw`text-red-600 py-1`}>
 						{error}
 					</Text>
 				)

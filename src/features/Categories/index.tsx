@@ -72,7 +72,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 					style={tw.style(`flex rounded-lg px-3 pb-3`, { backgroundColor: 'rgba(209, 233, 235, 0.9)' })}
 					onPress={() => onViewEntries(category)}
 				>
-					<Text style={tw.style(`text-lg font-bold text-stone-600`, { marginTop: 30 })}>{category?.name}</Text>
+					<Text style={tw.style(`text-base font-bold text-stone-600`, { marginTop: 30 })}>{category?.name}</Text>
 					<IconButton
 						mode="contained"
 						icon="star"
@@ -86,12 +86,12 @@ export default function Categories({ onToggleDisplayView }: Props) {
 						<Text>{i18n.t('categories:card:entries:count', { totalEntries: totalEntries })}</Text>
 
 						<IconButton
-							mode="contained"
+							mode="outlined"
 							icon="plus"
-							size={24}
-							iconColor="white"
-							style={tw`m-0`}
-							containerColor={tw.color('green-400')}
+							size={16}
+							iconColor={tw.color('white')}
+							style={tw`mr-0 border-green-500`}
+							containerColor={tw.color('green-500')}
 							onPress={() => onAddNewEntry(category)}
 						/>
 					</View>
@@ -101,8 +101,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 	}
 
 	return (
-		// <Content contentContainerStyle={tw.style(`flex p-1`)}>
-		<Content contentContainerStyle={tw`p-3`} fadingEdgeLength={50}>
+		<Content contentContainerStyle={tw`p-3`} fadingEdgeLength={50} contentInsetAdjustmentBehavior="automatic">
 			{/* All Items Card */}
 			{allCategory ? (
 				<View style={tw`flex-1`}>
