@@ -85,7 +85,9 @@ export function decrypt(value: string, secret: string): string {
 			decrypted = CryptoJS.AES.decrypt(decrypted, secret).toString(CryptoJS.enc.Utf8)
 		}
 	} catch (e) {
-		console.warn('[Error] Unable to decrypt', e)
+		if (e instanceof Error) {
+			console.warn('[Error] Unable to decrypt:', e.message)
+		}
 	}
 	return decrypted
 }
@@ -95,8 +97,10 @@ export function encrypt(value: string | unknown, secret: string): string {
 	try {
 		encrypted = CryptoJS.AES.encrypt(encrypted, secret).toString()
 	} catch (e) {
-		console.warn('[Error] Unable to encrypt', e)
-		throw e
+		if (e instanceof Error) {
+			console.warn('[Error] Unable to encrypt:', e.message)
+			throw e
+		}
 	}
 	return encrypted
 }
