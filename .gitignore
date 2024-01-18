@@ -13,7 +13,6 @@ _to_delete/
 .vscode/
 coverage/
 %ProgramData%/
-__tests__/
 .yarn/cache/**
 
 # macOS
