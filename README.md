@@ -1,9 +1,10 @@
 # Offline Password Manager
 <a name="top"></a>
+[![Run tests](https://github.com/SandraLum/offline-password-manager/actions/workflows/test.yml/badge.svg)](https://github.com/SandraLum/offline-password-manager/actions/workflows/test.yml)
 <img src="https://img.shields.io/badge/development-in_progress-orange" alt="Development"/>
 
 <div style="text-align: center;">
-<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/ff874061-bfad-4796-b39d-9d3a6ece9f79" width="150">
+<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/ff874061-bfad-4796-b39d-9d3a6ece9f79" width="150"> 
 </div>
 
 ## About The Project
