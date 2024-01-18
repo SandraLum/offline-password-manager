@@ -1,4 +1,4 @@
-name: Build for dev - android build
+name: Run tests
 on:
   push:
     branches: [main]
@@ -7,15 +7,13 @@ jobs:
     name: Dev build android
     runs-on: self-hosted
     steps:
-      - name: Host name
+      - name: Display Host name
         run: hostname
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.1
       - name: Checkout repo from main branch
         uses: actions/checkout@v3
         with:
           ref: main
-      - name: Install npm dependency
+      - name: Install dependencies
         run: yarn install
       - name: Run tests
-        run: yarn test --verbose --maxWorkers=2
+        run: yarn test --verbose
