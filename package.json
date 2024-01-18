@@ -1,7 +1,7 @@
 {
 	"name": "bondpass",
 	"version": "1.0.0",
-  "private": true,
+	"private": true,
 	"scripts": {
 		"start": "expo start --dev-client",
 		"android": "expo run:android",
@@ -9,6 +9,7 @@
 		"web": "expo start --web",
 		"test": "jest",
 		"start:local": "npx expo start --dev-client",
+		"eas:android:build:local": "eas build --platform android --local",
 		"eas:android:build": "eas build --profile development --platform android",
 		"generate:icons:brand": "node scripts/generateBrandIconsFile.js",
 		"generate:icons:generic": "node scripts/generateGenericIconsFile.js",
