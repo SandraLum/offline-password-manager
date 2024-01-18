@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
-      - name: Install npm dependency
+      - name: Install dependencies
         run: yarn install
       - name: Run tests
         run: yarn test --verbose --maxWorkers=2
