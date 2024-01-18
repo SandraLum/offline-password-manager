@@ -1,4 +1,4 @@
-name: Build for dev - android build
+name: Run tests
 on:
   push:
     branches: [main]
@@ -16,4 +16,4 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run tests
-        run: yarn test --verbose --maxWorkers=2
+        run: yarn test --verbose
