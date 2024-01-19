@@ -140,11 +140,9 @@ export default function RestoreProcess({ route }: Props) {
 		setIsLoadingFile(true)
 		try {
 			const result = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true })
-			console.log('result', result)
 			if (result.canceled === false && result.assets?.[0]?.uri) {
 				const content = await FileSystem.readAsStringAsync(result.assets?.[0]?.uri, { encoding: 'utf8' })
 				setBackupFile({ ...result.assets?.[0] })
-				console.log({ ...result.assets?.[0] })
 				setBackupContent(content)
 			}
 		} catch (e) {

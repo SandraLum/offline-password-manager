@@ -37,7 +37,7 @@ const i18n = new I18n({
 		'categories:card:entries:count': `{{totalEntries}} entries`,
 		'entries:label:no:entries': 'No entries',
 		'entries:button:add:new:entry': '+ Add',
-		'entries:label:no:search:matches': 'No matches found',
+		'entries:label:no:search:matches': 'No matches found for {{s}}',
 		'entries:menu:add:new:entry': 'Add Entry',
 		'entry:new:field:input:label': 'Label',
 		'entry:new:field:input:type:label': 'Type (Note: Type of input)',

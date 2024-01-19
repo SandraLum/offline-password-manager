@@ -112,7 +112,6 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}, [])
 
 	useEffect(() => {
-		console.log('entry', JSON.stringify(entry))
 		if (category && entry) {
 			const _fieldsOptions: OPM.FieldsOptions = {}
 			fields.forEach(f => {
