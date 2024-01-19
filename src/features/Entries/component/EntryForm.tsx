@@ -81,12 +81,10 @@ Props) {
 	const mk = useSelector(getMK)
 	const { allowCopy, allowScreenCapture, defaultHidePassword } = useSelector(selectUserSettings)
 
-	console.log('defaultHidePassword', defaultHidePassword)
-
 	useEffect(() => {
 		async function init() {
 			if (!allowScreenCapture) {
-				// await ScreenCapture.preventScreenCaptureAsync()
+				await ScreenCapture.preventScreenCaptureAsync()
 			}
 		}
 		init()

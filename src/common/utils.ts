@@ -13,10 +13,8 @@ export function generateUID(fnCheckForDuplicates?: (id: string) => boolean): str
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function clone(value: any) {
-	console.log('clone typeof value', typeof value)
 	if (Array.isArray(value) || typeof value === 'object') {
 		try {
-			console.log('parse')
 			return JSON.parse(JSON.stringify(value))
 		} catch {
 			console.warn('Invalid JSON')

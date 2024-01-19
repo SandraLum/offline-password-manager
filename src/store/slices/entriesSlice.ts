@@ -134,7 +134,6 @@ export const syncEntriesWithNewKey =
 					})
 				})
 
-				console.log('entries - results', entries)
 				dispatch(entriesSetAll(entries))
 			}
 		} catch (e) {
@@ -150,7 +149,6 @@ export type GroupEntry = {
 export const selectAllGroupedEntriesByProfile = createSelector(
 	[selectAllEntries, selectAllCategories, (state, profileId) => selectProfileById(state, profileId)],
 	(items, categories, profile): GroupEntry[] => {
-		console.log('selectAllGrouoped', categories)
 		const groupedIndexes: { [key: string | number]: number } = {}
 		return items.reduce((arr: GroupEntry[], curr) => {
 			if (profile?.entries?.includes(curr.id)) {

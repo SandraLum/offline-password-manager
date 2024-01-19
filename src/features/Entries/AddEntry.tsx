@@ -32,8 +32,6 @@ export default function AddEntry({ route }: Props) {
 	const category = useSelector((state: RootState) => selectCategoryById(state, data.category.id))
 	const currentProfile = useSelector(selectCurrentProfile)
 
-	console.log('Add Entry: category', category)
-
 	const originalFields = useMemo<OPM.Field[]>(
 		() =>
 			category ? TemplateEntries[category.id].fields.map((f: OPM.IField) => ({ ...f, id: utils.generateUID() })) : [],

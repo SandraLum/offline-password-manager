@@ -25,7 +25,7 @@ export default function AuthScreen({ children, personalizeHeader = false, style,
 			if (allowScreenCapture) {
 				await ScreenCapture.allowScreenCaptureAsync()
 			} else {
-				// await ScreenCapture.preventScreenCaptureAsync()
+				await ScreenCapture.preventScreenCaptureAsync()
 			}
 		}
 		init()
