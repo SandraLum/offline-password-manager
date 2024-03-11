@@ -4,7 +4,8 @@ const theme = {
 	...MD3LightTheme,
 	myOwnProperty: true,
 	colors: {
-		primary: 'rgb(0, 105, 113)',
+		header: 'rgb(15, 219, 196)',
+		primary: 'rgb(15, 219, 196)', //'rgb(0, 105, 113)',
 		onPrimary: 'rgb(255, 255, 255)',
 		primaryContainer: 'rgb(132, 243, 255)',
 		onPrimaryContainer: 'rgb(0, 32, 35)',

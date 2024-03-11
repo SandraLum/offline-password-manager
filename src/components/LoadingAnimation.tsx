@@ -11,7 +11,7 @@ import Animated, {
 	withSpring,
 	withTiming
 } from 'react-native-reanimated'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 type Props = {
 	children?: ReactNode | undefined

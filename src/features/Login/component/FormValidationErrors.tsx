@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { Text, Snackbar, Portal } from 'react-native-paper'
 

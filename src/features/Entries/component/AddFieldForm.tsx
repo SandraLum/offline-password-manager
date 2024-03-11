@@ -6,15 +6,8 @@ import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Button, Text, TextInput as PaperTextInput } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import Animated, {
-	FadeInDown,
-	FadeInUp,
-	FadeOutDown,
-	FadeOutUp,
-	SlideInRight,
-	SlideOutRight
-} from 'react-native-reanimated'
-import tw from 'twrnc'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+import tw from '@src/libs/tailwind'
 
 export default function AddFieldForm({ onAddField }: { onAddField: (fieldType: OPM.Field) => void }) {
 	const formFieldTypes = [
@@ -26,7 +19,7 @@ export default function AddFieldForm({ onAddField }: { onAddField: (fieldType: O
 
 	const [fieldType, setFieldType] = useState<FieldType | null>(null)
 	const [fieldLabel, setFieldLabel] = useState('')
-	const [isShow, setIsShow] = useState(true)
+	const [isShow, setIsShow] = useState(false)
 	const show = () => setIsShow(true)
 	const hide = () => setIsShow(false)
 
@@ -81,9 +74,9 @@ export default function AddFieldForm({ onAddField }: { onAddField: (fieldType: O
 	}
 
 	return (
-		<View style={tw`p-2 mx-1 my-4 border-2 bg-orange-200 border-neutral-500 rounded-lg`}>
+		<View style={tw`p-2 mx-1 my-5 border-2 bg-[#d5ebe8] border-neutral-100 rounded-lg`}>
 			<TouchableOpacity style={tw`flex-row justify-between items-center`} onPress={onToggleShow}>
-				<Text style={tw`font-bold text-neutral-700 text-4`}>Add New Field</Text>
+				<Text style={tw`font-bold text-neutral-600 text-3`}>Add New Field</Text>
 				<MaterialCommunityIcons
 					size={24}
 					name={isShow ? 'arrow-up-drop-circle-outline' : 'arrow-down-drop-circle-outline'}
@@ -94,7 +87,7 @@ export default function AddFieldForm({ onAddField }: { onAddField: (fieldType: O
 				<Animated.View entering={FadeInDown} style={tw`flex-1`}>
 					<View>
 						<View style={tw`py-1`}>
-							<Text style={tw`text-3 font-bold text-orange-700`}>{i18n.t('entry:new:field:input:label')}</Text>
+							<Text style={tw`text-3 font-bold text-neutral-500`}>{i18n.t('entry:new:field:input:label')}</Text>
 							<PaperTextInput
 								dense
 								mode="outlined"
@@ -108,7 +101,7 @@ export default function AddFieldForm({ onAddField }: { onAddField: (fieldType: O
 						</View>
 
 						<View>
-							<Text style={tw`text-3 font-bold text-orange-700 py-1`}>
+							<Text style={tw`text-3 font-bold text-neutral-500 py-1`}>
 								{i18n.t('entry:new:field:input:type:label')}
 							</Text>
 							{/* <PaperTextInput dense mode="outlined" contentStyle={tw`border-0 px-2`} /> */}

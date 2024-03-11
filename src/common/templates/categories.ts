@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { CategoryId } from '@src/common/enums'
 import { OPMTypes } from '@src/common/types'
 import { setIdFormat } from '../utils'
@@ -9,7 +9,7 @@ export const Categories: OPMTypes.TemplateCategory[] = [
 		id: CategoryId.AllItems,
 		name: 'All Items',
 		icon: {
-			name: 'format-list-bulleted-type',
+			name: 'collage',
 			bgColor: tw.color('zinc-200'),
 			color: tw.color('neutral-800')
 		}

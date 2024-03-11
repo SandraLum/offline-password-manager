@@ -1,5 +1,5 @@
 import { Image, View } from 'react-native'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import Content from '@components/Content'
 import { Button, Text } from 'react-native-paper'
 import { i18n } from '@src/app/locale'

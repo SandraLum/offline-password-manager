@@ -35,6 +35,7 @@ const i18n = new I18n({
 		'categories:card:title:category': 'Categories',
 		'categories:card:menu:close': 'Cancel',
 		'categories:card:entries:count': `{{totalEntries}} entries`,
+		'categories:card:entries': `entries`,
 		'entries:label:no:entries': 'No entries',
 		'entries:button:add:new:entry': '+ Add',
 		'entries:label:no:search:matches': 'No matches found for {{s}}',

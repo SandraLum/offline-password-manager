@@ -7,13 +7,13 @@ import { useSelector } from 'react-redux'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as ScreenCapture from 'expo-screen-capture'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { selectUserSettings } from '@src/store/slices/settingSlice'
 import { usePreventScreenCapture } from 'expo-screen-capture'
 import { ToastProvider } from '@src/common/contexts/ToastContext'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function AuthScreen({ children, personalizeHeader = false, style, ...props }: any) {
+export default function AuthScreen({ children, personalizeHeader = false, style, headerShown = true, ...props }: any) {
 	const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 	const currentProfile = useSelector(selectCurrentProfile)
 	const { allowScreenCapture } = useSelector(selectUserSettings)
@@ -32,7 +32,11 @@ export default function AuthScreen({ children, personalizeHeader = false, style,
 	}, [allowScreenCapture])
 
 	useEffect(() => {
-		if (personalizeHeader && currentProfile?.avatar?.color) {
+		if (!headerShown) {
+			navigation.setOptions({
+				headerShown: false
+			})
+		} else if (personalizeHeader && currentProfile?.avatar?.color) {
 			const color = currentProfile?.avatar?.color
 			const backgroundColor = (currentProfile?.avatar?.style as ViewStyle)?.backgroundColor || 'white'
 
@@ -62,7 +66,7 @@ export default function AuthScreen({ children, personalizeHeader = false, style,
 	}, [personalizeHeader, currentProfile?.avatar?.color, currentProfile?.avatar?.style, navigation])
 
 	return (
-		<View style={tw.style({ backgroundColor: 'rgb(240, 240, 240)' }, style)} {...props}>
+		<View style={tw.style({ backgroundColor: 'white' }, style)} {...props}>
 			{children}
 		</View>
 	)

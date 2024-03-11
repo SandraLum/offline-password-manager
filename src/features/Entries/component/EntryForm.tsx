@@ -1,9 +1,9 @@
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { Fragment, useContext, useEffect } from 'react'
 
 import { View, ScrollView, Alert } from 'react-native'
-import { Text, Divider, TextInput as PaperTextInput, IconButton, Snackbar } from 'react-native-paper'
+import { Text, TextInput as PaperTextInput, IconButton } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { FieldType } from '@src/common/templates'
 import { i18n } from '@src/app/locale'
 import IconSelector from '@components/IconSelector'
@@ -59,7 +59,7 @@ const OptionalActions = (props: OptionalProps) => {
 					icon="close-circle"
 					iconColor="grey"
 					size={20}
-					style={tw`font-bold p-0 m-0`}
+					style={tw`font-bold p-0 m-0 right-[-1]`}
 					onPress={onRemovePressed}
 				/>
 			) : null}
@@ -93,6 +93,8 @@ Props) {
 	function getFieldComponent(f: OPM.Field) {
 		let component
 		const value = fieldsValues[f.id] || ''
+		const style = 'flex-1 bg-transparent justify-center' + (!editable ? ' border-b-[1px] border-neutral-500' : '')
+		const contentStyle = 'border-0 px-2'
 
 		// Decrypt value
 		const decrypted = !isEmpty(value) ? decrypt(value, mk) : ''
@@ -106,8 +108,8 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={editable ? f.placeholder : ''}
-						style={tw.style(`flex-1 bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-9')}
-						contentStyle={tw`border-0 px-2`}
+						style={tw.style(style, !f.fieldOptions?.multiline && 'h-9')}
+						contentStyle={tw.style(contentStyle)}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
 						multiline={f.fieldOptions?.multiline}
@@ -122,8 +124,8 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={f.placeholder}
-						style={tw.style(`flex-1 bg-transparent justify-center`, !f.fieldOptions?.multiline && 'h-10')}
-						contentStyle={tw`border-0 px-2`}
+						style={tw.style(style, !f.fieldOptions?.multiline && 'h-11')}
+						contentStyle={tw.style(contentStyle)}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
 						secureTextEntry={fieldsOptions[f.id]?.isSecure || defaultHidePassword}
@@ -153,8 +155,8 @@ Props) {
 						value={decrypted}
 						onChangeText={val => onChangeValue(f, val)}
 						placeholder={f.placeholder}
-						style={tw.style(`flex-1 bg-transparent justify-center`)}
-						contentStyle={tw`border-0 px-2`}
+						style={tw.style(style)}
+						contentStyle={tw.style(contentStyle)}
 						underlineColor="transparent"
 						activeUnderlineColor="hwb(360, 100%, 100%)"
 						multiline={true}
@@ -204,56 +206,22 @@ Props) {
 			<ScrollView
 				nestedScrollEnabled={true}
 				showsVerticalScrollIndicator={true}
-				style={tw`w-full h-full`}
+				style={tw`h-full bg-white`}
 				contentContainerStyle={tw.style(`flex`)}
 			>
-				<View style={tw`w-full px-2 py-0 bg-white`}>
-					<View style={tw.style(`flex py-2 flex-row items-center`)}>
-						<IconSelector
-							bordered={editable}
-							editable={editable}
-							size={40}
-							icon={title.icon}
-							name={title.name}
-							onChangeIcon={onChangeIcon}
-						/>
-
-						<PaperTextInput
-							dense
-							mode={editable ? 'outlined' : 'flat'}
-							editable={editable}
-							value={title.name}
-							onChangeText={text => setTitle({ ...title, name: text })}
-							style={tw.style(`flex-1 justify-center text-5 bg-transparent`, !editable && 'font-bold')}
-							contentStyle={tw.style(!editable && 'pl-1')}
-							error={title.name.trim() === ''}
-							underlineColor="transparent"
-							activeUnderlineColor="transparent"
-							placeholder={i18n.t('entry:form:field:input:placeholder:title')}
-							focusable={true}
-							right={
-								editable && title.name.length > 0 ? (
-									<PaperTextInput.Icon
-										icon="close-circle-outline"
-										forceTextInputFocus={true}
-										onPress={() => setTitle({ ...title, name: '' })}
-									/>
-								) : null
-							}
-						/>
-					</View>
+				<View style={tw`px-2 py-2 bg-white`}>
 					{/* eslint-disable-next-line react-native/no-inline-styles */}
 					{/* <Divider style={{ borderBottomWidth: 2, borderColor: tw.color('teal-700') }} /> */}
 
 					{/* Render fields */}
-					<View style={tw`border-2 border-neutral-400 rounded-xl pl-2`}>
+					<View style={tw`border-[1px] border-neutral-400 rounded-xl p-2 m-2 pb-10`}>
 						{fields.map((f: OPM.Field, index: number) => {
 							const { field, value } = getFieldComponent(f)
 
 							return field ? (
 								<Fragment key={`f-${index}-${f.id}`}>
 									<View style={tw`flex-col justify-center py-2`}>
-										<Text style={tw`text-3 pl-2 py-1 font-bold`}>{f.label}</Text>
+										<Text style={tw`text-3 pl-1 py-1 font-bold`}>{f.label}</Text>
 
 										<View style={tw`flex-row items-center`}>
 											<View style={tw`flex-1`}>{field}</View>

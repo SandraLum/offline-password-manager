@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { View, Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { useAssetContent } from '@src/common/hooks/useAssetContent'
 import { getSalt } from '@src/store/slices/secureSlice'
 

@@ -1,0 +1,42 @@
+{
+	"expo": {
+		"name": "Bondpass Password Manager",
+		"slug": "offlinepasswordstore",
+		"version": "0.0.1",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"primaryColor": "#589CA9",
+		"description": "",
+		"splash": {
+			"image": "./assets/images/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"plugins": [
+			"expo-localization",
+			"@config-plugins/react-native-blob-util",
+			"@config-plugins/react-native-pdf",
+			[
+				"expo-document-picker",
+				{
+					"iCloudContainerEnvironment": "Production"
+				}
+			]
+		],
+		"extra": {
+			"eas": {
+				"projectId": "xxxxx"
+			}
+		},
+		"android": {
+			"package": "io.slamcode.bondpass",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			}
+		},
+		"ios": {
+			"usesIcloudStorage": true
+		}
+	}
+}

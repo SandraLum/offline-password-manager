@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Alert, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
@@ -21,6 +21,8 @@ import { useNavigation } from '@react-navigation/native'
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AuthScreen from '@src/components/AuthScreen'
+import EntryHeader from './component/EntryHeader'
+import { EntryMode } from '@src/common/enums'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
@@ -77,7 +79,7 @@ export default function AddEntry({ route }: Props) {
 	// Initialize
 	useEffect(() => {
 		if (category) {
-			setTitle(o => ({ ...o, ...{ name: category.name, icon: { color: category.icon.bgColor } } }))
+			setTitle(o => ({ ...o, icon: { color: category.icon.bgColor } }))
 		}
 	}, [category])
 
@@ -113,7 +115,16 @@ export default function AddEntry({ route }: Props) {
 	}
 
 	return (
-		<AuthScreen personalizeHeader={true}>
+		<AuthScreen headerShown={false} style={tw`flex-1`}>
+			<EntryHeader
+				category={category}
+				mode={EntryMode.NEW}
+				entry={{ title }}
+				onUpdate={onSave}
+				onCancel={onCancel}
+				setTitle={setTitle}
+				onChangeIcon={onChangeIcon}
+			/>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}

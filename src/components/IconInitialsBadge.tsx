@@ -1,5 +1,5 @@
 import { Badge, Avatar } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { Image, TouchableOpacity } from 'react-native'
 

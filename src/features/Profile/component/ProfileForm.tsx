@@ -1,7 +1,7 @@
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { Text, Divider, TextInput as PaperTextInput } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { OPMTypes } from '@src/common/types'
 import AvatarCustomizer from '@src/components/AvatarCustomizer'
 

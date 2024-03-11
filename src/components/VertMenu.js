@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { IconButton, Menu, Divider } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { i18n } from '@src/app/locale'
 
 export default function VertMenu(props) {

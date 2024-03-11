@@ -7,7 +7,7 @@ import {
 import { Text, View, ViewStyle } from 'react-native'
 import { Divider } from 'react-native-paper'
 import { i18n } from './locale'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentProfile } from '@src/store/slices/appSlice'
 import Avatar from '@src/components/Avatar'

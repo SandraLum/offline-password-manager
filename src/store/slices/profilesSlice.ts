@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 import * as utils from '@utils'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { OPMTypes } from '@src/common/types'
 import { RootState } from '@src/store'
 

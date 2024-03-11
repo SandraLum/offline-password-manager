@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { useDispatch } from 'react-redux'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
