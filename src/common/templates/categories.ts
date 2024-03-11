@@ -9,7 +9,7 @@ export const Categories: OPMTypes.TemplateCategory[] = [
 		id: CategoryId.AllItems,
 		name: 'All Items',
 		icon: {
-			name: 'format-list-bulleted-type',
+			name: 'collage',
 			bgColor: tw.color('zinc-200'),
 			color: tw.color('neutral-800')
 		}

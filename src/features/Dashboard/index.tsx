@@ -59,7 +59,7 @@ export default function Dashboard({ route }: Props) {
 	}, [navigation, route])
 
 	return (
-		<AuthScreen style={tw.style(`flex-1 bg-white`, { backgroundColor: `rgba(53, 142, 148, 0)` })}>
+		<AuthScreen style={tw.style(`flex-1 bg-stone-100`)}>
 			<Header
 				showDrawerIcon={displayView.view === DashboardContentView.Categories}
 				onSearchChange={onSearchChange}
