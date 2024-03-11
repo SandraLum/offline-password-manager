@@ -3,7 +3,7 @@ import { Button } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import Content from '@components/Content'
 import { unlock } from '@src/store/slices/authSlice'
@@ -77,7 +77,7 @@ export default function Login() {
 					{/* {error && <Text style={tw`text-red-700 py-1`}>{error}</Text>} */}
 
 					{/* SL:TODO remove */}
-					{/* {__DEV__ && (
+					{__DEV__ && (
 						<Button
 							onPress={() => navigation.navigate({ name: 'SetMasterPassword', params: {} })}
 							mode="contained"
@@ -85,14 +85,14 @@ export default function Login() {
 						>
 							{'Go to Set Password'}
 						</Button>
-					)} */}
+					)}
 
 					{/* SL:TODO remove, this is only for dev */}
-					{/* {__DEV__ && (
+					{__DEV__ && (
 						<Button buttonColor={tw.color('red-500')} onPress={resetApp} mode="contained" style={tw`my-5`}>
 							{'Reset Data'}
 						</Button>
-					)} */}
+					)}
 				</Content>
 			</Screen>
 		</ImageBackground>

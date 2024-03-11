@@ -4,7 +4,7 @@ import { Image, Platform, ToastAndroid, View } from 'react-native'
 import { Button, Text, TouchableRipple } from 'react-native-paper'
 import { i18n } from '@src/app/locale'
 import * as FileSystem from 'expo-file-system'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import AuthScreen from '@src/components/AuthScreen'
 import { MaterialCommunityIcons } from '@expo/vector-icons'

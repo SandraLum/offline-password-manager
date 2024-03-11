@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { IconButton } from 'react-native-paper'
-import tw from 'twrnc'
-import { View } from 'react-native'
+import tw from '@src/libs/tailwind'
+import { View, ViewStyle } from 'react-native'
 
 import ComplexIconModal from './ComplexIconModal'
 import EntryIcon from '../EntryIcon'
@@ -12,12 +12,13 @@ type Props = {
 	editable: boolean
 	bordered?: boolean
 	name?: string
-	style?: unknown
+	containerStyle?: ViewStyle | undefined
+	style?: ViewStyle | undefined
 	onChangeIcon: (icon?: OPM.ComplexIcon) => void
 }
 
 export default function IconSelector(props: Props) {
-	const { editable, icon, name } = props
+	const { editable, icon, size, name, containerStyle, style } = props
 	const [visible, setVisible] = useState(false)
 	const showModal = () => setVisible(true)
 	const hideModal = () => setVisible(false)
@@ -39,8 +40,9 @@ export default function IconSelector(props: Props) {
 					bordered={true}
 					OnPress={() => editable && showModal()}
 					icon={icon}
-					size={42}
-					// style={tw`ml-1`}
+					size={size || 42}
+					style={style}
+					containerStyle={containerStyle}
 				/>
 
 				{editable && (

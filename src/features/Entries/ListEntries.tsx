@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { View, Text } from 'react-native'
 import { List, IconButton } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { i18n } from '@src/app/locale'
 
 import Content from '@src/components/Content'

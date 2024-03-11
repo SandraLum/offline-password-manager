@@ -1,4 +1,4 @@
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import Content from '@components/Content'
 import AuthScreen from '@src/components/AuthScreen'
 import { Portal } from 'react-native-paper'

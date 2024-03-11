@@ -10,7 +10,7 @@ import { getBackupState } from '@store/slices/settingSlice'
 import { i18n } from '@src/app/locale'
 
 import { useContext, useEffect, useState } from 'react'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { ToastContext } from '@src/common/contexts/ToastContext'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ParamListBase, useNavigation } from '@react-navigation/native'

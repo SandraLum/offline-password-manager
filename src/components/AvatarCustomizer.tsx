@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { IconButton } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { View, TouchableOpacity } from 'react-native'
 
 import Avatar from './Avatar'

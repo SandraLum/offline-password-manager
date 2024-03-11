@@ -4,7 +4,7 @@ import { Button, List, Switch } from 'react-native-paper'
 import * as ScreenCapture from 'expo-screen-capture'
 
 import { i18n } from '@src/app/locale'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import AuthScreen from '@src/components/AuthScreen'
 
 import Content from '@src/components/Content'

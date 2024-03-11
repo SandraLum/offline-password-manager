@@ -1,6 +1,6 @@
 import { TextStyle, ViewStyle } from 'react-native/types'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 type Props = {
 	icon: OPM.Avatar

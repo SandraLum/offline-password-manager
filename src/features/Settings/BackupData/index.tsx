@@ -1,5 +1,5 @@
 import React from 'react'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { Image, Text, View } from 'react-native'
 import { Button } from 'react-native-paper'
 

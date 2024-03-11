@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { View, Alert } from 'react-native'
 import { Text, Button } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 

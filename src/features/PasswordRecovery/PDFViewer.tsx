@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line react-native/split-platform-components
 import { View, Platform, ToastAndroid } from 'react-native'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { IconButton, Menu } from 'react-native-paper'
 import * as FileSystem from 'expo-file-system'

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Dimensions } from 'react-native'
 import { Button, Text, TouchableRipple } from 'react-native-paper'
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import AuthScreen from '@src/components/AuthScreen'
 import Avatar from '@src/components/Avatar'

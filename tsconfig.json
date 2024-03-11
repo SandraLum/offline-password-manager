@@ -8,7 +8,8 @@
 			"@slices/*": ["./src/store/slices/*"],
 			"@common/*": ["./src/common/*"],
 			"@utils": ["./src/common/utils"],
-			"@components/*": ["./src/components/*"]
+			"@components/*": ["./src/components/*"],
+			"@libs": ["./src/libs/*"]
 		},
 		"types": ["node"]
 	}

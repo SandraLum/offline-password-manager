@@ -1,5 +1,5 @@
 import { Modal, Portal, Text, IconButton, Button } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { Image, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native'

@@ -1,6 +1,6 @@
 import { Image, TouchableOpacity, ViewStyle } from 'react-native'
 import { Badge, Avatar } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { getInitials } from '@utils'
 
@@ -12,11 +12,22 @@ type EntryIcon = {
 	bordered?: boolean
 	editable?: boolean
 	dense?: boolean
-	style?: ViewStyle
+	containerStyle?: ViewStyle | undefined
+	style?: ViewStyle | undefined
 }
 
 export default function EntryIcon(props: EntryIcon) {
-	const { icon, name, OnPress, size = 36, bordered = false, editable = false, dense = false, style } = props
+	const {
+		icon,
+		name,
+		OnPress,
+		size = 36,
+		bordered = false,
+		editable = false,
+		dense = false,
+		containerStyle,
+		style
+	} = props
 	const roundedBorderStyle = 'border rounded-full border-slate-300'
 	const reducedSize = dense ? 0.8 : 1
 	let iconType: 'badge' | 'brand' | 'generic'
@@ -48,7 +59,8 @@ export default function EntryIcon(props: EntryIcon) {
 							},
 							roundedBorderStyle,
 							dense ? 'mx-1' : '',
-							style
+							style,
+							containerStyle
 						)}
 					>
 						{getInitials(name)}
@@ -60,7 +72,7 @@ export default function EntryIcon(props: EntryIcon) {
 		case 'generic': {
 			const genericIcon: OPM.GenericIcon = icon as OPM.GenericIcon
 			renderIcon = (
-				<TouchableOpacity activeOpacity={0.5} disabled={!editable} onPress={OnPress}>
+				<TouchableOpacity activeOpacity={0.5} disabled={!editable} onPress={OnPress} style={containerStyle}>
 					<Avatar.Icon
 						icon={genericIcon.name}
 						size={size + 4}
@@ -81,7 +93,8 @@ export default function EntryIcon(props: EntryIcon) {
 					style={tw.style(
 						`justify-center items-center`,
 						{ width: size + 2, height: size + 2 },
-						bordered && roundedBorderStyle
+						bordered && roundedBorderStyle,
+						containerStyle
 					)}
 				>
 					<Image

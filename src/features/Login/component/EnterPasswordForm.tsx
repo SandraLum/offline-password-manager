@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { Button, TextInput as PaperTextInput, Text } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { i18n } from '@src/app/locale'
 import FormValidationErrors from './FormValidationErrors'

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { TouchableOpacity, View, ViewStyle } from 'react-native'
 import { Modal, Portal, Text, IconButton, Button, Divider } from 'react-native-paper'
 import { ScrollView } from 'react-native'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { i18n } from '@src/app/locale'

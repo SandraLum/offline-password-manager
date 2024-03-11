@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { View } from 'react-native'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import SessionLoginModal from '@src/components/SessionLoginModal'

@@ -6,7 +6,7 @@ import { Button, IconButton, Menu, Text } from 'react-native-paper'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { MaterialIcons } from '@expo/vector-icons'
 import { i18n } from '@src/app/locale'
 

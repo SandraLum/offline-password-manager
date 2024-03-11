@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { OpaqueColorValue, View } from 'react-native'
 import { Modal, Portal } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 type Props = {
 	visible: boolean

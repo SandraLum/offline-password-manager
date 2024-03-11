@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { Image, View } from 'react-native'
 import { Button, TextInput as PaperTextInput, Text } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import AuthScreen from '@src/components/AuthScreen'
 import { i18n } from '@src/app/locale'

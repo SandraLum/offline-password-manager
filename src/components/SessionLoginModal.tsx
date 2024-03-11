@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppState, Text, View } from 'react-native'
 import { Portal, Modal, Divider } from 'react-native-paper'
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { AppDispatch } from '@src/store'
 import { MaterialCommunityIcons } from '@expo/vector-icons'

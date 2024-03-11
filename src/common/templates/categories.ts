@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { CategoryId } from '@src/common/enums'
 import { OPMTypes } from '@src/common/types'
 import { setIdFormat } from '../utils'

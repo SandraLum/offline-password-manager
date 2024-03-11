@@ -1,6 +1,6 @@
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useCallback, useEffect, useState } from 'react'
-import tw from 'twrnc'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import tw from '@src/libs/tailwind'
 import Categories from '../Categories'
 
 import { ParamListBase, useNavigation } from '@react-navigation/native'
@@ -49,9 +49,7 @@ export default function Dashboard({ route }: Props) {
 	)
 
 	useEffect(() => {
-		navigation.setOptions({
-			headerShown: false
-		})
+		navigation.setOptions({ headerShown: false })
 		// @ts-expect-error: event is valid but react navigation ts is not updated
 		const unsubscribe = navigation.addListener('drawerItemPress', () => {
 			setDisplayView({ view: DashboardContentView.Categories })
@@ -61,7 +59,7 @@ export default function Dashboard({ route }: Props) {
 	}, [navigation, route])
 
 	return (
-		<AuthScreen style={tw.style(`flex-1`, { backgroundColor: `rgba(53, 142, 148, 0)` })}>
+		<AuthScreen style={tw.style(`flex-1 bg-white`, { backgroundColor: `rgba(53, 142, 148, 0)` })}>
 			<Header
 				showDrawerIcon={displayView.view === DashboardContentView.Categories}
 				onSearchChange={onSearchChange}

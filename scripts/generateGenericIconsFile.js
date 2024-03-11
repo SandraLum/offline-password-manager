@@ -27,7 +27,7 @@ function generateContent() {
 	arrContent = arrContent.slice(0, -1)
 	arrContent += `]`
 
-	fileContent = `import tw from 'twrnc'\r\n\r\nconst genericIcons = ${arrContent}\r\n\r\nexport default genericIcons`
+	fileContent = `import tw from '@src/libs/tailwind'\r\n\r\nconst genericIcons = ${arrContent}\r\n\r\nexport default genericIcons`
 	return fileContent
 }
 

@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { View, Alert } from 'react-native'
-import { Text, IconButton } from 'react-native-paper'
+import { Alert } from 'react-native'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@src/app/routes'
 
@@ -20,6 +19,7 @@ import { OPMTypes } from '@src/common/types'
 import EntryForm from './component/EntryForm'
 import { EntryMode } from '@src/common/enums'
 import AuthScreen from '@src/components/AuthScreen'
+import EntryHeader from './component/EntryHeader'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ViewEditEntry'>
 
@@ -127,38 +127,6 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}, [category, entry, fields, fieldsOptions, mode, navigation])
 
 	useEffect(() => {
-		if (category) {
-			navigation.setOptions({
-				headerTitle: () => <Text style={tw.style(`text-6 font-bold`)}>{category.name}</Text>,
-				headerRight: () => {
-					let headerButtons
-					switch (mode) {
-						case EntryMode.READ:
-							headerButtons = (
-								<View style={tw`flex flex-row`}>
-									<IconButton icon="star-outline" onPress={() => console.log('Fav pressed')} />
-									<IconButton icon="pencil" mode="contained" onPress={() => setMode(EntryMode.EDIT)} />
-									<IconButton icon="delete" onPress={onDelete} />
-								</View>
-							)
-							break
-						case EntryMode.EDIT:
-							headerButtons = (
-								<View style={tw`flex flex-row`}>
-									<IconButton icon="star-outline" onPress={() => console.log('Fav pressed')} />
-									<IconButton icon="content-save" mode="contained" onPress={onUpdate} />
-									<IconButton icon="close" iconColor={tw.color('gray-400')} onPress={onCancel} />
-								</View>
-							)
-							break
-					}
-					return headerButtons
-				}
-			})
-		}
-	}, [category, mode, navigation, onDelete, onUpdate, onCancel])
-
-	useEffect(() => {
 		setEditable(mode === EntryMode.EDIT)
 	}, [mode])
 
@@ -167,7 +135,18 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	}
 
 	return (
-		<AuthScreen personalizeHeader={true}>
+		<AuthScreen headerShown={false} style={tw`flex-1`}>
+			<EntryHeader
+				category={category}
+				entry={{ title }}
+				mode={mode}
+				setMode={setMode}
+				onDelete={onDelete}
+				onCancel={onCancel}
+				onUpdate={onUpdate}
+				setTitle={setTitle}
+				onChangeIcon={onChangeIcon}
+			/>
 			<EntryForm
 				editable={editable}
 				entry={{ title, fieldsOptions, fieldsValues, fields }}

@@ -1,4 +1,4 @@
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 const genericIcons = [
 	{ id: 'genicon-0', displayName: 'Account', name: 'account-box', color: tw.color('blue-600'), sort: 0 },

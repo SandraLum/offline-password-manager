@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Text, FlatList, View } from 'react-native'
 import { Button, Card } from 'react-native-paper'
 
-import tw from 'twrnc'
+import tw from '@src/libs/tailwind'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
