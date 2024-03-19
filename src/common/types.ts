@@ -30,6 +30,7 @@ export declare namespace OPMTypes {
 		id: string
 		title: OPM.EntryTitle
 		category: { id: ICategory['id'] }
+		favourite?: boolean
 		fields: OPM.Field[]
 		fieldsValues?: OPM.FieldsValues
 		lastUpdatedOn: number | string

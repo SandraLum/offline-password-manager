@@ -23,6 +23,7 @@ export const defaultEntry: OPMTypes.Entry = {
 	id: '',
 	title: { name: '' },
 	category: { id: CategoryId.Login },
+	favourite: false,
 	fields: [],
 	fieldsValues: {},
 	lastUpdatedOn: new Date().valueOf()
@@ -31,7 +32,13 @@ export const defaultEntry: OPMTypes.Entry = {
 const defaultEntries: OPMTypes.Entry[] = []
 const entriesAdapter = createEntityAdapter<OPMTypes.Entry>({
 	selectId: entry => entry.id || '',
-	sortComparer: (a, b) => new Date(b.lastUpdatedOn).valueOf() - new Date(a.lastUpdatedOn).valueOf()
+	sortComparer: (a, b) => {
+		if (a.favourite === b.favourite) {
+			return new Date(b.lastUpdatedOn).valueOf() - new Date(a.lastUpdatedOn).valueOf()
+		} else {
+			return (b.favourite ? 1 : 0) - (a.favourite ? 1 : 0)
+		}
+	}
 })
 
 const initialState = entriesAdapter.upsertMany(entriesAdapter.getInitialState(), defaultEntries)
@@ -40,7 +47,9 @@ const entriesSlice = createSlice({
 	name: 'entries',
 	initialState,
 	reducers: {
-		entriesAddOne: entriesAdapter.addOne,
+		entriesAddOne: (state, action) => {
+			entriesAdapter.addOne(state, action)
+		},
 		entriesAddMany: entriesAdapter.addMany,
 		entriesSetAll: entriesAdapter.setAll,
 		entryUpdate: entriesAdapter.updateOne,
@@ -111,6 +120,17 @@ export const selectAllEntriesByProfile = createSelector(
 		let filtered: OPMTypes.Entry[] = []
 		if (profile?.entries) {
 			filtered = entries.filter(e => profile?.entries?.includes(e.id))
+		}
+		return filtered
+	}
+)
+
+export const selectAllFavouritedEntriesByProfile = createSelector(
+	[selectAllEntries, (state, profileId) => selectProfileById(state, profileId)],
+	(entries, profile): OPMTypes.Entry[] => {
+		let filtered: OPMTypes.Entry[] = []
+		if (profile?.entries) {
+			filtered = entries.filter(e => profile?.entries?.includes(e.id) && e.favourite === true)
 		}
 		return filtered
 	}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { TouchableOpacity } from 'react-native'
@@ -7,7 +7,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import tw from '@src/libs/tailwind'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { i18n } from '@src/app/locale'
 
 import { ProfileMode } from '@src/common/enums'
@@ -16,6 +16,7 @@ import { selectAllProfiles } from '@src/store/slices/profilesSlice'
 import { OPMTypes } from '@src/common/types'
 import Avatar from '@src/components/Avatar'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import Animated, { BounceIn, useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated'
 
 export default function ProfileMenu() {
 	const dispatch = useDispatch()
@@ -23,6 +24,7 @@ export default function ProfileMenu() {
 
 	const allProfiles = useSelector(selectAllProfiles)
 	const currentProfileId = useSelector(getCurrentProfileId)
+	const scaleAnimation = useSharedValue(1)
 
 	const currentProfile = useMemo(
 		() => allProfiles.find(p => p.id === currentProfileId),
@@ -39,6 +41,10 @@ export default function ProfileMenu() {
 	if (!currentProfile) {
 		return null
 	}
+
+	useEffect(() => {
+		scaleAnimation.value = withSequence(withSpring(0.2, { mass: 0.5, overshootClamping: true }), withSpring(1))
+	}, [currentProfileId])
 
 	function onProfileNavigate(mode: 'Edit' | 'Add') {
 		setMenuVisibility(false)
@@ -58,9 +64,15 @@ export default function ProfileMenu() {
 	}
 
 	function onSwitchProfile(profile: OPMTypes.Profile) {
-		dispatch(setCurrentProfile({ profile }))
 		setMenuVisibility(false)
+		setTimeout(() => {
+			dispatch(setCurrentProfile({ profile }))
+		}, 0)
 	}
+
+	const animatedStyle = useAnimatedStyle(() => ({
+		transform: [{ scale: scaleAnimation.value }]
+	}))
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -72,16 +84,18 @@ export default function ProfileMenu() {
 					style={tw`w-3/4`}
 					anchor={
 						<TouchableOpacity
-							style={tw.style(`flex-row items-center justify-center`)}
+							style={tw.style(`flex-row mx-3 my-2 items-end`)}
 							activeOpacity={1}
 							onPress={() => setMenuVisibility(true)}
 						>
-							<Avatar
-								icon={currentProfile.avatar}
-								size={26}
-								style={tw.style(`p-1 mr-1 border-gray-200`, { borderWidth: 1 })}
-							/>
-							<IconButton icon="dots-vertical" style={tw`m-0`} />
+							<Animated.View style={animatedStyle}>
+								<Avatar
+									icon={currentProfile.avatar}
+									size={26}
+									style={tw.style(`border-gray-200`, { borderWidth: 1 })}
+								/>
+							</Animated.View>
+							<MaterialCommunityIcons name="dots-hexagon" size={15} color={'white'} />
 						</TouchableOpacity>
 					}
 					anchorPosition="bottom"
@@ -91,9 +105,9 @@ export default function ProfileMenu() {
 						<View style={tw.style(`flex flex-row justify-center items-center border-b border-slate-200`)}>
 							<View style={tw.style(`flex-1 flex-col justify-center items-center p-2 pb-3`)}>
 								<View style={tw.style(`w-full flex-row items-center px-2 pb-3`)}>
-									<Avatar icon={currentProfile.avatar} size={32} style={tw`p-1 mr-2`} />
+									<Avatar icon={currentProfile.avatar} size={40} style={tw`p-1 mr-2`} />
 									<View style={tw.style(`flex-col px-1`)}>
-										<Text style={tw.style(`font-extrabold text-slate-600`)}>{currentProfile.name}</Text>
+										<Text style={tw.style(`font-extrabold text-4 text-slate-600`)}>{currentProfile.name}</Text>
 										<Text style={tw.style(`text-sm text-slate-500`)}>{currentProfile.description}</Text>
 									</View>
 								</View>
@@ -125,7 +139,6 @@ export default function ProfileMenu() {
 						style={tw.style(`max-w-none`)}
 						onPress={() => onProfileNavigate('Add')}
 					/>
-					<Menu.Item style={tw.style(`max-w-none`)} title={i18n.t('dashboard:profile:label:manage:profiles')} />
 				</Menu>
 			</>
 		</TouchableWithoutFeedback>

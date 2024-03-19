@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState, useMemo } from 'react'
+import { useRef, useMemo } from 'react'
 
 import { useSelector } from 'react-redux'
 import { Image, Text, View } from 'react-native'
-import { Card, IconButton } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 
 import tw from '@src/libs/tailwind'
 import { i18n } from '@src/app/locale'
@@ -110,12 +110,12 @@ export default function Categories({ onToggleDisplayView }: Props) {
 			{allCategory ? (
 				// <View style={tw`flex-1`}>
 				<TouchableOpacity
-					style={tw.style(`flex-row rounded-xl bg-white border-neutral-300 border-[1px]`, { overflow: 'hidden' })}
+					style={tw.style(`flex-row rounded-xl bg-white`, { overflow: 'hidden' })}
 					onPress={() => onViewEntries(allCategory)}
 				>
 					<Image
 						resizeMode="cover"
-						style={tw.style(`w-[80px] h-[80px] rounded-full justify-center left-[-12px] top-[-5px]`, {
+						style={tw.style(`w-[60px] h-[60px] rounded-full justify-center left-[-12px] top-[-5px]`, {
 							opacity: 0.6
 						})}
 						source={require('../../../assets/images/icons/app/dashboard-icon-128x128.png')}
@@ -132,7 +132,7 @@ export default function Categories({ onToggleDisplayView }: Props) {
 			{/* Categories */}
 			{otherCategories.length > 0 ? (
 				<View style={tw`pt-2`}>
-					<Text style={tw`font-bold text-5 p-1`}>{i18n.t('categories:card:title:category')}</Text>
+					<Text style={tw`font-bold text-5 p-1 text-neutral-700`}>{i18n.t('categories:card:title:category')}</Text>
 
 					<View style={tw.style(`flex-row flex-wrap`)}>
 						{otherCategories.map(c => {

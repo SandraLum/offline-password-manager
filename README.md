@@ -1,4 +1,5 @@
 # Offline Password Manager
+
 <a name="top"></a>
 [![Run tests](https://github.com/SandraLum/offline-password-manager/actions/workflows/test.yml/badge.svg)](https://github.com/SandraLum/offline-password-manager/actions/workflows/test.yml)
 <img src="https://img.shields.io/badge/development-in_progress-orange" alt="Development"/>
@@ -58,7 +59,7 @@ _How to use_
 
 1. Set a master password
 2. There are predefined categories which helps you catogorize your login credentials, click on the add button for any of the category
-3. Enter your information that you need to be stored _(**Information saved are all encrypted)_
+3. Enter your information that you need to be stored _(\*\*Information saved are all encrypted)_
 4. Profiles can be created for your family or team members so that you can switch between the profiles to retrieve the credentials.
 5. There is a feature to export your entries to csv for reference
 
@@ -73,13 +74,13 @@ _How to use_
 
 - [x] Dynamically add/remove fields
 - [x] Upgrade sdk
+- [x] Add favorite category for favorite entries
 - [ ] Manage multiple profiles
-- [ ] Add favorite category for favorite entries
 - [ ] Multi-language Support
 
 ## Fixes
 
-- [ ] Bug: search feature at header
+- [x] Bug: search feature at header
     <br>
     <br>
 <!-- CONTACT -->
@@ -93,5 +94,5 @@ Project Link: [https://github.com/SandraLum/offline-password-manager](https://gi
 ## Acknowledgments
 
 - [Icons 8](https://icons8.com/)
-  
+
 <p align="right">(<a href="#top">back to top</a>)</p>

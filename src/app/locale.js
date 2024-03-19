@@ -51,6 +51,8 @@ const i18n = new I18n({
 		'dashboard:profile:label:other:profiles': 'Other Profiles',
 		'dashboard:profile:label:add:profile': 'Add another profile',
 		'dashboard:profile:label:manage:profiles': 'Manage profiles',
+		'favourites:title:label': 'Favourites',
+		'favourites:label:no:fav': 'No favourites added yet',
 		'password:recovery:sheet:button:save-share': 'Save and Print',
 		'password:recovery:sheet:button:close': 'Close',
 		'password:recovery:sheet:button:done': 'Done',
