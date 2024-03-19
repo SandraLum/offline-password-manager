@@ -62,12 +62,16 @@ _How to use_
 3. Enter your information that you need to be stored _(\*\*Information saved are all encrypted)_
 4. Profiles can be created for your family or team members so that you can switch between the profiles to retrieve the credentials.
 5. There is a feature to export your entries to csv for reference
-
+   
 <!-- <img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/34295cbe-535f-47d9-96a5-d252356cc755" width="220"> -->
 <!-- <img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/cd6e0e71-8e04-4b41-97df-257fbf9429af" width="220"> -->
-<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/dd357ba2-220e-421a-baee-bb354fdbd9e1" width="200">
-<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/a34b476f-045c-402e-a2b4-406507cfbca6" width="200">
-<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/838ce1b9-5f8a-4aef-b522-2eaa57334238" width="200">
+<!-- <img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/dd357ba2-220e-421a-baee-bb354fdbd9e1" width="200"> -->
+<!-- <img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/a34b476f-045c-402e-a2b4-406507cfbca6" width="200"> -->
+<!-- <img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/838ce1b9-5f8a-4aef-b522-2eaa57334238" width="200"> -->
+
+<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/9c653ed6-2db9-4380-9965-f7cc0066dbd1" width="200">
+<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/afe9ce47-94ee-44a3-ad08-4f8e94e84960" width="200">
+<img src="https://github.com/SandraLum/offline-password-manager/assets/2909449/ad1619a4-72f2-4d48-866c-2f7c889acd14" width="200">
 <br><br>
 
 ## Roadmap
