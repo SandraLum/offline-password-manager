@@ -72,12 +72,17 @@ export default function EntryIcon(props: EntryIcon) {
 		case 'generic': {
 			const genericIcon: OPM.GenericIcon = icon as OPM.GenericIcon
 			renderIcon = (
-				<TouchableOpacity activeOpacity={0.5} disabled={!editable} onPress={OnPress} style={containerStyle}>
+				<TouchableOpacity
+					activeOpacity={0.5}
+					disabled={!editable}
+					onPress={OnPress}
+					style={tw.style(`mx-1`, bordered && roundedBorderStyle, containerStyle)}
+				>
 					<Avatar.Icon
 						icon={genericIcon.name}
-						size={size + 4}
+						size={size * 0.9}
 						color={genericIcon.color}
-						style={tw.style({ backgroundColor: 'transparent' }, bordered && roundedBorderStyle, style)}
+						style={tw.style({ backgroundColor: 'transparent' }, style)}
 					/>
 				</TouchableOpacity>
 			)

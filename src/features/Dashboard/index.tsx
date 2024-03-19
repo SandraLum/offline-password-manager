@@ -10,6 +10,7 @@ import Animated, { FadeInDown, FadeOutDown, SlideInRight, SlideOutRight } from '
 import AuthScreen from '@src/components/AuthScreen'
 import { DrawerParamList } from '@src/app/routes'
 import Header from './component/Header'
+import Favourites from './component/Favourites'
 
 type ContentView = {
 	view: DashboardContentView
@@ -59,7 +60,7 @@ export default function Dashboard({ route }: Props) {
 	}, [navigation, route])
 
 	return (
-		<AuthScreen style={tw.style(`flex-1 bg-stone-100`)}>
+		<AuthScreen style={tw.style(`flex-1 bg-neutral-100`)}>
 			<Header
 				showDrawerIcon={displayView.view === DashboardContentView.Categories}
 				onSearchChange={onSearchChange}
@@ -68,6 +69,7 @@ export default function Dashboard({ route }: Props) {
 
 			{displayView.view === DashboardContentView.Categories && (
 				<Animated.View entering={FadeInDown} exiting={FadeOutDown} style={tw`flex-1`}>
+					<Favourites />
 					<Categories onToggleDisplayView={onToggleDisplayView} />
 				</Animated.View>
 			)}

@@ -16,15 +16,14 @@ import { selectUserSettings } from '@src/store/slices/settingSlice'
 import * as Clipboard from 'expo-clipboard'
 import * as ScreenCapture from 'expo-screen-capture'
 import { ToastContext } from '@src/common/contexts/ToastContext'
+import { OPMTypes } from '@src/common/types'
 
 type Props = {
 	entry: {
-		title: OPM.EntryTitle
 		fieldsOptions: OPM.FieldsOptions
 		fieldsValues: OPM.FieldsValues
 		fields: OPM.Field[]
 	}
-	setTitle: React.Dispatch<React.SetStateAction<OPM.EntryTitle>>
 	setFieldsOptions: React.Dispatch<React.SetStateAction<OPM.FieldsOptions>>
 	setFieldsValues: React.Dispatch<React.SetStateAction<OPM.FieldsValues>>
 	setFields: React.Dispatch<React.SetStateAction<OPM.Field[]>>
@@ -68,13 +67,11 @@ const OptionalActions = (props: OptionalProps) => {
 }
 
 export default function EntryForm({
-	entry: { title, fieldsOptions, fieldsValues, fields },
-	setTitle,
+	entry: { fieldsOptions, fieldsValues, fields },
 	setFieldsOptions,
 	setFieldsValues,
 	setFields,
-	editable = false,
-	onChangeIcon
+	editable = false
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Props) {
 	const { invokeToast } = useContext(ToastContext)

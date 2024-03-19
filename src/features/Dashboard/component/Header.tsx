@@ -38,55 +38,56 @@ export default function Header(props: Props) {
 	}
 
 	return (
-		<View style={tw`py-2 bg-aqua-500 rounded-bl-3xl rounded-br-3xl`}>
+		<>
 			{/* Design */}
 			<View
-				style={tw.style(`bg-white absolute rounded-full opacity-30`, {
+				style={tw.style(`bg-white absolute rounded-full opacity-50`, {
 					backgroundColor: tw.color('amber-200'),
-					top: '50%',
-					left: '-60%',
-					width: bgDesign.size,
+					top: '15%',
+					left: '-50%',
+					width: bgDesign.size + 100,
 					height: bgDesign.size,
-					transform: [{ scaleX: 1.6 }]
+					transform: [{ scaleX: 1.9 }, { rotate: '-35deg' }]
 				})}
 			/>
-
-			<SafeAreaView style={tw``}>
-				<View style={tw`flex flex-row items-center justify-between`}>
-					{showDrawerIcon ? (
-						<IconButton
-							icon="dots-grid"
-							iconColor="white"
-							size={30}
-							onPress={(navigation as DrawerNavigationProp<ParamListBase>).toggleDrawer}
-						/>
-					) : (
-						<View style={{ transform: [{ rotate: '-90deg' }] }}>
-							<IconButton icon="dots-triangle" iconColor={tw.color('white')} size={30} onPress={navigateBack} />
-						</View>
-					)}
-					<ProfileMenu />
-				</View>
-				<View style={tw`flex flex-row p-3`}>
-					{/* Search bar */}
-					<View style={tw`flex-1 flex-row rounded-lg px-2 py-[6px] ml-1 mr-3 items-center bg-white`}>
-						<MaterialIcons name={'search'} size={20} color={tw.color('neutral-400')} />
-
-						<TextInput
-							style={tw`flex-1 text-base`}
-							placeholderTextColor={tw.color('neutral-500')}
-							placeholder={i18n.t('search:bar:placeholder:search')}
-							onChangeText={onChangeSearch}
-							inlineImageLeft="search-icon"
-							value={searchQuery}
-							onBlur={Keyboard.dismiss}
-						/>
-						{searchQuery.length !== 0 ? (
-							<IconButton icon="close" size={15} style={tw`bg-neutral-300 m-0 p-1`} onPress={clearQuery} />
-						) : null}
+			<View style={tw.style(`py-2 rounded-bl-3xl rounded-br-3xl z-1`, { backgroundColor: 'rgba(15, 219, 196, 0.6)' })}>
+				<SafeAreaView>
+					<View style={tw`flex flex-row items-center justify-between bg-transparent`}>
+						{showDrawerIcon ? (
+							<IconButton
+								icon="dots-grid"
+								iconColor="white"
+								size={30}
+								onPress={(navigation as DrawerNavigationProp<ParamListBase>).toggleDrawer}
+							/>
+						) : (
+							<View style={{ transform: [{ rotate: '-90deg' }] }}>
+								<IconButton icon="dots-triangle" iconColor={tw.color('white')} size={30} onPress={navigateBack} />
+							</View>
+						)}
+						<ProfileMenu />
 					</View>
-				</View>
-			</SafeAreaView>
-		</View>
+					<View style={tw`flex flex-row p-3`}>
+						{/* Search bar */}
+						<View style={tw`flex-1 flex-row rounded-lg px-2 py-[6px] ml-1 mr-3 items-center bg-white`}>
+							<MaterialIcons name={'search'} size={20} color={tw.color('neutral-400')} />
+
+							<TextInput
+								style={tw`flex-1 text-base`}
+								placeholderTextColor={tw.color('neutral-500')}
+								placeholder={i18n.t('search:bar:placeholder:search')}
+								onChangeText={onChangeSearch}
+								inlineImageLeft="search-icon"
+								value={searchQuery}
+								onBlur={Keyboard.dismiss}
+							/>
+							{searchQuery.length !== 0 ? (
+								<IconButton icon="close" size={15} style={tw`bg-neutral-300 m-0 p-1`} onPress={clearQuery} />
+							) : null}
+						</View>
+					</View>
+				</SafeAreaView>
+			</View>
+		</>
 	)
 }

@@ -5,12 +5,14 @@ import categoriesSlice from '@src/store/slices/categoriesSlice'
 import entriesSlice from '@src/store/slices/entriesSlice'
 import profilesSlice from '@src/store/slices/profilesSlice'
 import settingSlice from '@src/store/slices/settingSlice'
+import favouritesSlice from '@src/store/slices/favouritesSlice'
 
 export const mainReducer = {
 	app: appSlice.reducer,
 	auth: authSlice.reducer,
 	categories: categoriesSlice.reducer,
 	entries: entriesSlice.reducer,
+	favourites: favouritesSlice.reducer,
 	profiles: profilesSlice.reducer,
 	setting: settingSlice.reducer
 }

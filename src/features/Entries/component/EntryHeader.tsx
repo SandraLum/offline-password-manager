@@ -14,12 +14,14 @@ type Props = {
 	category: OPMTypes.Category
 	entry: {
 		title: OPM.EntryTitle
+		favourite: OPMTypes.Entry['favourite']
 	}
 	mode?: EntryMode
 	onDelete?: () => void
 	onUpdate?: () => void
 	onCancel: () => void
 	setMode?: (mode: EntryMode) => void
+	onChangeFavourite: () => void
 	setTitle: React.Dispatch<React.SetStateAction<OPM.EntryTitle>>
 	onChangeIcon: (icon?: OPM.ComplexIcon) => void
 }
@@ -28,8 +30,9 @@ export default function Header(props: Props) {
 	const {
 		category,
 		mode = EntryMode.READ,
-		entry: { title },
+		entry: { title, favourite },
 		setTitle,
+		onChangeFavourite,
 		setMode,
 		onDelete,
 		onChangeIcon
@@ -48,7 +51,12 @@ export default function Header(props: Props) {
 			case EntryMode.READ:
 				headerButtons = (
 					<>
-						<IconButton icon="star-outline" style={tw`m-0`} onPress={() => console.log('Fav pressed')} />
+						<IconButton
+							icon={favourite ? 'star' : 'star-outline'}
+							style={tw`m-0`}
+							onPress={onChangeFavourite}
+							iconColor={favourite ? 'yellow' : 'black'}
+						/>
 						<IconButton icon="pencil" style={tw`m-0`} onPress={() => setMode?.(EntryMode.EDIT)} />
 						<IconButton icon="delete" style={tw`m-0`} onPress={onDelete} />
 					</>
@@ -61,8 +69,8 @@ export default function Header(props: Props) {
 						<IconButton
 							icon="star-outline"
 							style={tw`m-1`}
-							onPress={() => console.log('Fav pressed')}
-							iconColor="white"
+							onPress={onChangeFavourite}
+							iconColor={favourite ? 'yellow' : 'white'}
 						/>
 						<IconButton icon="content-save" style={tw`m-1`} onPress={props.onUpdate} iconColor="white" />
 						<IconButton icon="close" style={tw`m-1`} iconColor={tw.color('neutral-700')} onPress={props.onCancel} />

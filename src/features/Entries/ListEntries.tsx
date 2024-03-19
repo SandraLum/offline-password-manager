@@ -167,6 +167,7 @@ export default function ListEntries(props: Props) {
 						) : (
 							<List.Item
 								title={i18n.t('entries:label:no:entries')}
+								onPress={() => onAddNewEntry(category)}
 								right={() => (
 									<IconButton
 										mode="contained"
@@ -175,7 +176,6 @@ export default function ListEntries(props: Props) {
 										iconColor="white"
 										style={tw`m-0`}
 										containerColor={tw.color('green-400')}
-										onPress={() => onAddNewEntry(category)}
 									/>
 								)}
 								style={tw.style(`py-1 pr-2 mr-0 rounded-lg bg-zinc-50`)}

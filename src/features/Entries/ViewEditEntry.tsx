@@ -41,6 +41,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	const [fieldsValues, setFieldsValues] = useState<OPM.FieldsValues>({})
 	const [fields, setFields] = useState<OPM.Field[]>(originalFields)
 	const [title, setTitle] = useState<OPM.EntryTitle>(entry?.title || defaultEntry.title)
+	const [favourite, setFavourite] = useState<OPMTypes.Entry['favourite']>(entry?.favourite || false)
 
 	const onUpdate = useCallback(() => {
 		function onValidate(data: { category: OPMTypes.Category; title: OPM.EntryTitle }): boolean {
@@ -72,6 +73,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 						changes: {
 							category,
 							title,
+							favourite,
 							fields: updatedFields,
 							fieldsValues
 						}
@@ -81,7 +83,7 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 				setMode(EntryMode.READ)
 			}
 		}
-	}, [category, dispatch, entry, fields, fieldsOptions, fieldsValues, title])
+	}, [category, dispatch, entry, fields, fieldsOptions, fieldsValues, title, favourite])
 
 	const onDelete = useCallback(() => {
 		if (entry?.id) {
@@ -133,12 +135,25 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 	function onChangeIcon(icon?: OPM.ComplexIcon) {
 		setTitle(t => ({ ...t, icon }))
 	}
+	console.log('entry', entry)
+	function onChangeFavourite() {
+		console.log('entry?.id', entry?.id, favourite)
+		if (entry?.id) {
+			setFavourite(!favourite)
+			dispatch(
+				entryUpdate({
+					id: entry.id,
+					changes: { favourite: !favourite }
+				})
+			)
+		}
+	}
 
 	return (
 		<AuthScreen headerShown={false} style={tw`flex-1`}>
 			<EntryHeader
 				category={category}
-				entry={{ title }}
+				entry={{ title, favourite }}
 				mode={mode}
 				setMode={setMode}
 				onDelete={onDelete}
@@ -146,11 +161,11 @@ export default function ViewEditEntry({ navigation, route }: Props) {
 				onUpdate={onUpdate}
 				setTitle={setTitle}
 				onChangeIcon={onChangeIcon}
+				onChangeFavourite={onChangeFavourite}
 			/>
 			<EntryForm
 				editable={editable}
-				entry={{ title, fieldsOptions, fieldsValues, fields }}
-				setTitle={setTitle}
+				entry={{ fieldsOptions, fieldsValues, fields }}
 				setFieldsOptions={setFieldsOptions}
 				setFieldsValues={setFieldsValues}
 				setFields={setFields}

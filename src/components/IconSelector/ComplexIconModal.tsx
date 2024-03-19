@@ -5,6 +5,8 @@ import { Image, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native'
 import { GenericIcons, BrandIcons } from '@src/common/assets/icons'
 import { i18n } from '@src/app/locale'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import Icon from 'react-native-paper/lib/typescript/src/components/Icon'
 
 type Props = {
 	visible: boolean
@@ -29,6 +31,27 @@ export default function ComplexIconModal(props: Props) {
 					/>
 				</View>
 				<ScrollView>
+					<Text style={tw`font-bold text-lg`}>{i18n.t('component:icon-initial:icons-selector:text:brand-icons')}</Text>
+					<View style={tw`flex flex-row flex-wrap w-full`}>
+						{BrandIcons.map((ic: OPM.BrandIcon, index: number) => {
+							return (
+								<TouchableOpacity
+									key={`ic-${index}-${ic.id}`}
+									onPress={() => onChange(ic)}
+									style={tw.style(`w-1/4 p-1 py-2 justify-center items-center`)}
+								>
+									<Image
+										resizeMode="contain"
+										resizeMethod="resize"
+										source={ic.path}
+										style={tw.style({ height: 40, width: 40 })}
+									/>
+									<Text style={tw`text-center`}>{ic.displayName}</Text>
+								</TouchableOpacity>
+							)
+						})}
+					</View>
+
 					<Text style={tw`font-bold text-lg`}>
 						{i18n.t('component:icon-initial:icons-selector:text:generic-icons')}
 					</Text>
@@ -39,25 +62,9 @@ export default function ComplexIconModal(props: Props) {
 								<TouchableOpacity
 									key={`ic-${index}-${ic.id}`}
 									onPress={() => onChange(ic)}
-									style={tw`w-1/4 p-1 justify-center items-center`}
+									style={tw`w-1/4 p-1 py-2 justify-center items-center`}
 								>
-									<IconButton icon={ic.name} size={45} iconColor={ic.color} style={tw`p-0 m-0`} />
-									<Text style={tw`text-center mt-[-8]`}>{ic.displayName}</Text>
-								</TouchableOpacity>
-							)
-						})}
-					</View>
-
-					<Text style={tw`font-bold text-lg`}>{i18n.t('component:icon-initial:icons-selector:text:brand-icons')}</Text>
-					<View style={tw`flex flex-row flex-wrap w-full`}>
-						{BrandIcons.map((ic: OPM.BrandIcon, index: number) => {
-							return (
-								<TouchableOpacity
-									key={`ic-${index}-${ic.id}`}
-									onPress={() => onChange(ic)}
-									style={tw.style(`w-1/4 p-1 py-2 justify-center items-center`)}
-								>
-									<Image resizeMode="contain" source={ic.path} style={tw.style({ height: 40, width: 40 })} />
+									<MaterialCommunityIcons name={ic.name as any} size={42} color={ic.color} />
 									<Text style={tw`text-center`}>{ic.displayName}</Text>
 								</TouchableOpacity>
 							)

@@ -23,6 +23,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AuthScreen from '@src/components/AuthScreen'
 import EntryHeader from './component/EntryHeader'
 import { EntryMode } from '@src/common/enums'
+import { OPMTypes } from '@src/common/types'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddEntry'>
 
@@ -45,6 +46,7 @@ export default function AddEntry({ route }: Props) {
 	const [fieldsValues, setFieldsValues] = useState<OPM.FieldsValues>({})
 	const [fields, setFields] = useState<OPM.Field[]>(originalFields)
 	const [title, setTitle] = useState<OPM.EntryTitle>({ ...defaultEntry.title })
+	const [favourite, setFavourite] = useState<OPMTypes.Entry['favourite']>(false)
 
 	const onSave = useCallback(() => {
 		if (!category) return
@@ -54,6 +56,7 @@ export default function AddEntry({ route }: Props) {
 				id: utils.generateUID(),
 				category,
 				title,
+				favourite,
 				fields,
 				fieldsValues,
 				lastUpdatedOn: new Date().valueOf()
@@ -114,21 +117,25 @@ export default function AddEntry({ route }: Props) {
 		setTitle(t => ({ ...t, icon }))
 	}
 
+	function onChangeFavourite() {
+		setFavourite(o => !o)
+	}
+
 	return (
 		<AuthScreen headerShown={false} style={tw`flex-1`}>
 			<EntryHeader
 				category={category}
 				mode={EntryMode.NEW}
-				entry={{ title }}
+				entry={{ title, favourite }}
 				onUpdate={onSave}
 				onCancel={onCancel}
 				setTitle={setTitle}
 				onChangeIcon={onChangeIcon}
+				onChangeFavourite={onChangeFavourite}
 			/>
 			<EntryForm
 				editable={editable}
-				entry={{ title, fieldsOptions, fieldsValues, fields }}
-				setTitle={setTitle}
+				entry={{ fieldsOptions, fieldsValues, fields }}
 				setFieldsOptions={setFieldsOptions}
 				setFieldsValues={setFieldsValues}
 				setFields={setFields}
