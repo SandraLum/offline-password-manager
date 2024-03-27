@@ -73,8 +73,6 @@ export type RootStackParamList = {
 		mode: ProfileMode.EDIT
 	}
 	AddProfile: {}
-	// Settings: {}
-	// SettingsStack: {}
 	Onboarding: {}
 	'Settings:ChangePassword': {}
 	'Settings:Testing': {}
@@ -86,8 +84,6 @@ export type RootStackParamList = {
 	}
 	'Settings:ExportCSV': {}
 	'Settings:ExportCSV:CSVGeneration': { data: { key: string; profileIds: string[] } }
-	// 'Settings:ExportGeneration': { type: 'csv' | 'opm'; data: { key: string; profileIds: string[] } }
-	// 'Settings:ExportGenerated': OPMTypes.ExportedFiles
 	'Settings:Backup': {}
 	'Settings:Backup:BackupGeneration': { data: { key: string } }
 
@@ -105,15 +101,6 @@ export type DrawerParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Drawer = createDrawerNavigator<DrawerParamList>()
 
-// function SettingsStack() {
-// 	return (
-// 		<Stack.Navigator initialRouteName="Settings">
-// 			<Stack.Screen name="Settings" component={Settings} />
-// 			<Stack.Screen name="Settings:ChangePassword" component={ChangePassword} />
-// 		</Stack.Navigator>
-// 	)
-// }
-
 function DrawerStack() {
 	return (
 		<Drawer.Navigator initialRouteName="Dashboard" drawerContent={CustomDrawer.Content}>
@@ -125,15 +112,6 @@ function DrawerStack() {
 					drawerIcon: props => <CustomDrawer.Icon {...props} name="home" />
 				}}
 			/>
-			{/* <Drawer.Screen
-				name="SettingsStack"
-				component={SettingsStack}
-				options={{
-					// headerShown: false,
-					title: i18n.t('routes:settings'),
-					drawerIcon: props => <CustomDrawer.Icon {...props} name="cog" />
-				}}
-			/> */}
 			<Drawer.Screen
 				name="Settings"
 				component={Settings}
@@ -195,15 +173,10 @@ export default function Routes() {
 										component={PasswordRecoveryForm}
 										options={{ headerShown: false }}
 									/>
-									<Stack.Screen
-										name="PasswordRecovery:PDF"
-										component={PasswordRecoveryPDF}
-										// options={{ title: 'Password Recovery Sheet' }}
-									/>
+									<Stack.Screen name="PasswordRecovery:PDF" component={PasswordRecoveryPDF} />
 								</Stack.Group>
 
 								{/* Settings */}
-								{/* <Stack.Screen name="Settings" component={Settings} /> */}
 								<Stack.Screen
 									name="Settings:ChangePassword"
 									component={ChangePassword}
@@ -232,19 +205,7 @@ export default function Routes() {
 									<Stack.Screen name="Settings:Restore:RestoreProcess" component={RestoreProcess} />
 								</Stack.Group>
 
-								{/* <Stack.Screen
-									name="Settings:ExportGenerated"
-									component={ExportGenerated}
-									options={{ title: 'Export Generated Files' }}
-								/> */}
-								{/* <Stack.Screen
-									name="Settings:ExportGeneration"
-									component={ExportGeneration}
-									options={{ title: 'Generating Export files' }}
-								/> */}
 								<Stack.Screen name="Settings:Testing" component={Testing} options={{ title: 'Testing' }} />
-
-								{/* <Stack.Screen name="SettingsStack" component={SettingsStack} /> */}
 							</>
 						)}
 					</Stack.Navigator>

@@ -15,7 +15,6 @@ import { i18n } from '@src/app/locale'
 import { factoryReset } from '@src/store/slices/appSlice'
 import Screen from '@src/components/Screen'
 import { clone } from '@src/common/utils'
-import { getBackupState } from '../../store/slices/settingSlice'
 
 // import { syncEntriesWithMKey } from '../Entries/entriesSlice'
 
@@ -69,10 +68,9 @@ export default function Login() {
 							resizeMode="contain"
 							source={require('../../../assets/images/app_name.png')}
 						/>
-						{/* <Text style={tw`text-3xl p-2 font-bold text-[#F9AB4A]`}>Bondpass</Text> */}
 					</View>
 
-					<EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} />
+					{/* <EnterPasswordForm mode="login" onLogin={onLogin} onLoginViaBiometrics={onLoginViaBiometrics} /> */}
 
 					{/* {error && <Text style={tw`text-red-700 py-1`}>{error}</Text>} */}
 
