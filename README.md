@@ -79,6 +79,7 @@ _How to use_
 - [x] Dynamically add/remove fields
 - [x] Upgrade sdk
 - [x] Add favorite category for favorite entries
+- [ ] Soft keyboard
 - [ ] Manage multiple profiles
 - [ ] Multi-language Support
 
